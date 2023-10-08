@@ -2,11 +2,13 @@
 Class for defining a rna strand dynamically
 """
 
-from attrs import define, field
-from typing import TypeVar, List
+from attrs import define, field, Factory
+from enum import Enum
+from typing import TypeVar, List, Dict, Any, Protocol
+import pickle
 
 
-T = TypeVar("T")
+T = TypeVar("T", bound=Enum)
 
 @define
 class Value():
@@ -25,4 +27,36 @@ class Group():
 
 @define
 class Strand():
+            
+    enum_list: T = field(kw_only=True)
+    _attributes:Dict[T, Any] = field()
+    @_attributes.default
+    def _do_the_attributes(self):
+        new_dict:Dict[T, Any] = {}
+        for thing in self.enum_list:
+            new_dict[thing] = None
+        return new_dict
+   
+    @property
+    def attributes(self):
+        return self._attributes
     
+    def set_attributes(self, atr:T, value:Any):
+        self._attributes[atr] = value
+     
+    # @property
+    # def attributes(self):
+    #     return self._attributes
+
+    # @attributes.setter
+    # def attributes(self,type:T, value):
+    #     self._attributes[type] = value
+    
+    # @attributes.on_setattr
+    # def _do_the_next_thing(self, attribute, value):
+    #     record_to_db(attribute=attribute, value=value)
+    
+    
+    # def __attrs_post_init__(self):
+    #     for thing in self.enum_list:
+    #         self.thing = None
