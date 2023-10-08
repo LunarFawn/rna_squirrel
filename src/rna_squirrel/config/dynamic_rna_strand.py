@@ -4,11 +4,15 @@ Class for defining a rna strand dynamically
 
 from attrs import define, field, Factory
 from enum import Enum
-from typing import TypeVar, List, Dict, Any, Protocol
+from typing import TypeVar, List, Dict, Any, Protocol, Type
 import pickle
 
 
 T = TypeVar("T", bound=Enum)
+
+class AtrClass(Enum):
+    PARENT = "PARENT"
+    CHILD = "CHILD"
 
 @define
 class Value():
@@ -23,12 +27,29 @@ class Object():
 class Group():
     objects:List[T]
 
+@define(kw_only=True)
 class GenericAttribute():
-    pass
+    atr_class:AtrClass = field()
+    atr_type:Type = None
+    atr_default_value:Any = None
+    attributes:Enum = field()
 
+class CustomAttribute():
+    # def __init__(self, save_value: bool = False) -> None:
+    #     super().__init__(save_value)
+    def __init__(self, save_value:bool = False) -> None:
+        self.do_save:bool = save_value
+
+    def new_attr(self, atr: GenericAttribute) -> None:
+        for attribute in atr.attributes:
+            if atr.atr_class == AtrClass.PARENT:
+                self.__setattr__(attribute.name, CustomAttribute(save_value=True))
+            elif atr.atr_class == AtrClass.CHILD:
+                self.__setattr__(attribute.name, atr.atr_default_value)
+    #strand = "taco"
 
 @define(kw_only=True)
-class Strand():
+class Nut():
     enum_list: T = field()
     use_db:bool = field()
     # attributes:Dict[T, Any] = field()
@@ -42,9 +63,9 @@ class Strand():
   
     def __attrs_post_init__(self):
        for thing in self.enum_list:
-            self.__setattr__(thing.name, None)
+            self.__setattr__(thing.name, CustomAttribute(save_value=True))
   
-   
+        
     # @property
     # def attributes(self):
     #     if self.use_db is True:

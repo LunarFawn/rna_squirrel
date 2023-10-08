@@ -7,7 +7,17 @@ from collections import namedtuple
 from typing import List, Dict
 
 
-from rna_squirrel.config.nupack_config import NupackStrand, Strand_Attributes
+from rna_squirrel.config.nupack_config import (
+    NupackStrand,
+    Nut_Attributes,
+    PrimaryStructure_Attributes,
+)
+from rna_squirrel.config.dynamic_rna_strand import (
+    Nut,
+    Value,
+    GenericAttribute,
+    AtrClass
+)
 
 @define
 class Energy():
@@ -47,30 +57,43 @@ class Ensemble():
     
 
 #@define
-class RNAStrand():
+class RNAStrand(Nut):
     
     def __init__(self, use_db:bool = False) -> None:
         self.primary_structure: PrimaryStructure
         self.ensemble:Ensemble# = Ensemble()
-        self.strand:NupackStrand = NupackStrand(enum_list=Strand_Attributes,
-                                                use_db=use_db)
-    
+        # self.strand:NupackStrand = NupackStrand(enum_list=Strand_Attributes,
+        #                                         use_db=use_db)
+        super().__init__(enum_list=Nut_Attributes,
+                         use_db=True)
+        
+        #build the Primary Structure first
+        self.PrimaryStructure.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+                                        attributes=PrimaryStructure_Attributes,
+                                        atr_type=str,
+                                        atr_default_value='yes!!!')  
+                                       )
+        # self.PrimaryStructure.Strand.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+        #                                 attributes=PrimaryStructure_Attributes,
+        #                                 )  
+        #                                )
+        
     @property
     def primary_structure(self):
         #return self.strand.attributes[Strand_Attributes.PrimaryStructure]
-        return self.strand.PrimaryStructure
+        return self.PrimaryStructure
         
     @primary_structure.setter
     def primary_structure(self, struct:PrimaryStructure):
-        self.strand.PrimaryStructure = struct
+        self.PrimaryStructure = struct
     
     @property
     def ensemble(self):
         # return self.strand.attributes[Strand_Attributes.Ensemble]
-        return self.strand.Ensemble
+        return self.Ensemble
         
     @ensemble.setter
     def ensemble(self, ensemble:Ensemble):
         # self.strand.set_attributes(atr=Strand_Attributes.Ensemble,
         #                            value=ensemble)
-        self.strand.Ensemble = ensemble
+        self.Ensemble = ensemble

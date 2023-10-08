@@ -6,9 +6,15 @@ for a generic system for later extensability
 """
 
 from enum import Enum
-from typing import TypeVar
+from typing import TypeVar, Type, List
 from attrs import define, field
-from rna_squirrel.config.dynamic_rna_strand import Strand, Value
+from rna_squirrel.config.dynamic_rna_strand import (
+    Nut,
+    Value,
+    GenericAttribute,
+    AtrClass,
+    CustomAttribute
+)
 
 OBJECT_TYPE = None
 
@@ -16,7 +22,7 @@ OBJECT_TYPE = None
 Pickle and unpickle
 """
 
-class Strand_Attributes(Enum):
+class Nut_Attributes(Enum):
     """
     This is a common attribute that
     needs to be published for the dynamic
@@ -27,12 +33,16 @@ class Strand_Attributes(Enum):
 
 class PrimaryStructure_Attributes(Enum):
     Strand = "Strand"
-
-class Strand_Type():
-    dyn_type:int
     
+# class PrimaryStructure_Stats(GenericAttribute):
+#     atr_class:AtrClass = AtrClass.PARENT
+#     atr_type:Type = None
+#     attributes:Enum = PrimaryStructure_Attributes
+    
+#     def __init__(self) -> None:
+#         super().__init__(atr_class=self.atr_class,
+#                          atr_type=self.atr_type)
 
-
-class NupackStrand(Strand):
-    pass
+class NupackStrand(Nut):
+    enum_list = Nut_Attributes
 
