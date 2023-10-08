@@ -23,12 +23,14 @@ class Object():
 class Group():
     objects:List[T]
 
+class GenericAttribute():
+    pass
 
 
-@define
+@define(kw_only=True)
 class Strand():
-            
-    enum_list: T = field(kw_only=True)
+    enum_list: T = field()
+    use_db:bool = field()
     _attributes:Dict[T, Any] = field()
     @_attributes.default
     def _do_the_attributes(self):
@@ -39,11 +41,20 @@ class Strand():
    
     @property
     def attributes(self):
+        if self.use_db is True:
+            #first pupulate property with
+            #value from db
+            pass
+       
         return self._attributes
     
     def set_attributes(self, atr:T, value:Any):
         self._attributes[atr] = value
-     
+        if self.use_db is True:
+            #write value to property in db
+            pass
+
+    
     # @property
     # def attributes(self):
     #     return self._attributes

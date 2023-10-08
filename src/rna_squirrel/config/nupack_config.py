@@ -25,7 +25,12 @@ class Strand_Attributes(Enum):
     PrimaryStructure = "PrimaryStructure"
     Ensemble = "Ensemble"
 
+class PrimaryStructure_Attributes(Enum):
+    Strand = "Strand"
 
+class Strand_Type():
+    dyn_type:int
+    
 
 @define
 class NupackStrand(Strand):
