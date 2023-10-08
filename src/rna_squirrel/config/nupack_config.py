@@ -32,7 +32,7 @@ class Strand_Type():
     dyn_type:int
     
 
-@define
+
 class NupackStrand(Strand):
     pass
 

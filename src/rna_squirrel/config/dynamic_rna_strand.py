@@ -31,28 +31,34 @@ class GenericAttribute():
 class Strand():
     enum_list: T = field()
     use_db:bool = field()
-    _attributes:Dict[T, Any] = field()
-    @_attributes.default
-    def _do_the_attributes(self):
-        new_dict:Dict[T, Any] = {}
-        for thing in self.enum_list:
-            new_dict[thing] = None
-        return new_dict
+    # attributes:Dict[T, Any] = field()
+    # @attributes.default
+    # def _do_the_attributes(self):
+    #     new_dict:Dict[T, Any] = {}
+    #     for thing in self.enum_list:
+    #         new_dict[thing] = None
+    #         self.__setattr__(thing.name, None)
+    #     return new_dict
+  
+    def __attrs_post_init__(self):
+       for thing in self.enum_list:
+            self.__setattr__(thing.name, None)
+  
    
-    @property
-    def attributes(self):
-        if self.use_db is True:
-            #first pupulate property with
-            #value from db
-            pass
+    # @property
+    # def attributes(self):
+    #     if self.use_db is True:
+    #         #first pupulate property with
+    #         #value from db
+    #         pass
        
-        return self._attributes
+    #     return self._attributes
     
-    def set_attributes(self, atr:T, value:Any):
-        self._attributes[atr] = value
-        if self.use_db is True:
-            #write value to property in db
-            pass
+    # def set_attributes(self, atr:T, value:Any):
+    #     self._attributes[atr] = value
+    #     if self.use_db is True:
+    #         #write value to property in db
+    #         pass
 
     
     # @property
@@ -68,6 +74,4 @@ class Strand():
     #     record_to_db(attribute=attribute, value=value)
     
     
-    # def __attrs_post_init__(self):
-    #     for thing in self.enum_list:
-    #         self.thing = None
+   

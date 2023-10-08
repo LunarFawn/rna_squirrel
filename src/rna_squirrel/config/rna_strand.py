@@ -57,18 +57,20 @@ class RNAStrand():
     
     @property
     def primary_structure(self):
-        return self.strand.attributes[Strand_Attributes.PrimaryStructure]
+        #return self.strand.attributes[Strand_Attributes.PrimaryStructure]
+        return self.strand.PrimaryStructure
         
     @primary_structure.setter
     def primary_structure(self, struct:PrimaryStructure):
-        self.strand.set_attributes(atr=Strand_Attributes.PrimaryStructure,
-                                   value=struct)
+        self.strand.PrimaryStructure = struct
     
     @property
     def ensemble(self):
-        return self.strand.attributes[Strand_Attributes.Ensemble]
+        # return self.strand.attributes[Strand_Attributes.Ensemble]
+        return self.strand.Ensemble
         
     @ensemble.setter
     def ensemble(self, ensemble:Ensemble):
-        self.strand.set_attributes(atr=Strand_Attributes.Ensemble,
-                                   value=ensemble)
+        # self.strand.set_attributes(atr=Strand_Attributes.Ensemble,
+        #                            value=ensemble)
+        self.strand.Ensemble = ensemble
