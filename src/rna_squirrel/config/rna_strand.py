@@ -93,10 +93,10 @@ class RNAStrand(Nut):
                                         atr_type=str,
                                         atr_default_value='yes?'))
 
-        self._primary_structure.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
-                                        attributes=PrimaryStructure_Attributes,
-                                        atr_type=str,
-                                        atr_default_value='empty'))
+        # self._primary_structure.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+        #                                 attributes=PrimaryStructure_Attributes,
+        #                                 atr_type=str,
+        #                                 atr_default_value='empty'))
         
     @property
     def primary_structure(self)->PrimaryStructure:
