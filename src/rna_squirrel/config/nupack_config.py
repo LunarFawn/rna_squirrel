@@ -28,11 +28,11 @@ class Nut_Attributes(Enum):
     needs to be published for the dynamic
     strand to build the correct object
     """
-    PrimaryStructure = "PrimaryStructure"
-    Ensemble = "Ensemble"
+    PrimaryStructure = "PrimaryStructure_DB"
+    Ensemble = "Ensemble_DB"
 
 class PrimaryStructure_Attributes(Enum):
-    Strand = "Strand"
+    Strand = "Strand_DB"
     
 # class PrimaryStructure_Stats(GenericAttribute):
 #     atr_class:AtrClass = AtrClass.PARENT

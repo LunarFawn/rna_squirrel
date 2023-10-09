@@ -60,7 +60,7 @@ class Ensemble():
 class RNAStrand(Nut):
     
     def __init__(self, use_db:bool = False) -> None:
-        self.primary_structure: PrimaryStructure
+        self._primary_structure: PrimaryStructure
         self.ensemble:Ensemble# = Ensemble()
         # self.strand:NupackStrand = NupackStrand(enum_list=Strand_Attributes,
         #                                         use_db=use_db)
@@ -68,7 +68,7 @@ class RNAStrand(Nut):
                          use_db=True)
         
         #build the Primary Structure first
-        self.PrimaryStructure.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+        self.PrimaryStructure_DB.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
                                         attributes=PrimaryStructure_Attributes,
                                         atr_type=str,
                                         atr_default_value='yes!!!')  
@@ -79,21 +79,21 @@ class RNAStrand(Nut):
         #                                )
         
     @property
-    def primary_structure(self):
+    def primary_structure(self)->PrimaryStructure:
         #return self.strand.attributes[Strand_Attributes.PrimaryStructure]
-        return self.PrimaryStructure
+        return PrimaryStructure(strand=self.PrimaryStructure_DB.Strand_DB)
         
     @primary_structure.setter
     def primary_structure(self, struct:PrimaryStructure):
-        self.PrimaryStructure = struct
+        self.PrimaryStructure_DB.Strand_DB = struct.strand
     
     @property
     def ensemble(self):
         # return self.strand.attributes[Strand_Attributes.Ensemble]
-        return self.Ensemble
+        return self.Ensemble_DB
         
     @ensemble.setter
     def ensemble(self, ensemble:Ensemble):
         # self.strand.set_attributes(atr=Strand_Attributes.Ensemble,
         #                            value=ensemble)
-        self.Ensemble = ensemble
+        self.Ensemble_DB = ensemble

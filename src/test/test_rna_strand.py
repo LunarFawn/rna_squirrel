@@ -5,12 +5,13 @@ from rna_squirrel.config.rna_strand import Energy, PrimaryStructure, RNAStrand, 
 
 def test_get_empty_strand():
     new_strand:RNAStrand = RNAStrand()
-    assert new_strand.primary_structure.Strand == "yes!!!"
+    assert new_strand.primary_structure.strand == "yes!!!"
 
 def test_set_strand_attribute():
     new_strand:RNAStrand = RNAStrand()
-    new_strand.primary_structure = "yo"
-    assert new_strand.primary_structure == "yo"
+    new_struct:PrimaryStructure = PrimaryStructure(strand="yo")
+    new_strand.primary_structure = new_struct
+    assert new_strand.primary_structure.strand == "yo"
 
 def test_get_empty_ensemble():
     new_strand:RNAStrand = RNAStrand()

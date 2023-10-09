@@ -43,9 +43,13 @@ class CustomAttribute():
     def new_attr(self, atr: GenericAttribute) -> None:
         for attribute in atr.attributes:
             if atr.atr_class == AtrClass.PARENT:
-                self.__setattr__(attribute.name, CustomAttribute(save_value=True))
+                self.__setattr__(attribute.value, CustomAttribute(save_value=True))
             elif atr.atr_class == AtrClass.CHILD:
-                self.__setattr__(attribute.name, atr.atr_default_value)
+                self.__setattr__(attribute.value, atr.atr_default_value)
+    
+    def update_attr(self):
+        pass
+    
     #strand = "taco"
 
 @define(kw_only=True)
@@ -63,7 +67,7 @@ class Nut():
   
     def __attrs_post_init__(self):
        for thing in self.enum_list:
-            self.__setattr__(thing.name, CustomAttribute(save_value=True))
+            self.__setattr__(thing.value, CustomAttribute(save_value=True))
   
         
     # @property
