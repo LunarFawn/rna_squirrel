@@ -34,12 +34,18 @@ class GenericAttribute():
     atr_default_value:Any = None
     attributes:Enum = field()
 
-class CustomAttribute():
+class CustomAttribute(GenericAttribute):
+    """
+    I think that each CustomAttribute needs
+    to spin up its own new table but needs to be 
+    traceable
+    """
     # def __init__(self, save_value: bool = False) -> None:
     #     super().__init__(save_value)
     def __init__(self, save_value:bool = False) -> None:
         self.do_save:bool = save_value
-
+        self.parent_table:Any = None
+        self.current_table:Any = None
     def new_attr(self, atr: GenericAttribute) -> None:
         for attribute in atr.attributes:
             if atr.atr_class == AtrClass.PARENT:
@@ -49,17 +55,25 @@ class CustomAttribute():
     
     def __setattr__(self, __name: str, __value: Any) -> None:
         #this is where to put the code to save to db
+        #use parent table location to place current
+        #table data
         super().__setattr__(__name, __value)
     
     def __getattribute__(self, __name: str) -> Any:
         #this is where to put the code to pull from db
+        #use parent table location to get current table
+        #to get the attribute value
         return super().__getattribute__(__name)
+
+    def new_table(self):
+        pass
     #strand = "taco"
 
 @define(kw_only=True)
 class Nut():
     enum_list: T = field()
     use_db:bool = field()
+    db:Any = field()
     # attributes:Dict[T, Any] = field()
     # @attributes.default
     # def _do_the_attributes(self):
