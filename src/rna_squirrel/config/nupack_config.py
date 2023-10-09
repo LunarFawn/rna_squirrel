@@ -18,10 +18,6 @@ from rna_squirrel.config.dynamic_rna_strand import (
 
 OBJECT_TYPE = None
 
-"""
-Pickle and unpickle
-"""
-
 class Nut_Attributes(Enum):
     """
     This is a common attribute that

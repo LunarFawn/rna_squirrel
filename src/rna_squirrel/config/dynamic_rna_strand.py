@@ -47,9 +47,13 @@ class CustomAttribute():
             elif atr.atr_class == AtrClass.CHILD:
                 self.__setattr__(attribute.value, atr.atr_default_value)
     
-    def update_attr(self):
-        pass
+    def __setattr__(self, __name: str, __value: Any) -> None:
+        #this is where to put the code to save to db
+        super().__setattr__(__name, __value)
     
+    def __getattribute__(self, __name: str) -> Any:
+        #this is where to put the code to pull from db
+        return super().__getattribute__(__name)
     #strand = "taco"
 
 @define(kw_only=True)
