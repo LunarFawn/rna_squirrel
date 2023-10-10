@@ -116,10 +116,3 @@ class Nut():
     # def _do_the_next_thing(self, attribute, value):
     #     record_to_db(attribute=attribute, value=value)
     
-class YAMLOperations():
-    def __init__(self) -> None:
-        pass
-    
-    def load_yaml(self):
-        pass
-   
