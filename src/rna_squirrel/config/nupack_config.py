@@ -40,5 +40,16 @@ class PrimaryStructure_Attributes(Enum):
 #                          atr_type=self.atr_type)
 
 class NupackStrand(Nut):
-    enum_list = Nut_Attributes
+
+   def __init__(self, use_db:bool = False) -> None:
+        super().__init__(enum_list=Nut_Attributes,
+                         use_db=True,
+                         db=None)
+    
+        #build the Primary Structure first
+        self.PrimaryStructure_DB.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+                                        attributes=PrimaryStructure_Attributes,
+                                        atr_type=str,
+                                        atr_default_value='yes?'))
+    
 

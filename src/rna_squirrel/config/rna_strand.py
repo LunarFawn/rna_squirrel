@@ -73,12 +73,13 @@ class Ensemble(CustomAttribute):
     
 
 #@define
-class RNAStrand(Nut):
+class RNAStrand(NupackStrand):
     
     def __init__(self, use_db:bool = False) -> None:
-        super().__init__(enum_list=Nut_Attributes,
-                         use_db=True,
-                         db=None)
+        super().__init__(use_db=use_db)
+        # super().__init__(enum_list=Nut_Attributes,
+        #                  use_db=True,
+        #                  db=None)
         self._primary_structure: PrimaryStructure = PrimaryStructure(save_value=True,
                                                                      current=None,
                                                                      parent=self)
@@ -88,10 +89,10 @@ class RNAStrand(Nut):
         
         
         #build the Primary Structure first
-        self.PrimaryStructure_DB.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
-                                        attributes=PrimaryStructure_Attributes,
-                                        atr_type=str,
-                                        atr_default_value='yes?'))
+        # self.PrimaryStructure_DB.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+        #                                 attributes=PrimaryStructure_Attributes,
+        #                                 atr_type=str,
+        #                                 atr_default_value='yes?'))
 
         # self._primary_structure.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
         #                                 attributes=PrimaryStructure_Attributes,
