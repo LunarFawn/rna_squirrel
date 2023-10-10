@@ -1,0 +1,63 @@
+
+
+
+NUT:
+  PrimaryStructure: PrimaryStructure_DB
+  Ensemble: Ensemble_DB
+
+CLASSES:
+  - name: PrimaryStructure
+  - name: Energy
+  - name: SecondaryStructure
+
+PrimaryStructure:
+  attributes:
+    - name: strand 
+      class: CHILD
+      type: str
+      default_value: Yes
+
+Energy:
+  attributes:
+    - name: kcal 
+      class: CHILD
+      type: float
+      default_value: 0
+
+SecondaryStructure:
+  attributes:
+    - name: dot_parens 
+      class: CHILD
+      type: str
+      default_value: ''
+    - name: free_energy 
+      class: PARENT
+      type: Energy
+      default_value: NONE
+    - name: stack_energy 
+      class: PARENT
+      type: Energy
+      default_value: NONE
+
+Ensemble:
+  attributes:
+    - name: min_energy
+      class: PARENT
+      type: Energy
+      default_value: NONE
+    - name: max_energy
+      class: PARENT
+      type: Energy
+      default_value: NONE
+    - name: energy_groups
+      class: CHILD
+      type: Dict[Energy, EnergyGroup]
+      default_value: {}
+    - name: mfe_structure
+      class: PARENT
+      type: PrimaryStructure
+      default_value: NONE
+    - name: mea_structure
+      class: PARENT
+      type: PrimaryStructure
+      default_value: NONE

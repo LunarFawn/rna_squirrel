@@ -1,6 +1,7 @@
 import pytest
 
 from rna_squirrel.config.rna_strand import Energy, PrimaryStructure, RNAStrand, Ensemble
+CONFIG_PATH = '/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
 
 @pytest.fixture
 def empty_default_strand():
