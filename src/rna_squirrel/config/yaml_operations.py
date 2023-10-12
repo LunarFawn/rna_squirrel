@@ -5,9 +5,11 @@ This is the file for yaml operations when reading config files
 from ruamel.yaml import YAML
 import sys
 from pathlib import Path
-from typing import Any, List
-from attrs import define, field
+from typing import Any, List, ClassVar
+#from attrs import define, field
 from enum import Enum
+from dataclasses import dataclass, field
+
 
 from rna_squirrel.config.dynamic_rna_strand import AtrClass
 
@@ -19,19 +21,24 @@ class ObjectStatus(Enum):
     PARENT = 'PARENT'
     CHILD = 'CHILD'
 
-@define
-class PrimaryObjectSpecs():
+@dataclass
+class ObjectSpec():
     """
     class for the fields to define
     the attributes of an object.
     Classes and attributes both have specs
     """
+    yaml_tage: ClassVar = '!Spec'
     name:str
-    object_heirarcy:AtrClass
-    object_type: str
-    default_value:Any 
+    status:str #ObjectStatus
+    object_type: str # Any
     
-@define
+    status_enum:ObjectStatus = field(init=False)
+     
+    def __post__init__(self) -> None:
+        self.status_enum = ObjectStatus(self.status)
+    
+@dataclass
 class ParentSpecs():
     pass
 
@@ -39,8 +46,10 @@ class YAMLOperations():
     
     def __init__(self) -> None:
         self.yaml = YAML()
+        self.yaml.register_class(ObjectSpec)
         self.yml_data: Any = None
         self.classes_list: List = []
+        self.nut_attributes: List[ObjectSpec] = []
         
     def open_yml_config(self, file_path:Path):
         """
@@ -67,7 +76,7 @@ class YAMLOperations():
         """
         
         #first get the list of classes
-        
+        classes = data['OBJECT_CLASSES']
         
     def get_object_list(self, data:Any):
         pass

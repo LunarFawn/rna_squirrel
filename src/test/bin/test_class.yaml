@@ -4,65 +4,66 @@
 #of them as objects and
 #further as parent/child
 OBJECT_CLASSES:
-  number: 4
+  #number: 4
   - name: PrimaryStructure
   - name: Energy
   - name: SecondaryStructure
   - name: Ensemble
 
 NUT:
-attributes:
-  number: 2
-  - name: primary_structure 
+  attributes:
+  #number: 2
+  - !ObjectSpec
+    name: primary_structure 
     status: CLASS
-    type: PrimaryStructure
-  - name: ensemble 
+    object_type: PrimaryStructure
+  - !ObjectSpec
+    name: ensemble 
     status: CLASS
-    type: Ensemble
+    object_type: Ensemble
 
 PrimaryStructure:
   attributes:
-    number: 1
+    #number: 1
     - name: strand
       status: VALUE 
-      type: str
+      object_type: str
 
 Energy:
   attributes:
-    number: 1
+    #number: 1
     - name: kcal 
       status: VALUE
-      type: float
-      default_value: 0
+      object_type: float
 
 SecondaryStructure:
   attributes:
-    number: 3
+    #number: 3
     - name: dot_parens 
       status: VALUE
-      type: str
+      object_type: str
     - name: free_energy 
       status: CLASS
-      type: Energy
+      object_type: Energy
     - name: stack_energy 
       status: CLASS
-      type: Energy
+      object_type: Energy
 
 Ensemble:
   attributes:
-    number: 5
+    #number: 5
     - name: min_energy
       status: CLASS
-      type: Energy
+      object_type: Energy
     - name: max_energy
       status: CLASS
-      type: Energy
+      object_type: Energy
     - name: energy_groups
       status: VALUE
-      type: Dict[Energy, EnergyGroup]
+      object_type: Dict[Energy, EnergyGroup]
     - name: mfe_structure
       status: CLASS
-      type: SecondaryStructure
+      object_type: SecondaryStructure
     - name: mea_structure
       status: CLASS
-      type: SecondaryStructure
+      object_type: SecondaryStructure
