@@ -17,7 +17,7 @@ NUT:
     - !ObjectSpec
       name: primary_structure 
       status: CLASS
-      object_type: PrimaryStructure
+      object_type: object_class:PrimaryStructure
     - !ObjectSpec
       name: ensemble 
       status: CLASS

@@ -5,7 +5,7 @@ This is the file for yaml operations when reading config files
 from ruamel.yaml import YAML
 import sys
 from pathlib import Path
-from typing import Any, List, ClassVar
+from typing import Any, List, ClassVar, Type
 #from attrs import define, field
 from enum import Enum
 from dataclasses import dataclass, field
@@ -18,11 +18,11 @@ class ObjectStatus(Enum):
     """
     The enum for type of object
     """
-    PARENT = 'PARENT'
-    CHILD = 'CHILD'
+    CLASS = 'CLASS'
+    VALUE = 'VALUE'
 
 @dataclass
-class ObjectSpec():
+class ObjectSpec:
     """
     class for the fields to define
     the attributes of an object.
@@ -30,12 +30,13 @@ class ObjectSpec():
     """
     yaml_tage: ClassVar = '!Spec'
     name:str
-    status:str #ObjectStatus
-    object_type: str # Any
     
-    status_enum:ObjectStatus = field(init=False)
-     
-    def __post__init__(self) -> None:
+    status:str #ObjectStatus
+    status_enum:ObjectStatus = field(init=False)   
+    
+    object_type: str # Any
+          
+    def __post_init__(self) -> None:
         self.status_enum = ObjectStatus(self.status)
     
 @dataclass
