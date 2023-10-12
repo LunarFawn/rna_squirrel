@@ -1,63 +1,68 @@
 
-
-
-NUT:
-  PrimaryStructure: PrimaryStructure_DB
-  Ensemble: Ensemble_DB
-
-CLASSES:
+#first declare all the classes
+#at this point it is best to just think
+#of them as objects and
+#further as parent/child
+OBJECT_CLASSES:
+  number: 4
   - name: PrimaryStructure
   - name: Energy
   - name: SecondaryStructure
+  - name: Ensemble
+
+NUT:
+attributes:
+  number: 2
+  - name: primary_structure 
+    status: CLASS
+    type: PrimaryStructure
+  - name: ensemble 
+    status: CLASS
+    type: Ensemble
 
 PrimaryStructure:
   attributes:
-    - name: strand 
-      class: CHILD
+    number: 1
+    - name: strand
+      status: VALUE 
       type: str
-      default_value: Yes
 
 Energy:
   attributes:
+    number: 1
     - name: kcal 
-      class: CHILD
+      status: VALUE
       type: float
       default_value: 0
 
 SecondaryStructure:
   attributes:
+    number: 3
     - name: dot_parens 
-      class: CHILD
+      status: VALUE
       type: str
-      default_value: ''
     - name: free_energy 
-      class: PARENT
+      status: CLASS
       type: Energy
-      default_value: NONE
     - name: stack_energy 
-      class: PARENT
+      status: CLASS
       type: Energy
-      default_value: NONE
 
 Ensemble:
   attributes:
+    number: 5
     - name: min_energy
-      class: PARENT
+      status: CLASS
       type: Energy
-      default_value: NONE
     - name: max_energy
-      class: PARENT
+      status: CLASS
       type: Energy
-      default_value: NONE
     - name: energy_groups
-      class: CHILD
+      status: VALUE
       type: Dict[Energy, EnergyGroup]
-      default_value: {}
     - name: mfe_structure
-      class: PARENT
-      type: PrimaryStructure
-      default_value: NONE
+      status: CLASS
+      type: SecondaryStructure
     - name: mea_structure
-      class: PARENT
-      type: PrimaryStructure
-      default_value: NONE
+      status: CLASS
+      type: SecondaryStructure
