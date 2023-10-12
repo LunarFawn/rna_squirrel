@@ -11,59 +11,78 @@ OBJECT_CLASSES:
   - name: Ensemble
 
 NUT:
+  attribute_count:
+    value: 2
   attributes:
-  #number: 2
-  - !ObjectSpec
-    name: primary_structure 
-    status: CLASS
-    object_type: PrimaryStructure
-  - !ObjectSpec
-    name: ensemble 
-    status: CLASS
-    object_type: Ensemble
+    - !ObjectSpec
+      name: primary_structure 
+      status: CLASS
+      object_type: PrimaryStructure
+    - !ObjectSpec
+      name: ensemble 
+      status: CLASS
+      object_type: Ensemble
 
 PrimaryStructure:
+  attribute_count:
+    value: 1
   attributes:
     #number: 1
-    - name: strand
+    - !ObjectSpec
+      name: strand
       status: VALUE 
       object_type: str
 
 Energy:
+  attribute_count:
+    value: 1
   attributes:
     #number: 1
-    - name: kcal 
+    - !ObjectSpec
+      name: kcal 
       status: VALUE
       object_type: float
 
 SecondaryStructure:
+  attribute_count:
+    value: 3
   attributes:
     #number: 3
-    - name: dot_parens 
+    - !ObjectSpec
+      name: dot_parens 
       status: VALUE
       object_type: str
-    - name: free_energy 
+    - !ObjectSpec
+      name: free_energy 
       status: CLASS
       object_type: Energy
-    - name: stack_energy 
+    - !ObjectSpec
+      name: stack_energy 
       status: CLASS
       object_type: Energy
 
 Ensemble:
+  attribute_count:
+    value: 5
   attributes:
     #number: 5
-    - name: min_energy
+    - !ObjectSpec
+      name: min_energy
       status: CLASS
       object_type: Energy
-    - name: max_energy
+    - !ObjectSpec
+      name: max_energy
       status: CLASS
       object_type: Energy
-    - name: energy_groups
+    - !ObjectSpec
+      name: energy_groups
       status: VALUE
       object_type: Dict[Energy, EnergyGroup]
-    - name: mfe_structure
+    - !ObjectSpec
+      name: mfe_structure
       status: CLASS
       object_type: SecondaryStructure
-    - name: mea_structure
+    - !ObjectSpec
+      name: mea_structure
       status: CLASS
       object_type: SecondaryStructure

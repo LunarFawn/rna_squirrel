@@ -7,4 +7,4 @@ WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\
 def test_open_yaml():
     yaml: YAMLOperations = YAMLOperations()
     data = yaml.open_yml_config(file_path=WINDOWS_PATH)
-    assert data == ''
+    assert data["OBJECT_CLASSES"][0]['name'] == 'PrimaryStructure'
