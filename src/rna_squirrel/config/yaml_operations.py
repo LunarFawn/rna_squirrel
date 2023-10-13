@@ -14,6 +14,45 @@ from dataclasses import dataclass, field
 from rna_squirrel.config.dynamic_rna_strand import AtrClass
 
 
+@dataclass
+class Integer:
+    name:str
+    python_type:Any = int
+    string_castable:bool = True
+
+@dataclass
+class FloatingPoint:
+    name:str
+    python_type:Any = float
+    string_castable:bool = True
+
+@dataclass
+class String:
+    name:str
+    python_type:Any = str
+    string_castable:bool = True
+
+@dataclass
+class Dictionary:
+    name:str
+    key: str
+    value: str
+
+@dataclass
+class CustomList:
+    name: str
+    list_type: str
+        
+
+@dataclass
+class ClassType:
+    name:str
+    class_type:str
+
+@dataclass
+class ClassDeclaration:
+    name:str
+
 class ObjectStatus(Enum):
     """
     The enum for type of object
@@ -28,7 +67,7 @@ class ObjectSpec:
     the attributes of an object.
     Classes and attributes both have specs
     """
-    yaml_tage: ClassVar = '!Spec'
+    #yaml_tage: ClassVar = '!Spec'
     name:str
     
     status:str #ObjectStatus
@@ -38,7 +77,18 @@ class ObjectSpec:
           
     def __post_init__(self) -> None:
         self.status_enum = ObjectStatus(self.status)
+
+@dataclass
+class ValueSpec:
+    """
+    Class for getting the configuration
+    of the attributes that are values 
+    so that the code can build the type
+    """
+    type_name: str
     
+
+
 @dataclass
 class ParentSpecs():
     pass
@@ -48,6 +98,9 @@ class YAMLOperations():
     def __init__(self) -> None:
         self.yaml = YAML()
         self.yaml.register_class(ObjectSpec)
+        self.yaml.register_class(String)
+        self.yaml.register_class(ClassAttribute)
+        self.yaml.register_class(ClassDeclaration)
         self.yml_data: Any = None
         self.classes_list: List = []
         self.nut_attributes: List[ObjectSpec] = []
