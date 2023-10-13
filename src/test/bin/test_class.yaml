@@ -3,20 +3,19 @@
 #at this point it is best to just think
 #of them as objects and
 #further as parent/child
-CLASSES:
-  #number: 4
-  - name: PrimaryStructure
-  - name: Energy
-  - name: SecondaryStructure
-  - name: Ensemble
+# CLASSES:
+#   #number: 4
+#   - name: PrimaryStructure
+#   - name: Energy
+#   - name: SecondaryStructure
+#   - name: Ensemble
 
-VALUES:
-  - name: str
-  - name: float
-  - name: Dict 
-    key: Energy
-    value: EnergyGroup
-
+# VALUES:
+#   - name: str
+#   - name: float
+#   - name: Dict 
+#     key: Energy
+#     value: EnergyGroup
 
 DECLARATIONS:
   - !ClassDeclaration
