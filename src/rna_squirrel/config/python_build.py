@@ -19,7 +19,19 @@ class PythonBuild():
         self
     
     def generate_config_header(self)->List[str]:
-        pass
+        """
+        Generates a list of strings that represent
+        the lines of the include header of the python
+        config file
+        """
+        header:List[str] = []
+        
+        header.append("from enum import Enum")
+        
+        
+        
+        return header
+    
 
 
 
