@@ -27,8 +27,15 @@ class PythonBuild():
         header:List[str] = []
         
         header.append("from enum import Enum")
-        
-        
+        header.append("from typing import TypeVar, Type, List")
+        header.append("from attrs import define, field")
+        header.append("from rna_squirrel.config.dynamic_rna_strand import (")
+        header.append("\tNut,")
+        header.append("\tValue,")
+        header.append("\tGenericAttribute,")
+        header.append("\tAtrClass,")
+        header.append("\tCustomAttribute")
+        header.append(")")
         
         return header
     
