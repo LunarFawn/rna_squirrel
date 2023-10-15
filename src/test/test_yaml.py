@@ -3,12 +3,14 @@ from pathlib import Path
 from rna_squirrel.config.yaml_operations import (    
     String,
     ClassDeclaration,
-    ClassType
+    ClassType,
+    Objects
 )
+
 
 import builtins
 
-from typing import List
+from typing import List, Dict
 
 @pytest.fixture
 def yaml_data():
@@ -62,3 +64,10 @@ def test_get_objects(yml_ops:YAMLOperations):
                                               class_name="SecondaryStructure")
     assert len(classes) == 2
     assert len(values) == 1
+
+def test_build_struct_dict(yml_ops:YAMLOperations):
+    data = yml_ops.open_yml_config(CONFIG_PATH)
+    declared_classes = yml_ops.get_declarations(yaml_data=data)
+    stuct_dict:Dict[str, Objects] = yml_ops.build_struct_dict(yaml_data=data,
+                                           declarations=declared_classes)
+    assert isinstance(stuct_dict["PrimaryStructure"].object_list[0] , String) == True 

@@ -5,7 +5,7 @@ This is the file for yaml operations when reading config files
 from ruamel.yaml import YAML
 import sys
 from pathlib import Path
-from typing import Any, List, ClassVar, Type
+from typing import Any, List, ClassVar, Type, Dict
 #from attrs import define, field
 from enum import Enum
 from dataclasses import dataclass, field
@@ -83,7 +83,7 @@ class Objects:
     Classes and attributes both have specs
     """
     #yaml_tage: ClassVar = '!Spec'
-    #name:str
+    name:str
     
     #status:str #ObjectStatus
     #status_enum:ObjectStatus = field(init=False)   
@@ -91,6 +91,11 @@ class Objects:
           
     #def __post_init__(self) -> None:
     #    self.status_enum = ObjectStatus(self.status)
+
+@dataclass
+class NUT():
+    name:str
+    objects: Objects
 
 @dataclass
 class ValueSpec:
@@ -115,6 +120,7 @@ class YAMLOperations():
         self.yaml.register_class(String)
         self.yaml.register_class(ClassType)
         self.yaml.register_class(ClassDeclaration)
+        self.yaml.register_class(NUT)
         self.yml_data: Any = None
         
         #list of classes that is the master list of 
@@ -146,13 +152,51 @@ class YAMLOperations():
             
         #now get NUT objects and build out from there
 
-    def build_class_queue(self):
+    def build_struct_dict(self, yaml_data:Any, declarations:List[ClassDeclaration])->Dict[str, Objects]:
+        """
+        Builds out the dictionary that has all the structures
+        and their info
+        """
+        #now that we have list lets populate the global stuff
+        #we care about
+        struct_dict:Dict[str, Objects] = {}
+        
+        #first do the nut
+        struct_dict['NUT'] = yaml_data["NUT"].objects
+        for declaration in declarations:
+            struct_name:str = declaration.name
+            struct_dict[struct_name] = yaml_data[struct_name]
+            #self.classes_list.append(declaration.name)
+        return struct_dict
+        
+    def build_struct_queue(self, yaml_data:Any,declarations:List[ClassDeclaration], struct_dict:Dict[str, Objects]):
         """
         Build the queue for all the classes
         so that they get built in the API in the 
         right order
+        
+        Walk the classes in the yaml and then end up with a
+        prioritizedqueue of all the classes to make in the api
         """
+        struct_order_queue:PriorityQueue = PriorityQueue()
+        
+        #start with nut and then go from there only adding structures
+        level_tracker:int = 1
+        
+        nut_list:List[str] = []
+        
+        nut_ojects = struct_dict['NUT'].object_list
+        for nut_object in nut_ojects:
+            if nut_object.status == ObjectStatus.CLASS:
+                queue_item = (level_tracker*-1, nut_object.class_type)
+                struct_order_queue.put(queue_item) 
+                nut_list.append(nut_object.class_type)
+        
+        for item in nut_list:
+    
+    def walk_objects(self,yaml_data:Any, object_struct:str):
         pass
+        
     
     def build_class(self, yaml_data:Any):
         """
@@ -177,7 +221,7 @@ class YAMLOperations():
         return data
      
     
-    def get_declarations(self, yaml_data:Any):
+    def get_declarations(self, yaml_data:Any)->List[ClassDeclaration]:
         """
         strep through and parse the declarations
         to build out the list of classes

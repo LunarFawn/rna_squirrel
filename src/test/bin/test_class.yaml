@@ -26,6 +26,8 @@ DECLARATIONS:
     name: SecondaryStructure
   - !ClassDeclaration
     name: Ensemble
+
+  
   
   # - !String
   #   name: strand
@@ -35,22 +37,26 @@ DECLARATIONS:
   #   name: dot_parens
 
 NUT:
-  !Objects
-    object_list:
-      - !ClassType
-        name: primary_structure
-        class_type: PrimaryStructure
-      - !ClassType
-        name: ensemble
-        class_type: Ensemble
+  !NUT
+    name: rna_strand
+    objects:
+      !Objects
+        object_list:
+          - !ClassType
+            name: primary_structure
+            class_type: PrimaryStructure
+          - !ClassType
+            name: ensemble
+            class_type: Ensemble
   # object_count:
   #   count: 2
 
 PrimaryStructure:
   !Objects
-      object_list:
-        - !String
-          name: strand
+    name: 
+    object_list:
+      - !String
+        name: strand
   #object_count:
   #  count: 1
  
