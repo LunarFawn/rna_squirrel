@@ -41,10 +41,10 @@ def test_load_object_spec(yaml_data):
     assert  isinstance(test_object2, ClassType) == True
     
 def test_load_object_type(yaml_data):
-    test_object:String =  yaml_data["PrimaryStructure"]["objects"][0]
+    test_object:String =  yaml_data["PrimaryStructure"].object_list[0]
     #test_type = getattr(builtins, test_object.python_type)  
-    
-    assert isinstance(test_object.python_type, type(str)) == True
+    assert test_object.python_type == str
+    #assert isinstance(test_object.python_type, str) == True
 
 def test_declarations(yaml_data):
     test_data: ClassDeclaration = yaml_data["DECLARATIONS"][0]
@@ -104,5 +104,5 @@ def test_build_struct_queue(yml_ops:YAMLOperations):
     struct_dict:Dict[str, Objects] = yml_ops.build_struct_dict(yaml_data=data,
                                                                declarations=declared_classes)
     queue:PriorityQueue = yml_ops.build_struct_queue(yaml_data=data,
-                                       struct_dict=struct_dict)
+                                                    struct_dict=struct_dict)
     assert queue.queue == [(-2, 'Energy'), (-2, 'SecondaryStructure'), (-1, 'Ensemble'), (-1, 'PrimaryStructure')]

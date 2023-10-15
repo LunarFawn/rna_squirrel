@@ -44,18 +44,24 @@ class FloatingPoint:
     status:ObjectStatus = ObjectStatus.VALUE
 
 @dataclass
-class String():
+class String:
     name:str
     python_type:Any = str
     string_castable:bool = True
     status:ObjectStatus = ObjectStatus.VALUE
 
+
+        
 @dataclass
 class Dictionary:
     name:str
-    key: str
-    value: str
+    key: Any
+    value: Any
+    python_type:Any = field(init=False)
     status:ObjectStatus = ObjectStatus.VALUE
+
+    def __post_init__(self) -> None:
+        self.python_type = Dict[]
 
 @dataclass
 class ClassType:
@@ -64,11 +70,17 @@ class ClassType:
     status:ObjectStatus = ObjectStatus.CLASS
 
 @dataclass
+class ValueType:
+    name:str
+    python_type:str 
+    status:ObjectStatus = ObjectStatus.VALUE
+    
+@dataclass
 class CustomList:
     name: str
     list_type: str
     status:ObjectStatus = ObjectStatus.VALUE
-
+    
 @dataclass
 class ClassDeclaration:
     name:str
@@ -150,10 +162,15 @@ class YAMLOperations():
         
         #now that we have list lets populate the global stuff
         #we care about
-        for declaration in declared_classes:
-            self.classes_list.append(declaration.name)
+        # for declaration in declared_classes:
+        #     self.classes_list.append(declaration.name)
             
         #now get NUT objects and build out from there
+        struct_dict:Dict[str, Objects] = self.build_struct_dict(yaml_data=data,
+                                                               declarations=declared_classes)
+        queue:PriorityQueue = self.build_struct_queue(yaml_data=data,
+                                                    struct_dict=struct_dict)
+        
 
     def build_struct_dict(self, yaml_data:Any, declarations:List[ClassDeclaration])->Dict[str, Objects]:
         """

@@ -8,7 +8,10 @@ import sys
 import os
 from typing import List
 from queue import PriorityQueue
-
+from rna_squirrel.config.yaml_operations import (    
+    Objects,
+    ClassType
+)
 
 class PythonBuild():
     """
@@ -78,5 +81,27 @@ class PythonBuild():
                          
         #now build out the objects and the attributes
 
-    def generate_config_baseclass_declaration(self):
-        pass    
+    def generate_config_baseclass_structure(self, class_name:str, struct_object:Objects):
+        """
+        Dynamically build the classes for the python API
+        """
+        struct_lines:List[str] = []
+        
+        #first make the header
+        struct_lines.append(f'class {class_name}(CustomAttribute):')
+        
+        struct_lines.append('def __init__(self, parent: Any, current:Any, save_value:bool) -> None:')
+        struct_lines.append('\t\tself.parent = parent')
+        struct_lines.append('\t\tself.current = current')
+        struct_lines.append('\t\tself.do_save = save_value')
+        struct_lines.append('\n')
+        
+        #now build the python property getter and settes
+        for attribute in struct_object.object_list:
+            if isinstance(attribute, ClassType) == False:
+                #its a value
+                atr_name:str = attribute.name
+                return_type = None
+            else:
+                #its a structure or class whatever im calling it
+                pass

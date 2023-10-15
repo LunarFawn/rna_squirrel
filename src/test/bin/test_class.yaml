@@ -92,8 +92,14 @@ Ensemble:
         class_type: Energy
       - !Dictionary
         name: energy_groups
-        key: Energy
-        value: EnergyGroup
+        key: 
+            - !ClassType
+            name: key
+            class_type: Energy
+        value: 
+            - !ClassType
+            name: value
+            class_type: EnergyGroup
       - !ClassType
         name: mfe_structure
         class_type: SecondaryStructure
