@@ -53,7 +53,6 @@ NUT:
 
 PrimaryStructure:
   !Objects
-    name: 
     object_list:
       - !String
         name: strand
@@ -61,43 +60,45 @@ PrimaryStructure:
   #  count: 1
  
 Energy:
-  objects:
+  !Objects
+    object_list: 
     - !FloatingPoint
       name: kcal
-  object_count:
-    count: 1
+  # object_count:
+  #   count: 1
 
 SecondaryStructure:
-  objects:
-    - !String
-      name: dot_parens
-    - !ClassType
-      name: free_energy
-      class_type: Energy
-    - !ClassType
-      name: stack_energy
-      class_type: Energy
-  object_count:
-    count: 3
+  !Objects
+    object_list: 
+      - !String
+        name: dot_parens
+      - !ClassType
+        name: free_energy
+        class_type: Energy
+      - !ClassType
+        name: stack_energy
+        class_type: Energy
+  # object_count:
+  #   count: 3
 
 Ensemble:
-  objects:
-    #number: 5
-    - !ClassType
-      name: min_energy
-      class_type: Energy
-    - !ClassType
-      name: max_energy
-      class_type: Energy
-    - !Dictionary
-      name: energy_groups
-      key: Energy
-      value: EnergyGroup
-    - !ClassType
-      name: mfe_structure
-      class_type: SecondaryStructure
-    - !ClassType
-      name: mea_structure
-      class_type: SecondaryStructure
-  object_count:
-    count: 5
+  !Objects
+    object_list:
+      - !ClassType
+        name: min_energy
+        class_type: Energy
+      - !ClassType
+        name: max_energy
+        class_type: Energy
+      - !Dictionary
+        name: energy_groups
+        key: Energy
+        value: EnergyGroup
+      - !ClassType
+        name: mfe_structure
+        class_type: SecondaryStructure
+      - !ClassType
+        name: mea_structure
+        class_type: SecondaryStructure
+  # object_count:
+  #   count: 5

@@ -76,14 +76,13 @@ class ClassDeclaration:
 
 
 @dataclass
-class Objects:
+class Objects():
     """
     class for the fields to define
     the attributes of an object.
     Classes and attributes both have specs
     """
     #yaml_tage: ClassVar = '!Spec'
-    name:str
     
     #status:str #ObjectStatus
     #status_enum:ObjectStatus = field(init=False)   
@@ -106,7 +105,11 @@ class ValueSpec:
     """
     type_name: str
     
-
+@dataclass
+class WalkObjectReturn():
+    structure_found_list:List[str]
+    struct_order_queue:PriorityQueue
+    level:int
 
 @dataclass
 class ParentSpecs():
@@ -169,7 +172,7 @@ class YAMLOperations():
             #self.classes_list.append(declaration.name)
         return struct_dict
         
-    def build_struct_queue(self, yaml_data:Any,declarations:List[ClassDeclaration], struct_dict:Dict[str, Objects]):
+    def build_struct_queue(self, yaml_data:Any, struct_dict:Dict[str, Objects]):
         """
         Build the queue for all the classes
         so that they get built in the API in the 
@@ -191,54 +194,65 @@ class YAMLOperations():
                 queue_item = (level_tracker*-1, nut_object.class_type)
                 struct_order_queue.put(queue_item) 
                 nut_list.append(nut_object.class_type)
-        
-        hold_tracker:int = level_tracker + 1
+        level_tracker += 1
+        hold_tracker:int = level_tracker
         
         
         
         stop = False
         
-        while stop is False:
-            new_object_list:List[str] = self.walk_objects_list()
+        walk_object:WalkObjectReturn = self.walk_objects_list(yaml_data=yaml_data,
+                                                              object_structs=nut_list,
+                                                              struct_order_queue=struct_order_queue,
+                                                              level=level_tracker)
+        nut_list = nut_list + walk_object.structure_found_list
         
-        for item in nut_list:
+        while walk_object.structure_found_list != []:
             #start over the tracker at the same level
             #each time through
-            level_tracker = hold_tracker
-            stop:bool = False
-            while stop is False:                
-                object_list:List[Any] = self.walk_objects(yaml_data=yaml_data,
-                                                object_struct=item)            
-                has_class:bool =  any(isinstance(x, ClassType) for x in object_list)
-                if has_class is False:
-                    stop = True
-                    break    
-                else:
-                    pass
-                               
-    def walk_objects_list(self,yaml_data:Any, object_structs:List[str],struct_order_queue:PriorityQueue, level:int):
-        is_class:bool = False
+            level_tracker += 1
+            walk_object = self.walk_objects_list(yaml_data=yaml_data,
+                                                object_structs=walk_object.structure_found_list,
+                                                struct_order_queue=struct_order_queue,
+                                                level=level_tracker,
+                                                previous_stucts=nut_list)
+            nut_list = nut_list + walk_object.structure_found_list
         
-        object_list:List[str] = []
+        #now the struct_order_queue should be built and be a priority queue
+        #now build all the API classes in order of pop
+        return struct_order_queue  
+    
+    def walk_objects_list(self, yaml_data:Any, object_structs:List[str],struct_order_queue:PriorityQueue, level:int, previous_stucts:List[str]=[]):
+        """
+        Assumed that object_structs is non-empty
+        """
+        
+        structure_found_list:List[str] = []
         
         for item in object_structs:
-            next_object_structs:List[Any] = self.walk_objects(yaml_data=yaml_data,
-                                                object_struct=item)            
+            current_item = yaml_data[item]
+            next_object_structs:List[Any] = yaml_data[item].object_list
+            # next_object_structs:List[Any] = self.walk_objects(yaml_data=yaml_data,
+            #                                     object_struct=item)            
             for next_item in next_object_structs:
                 if isinstance(next_item, ClassType) is True:
-                    object_list.append(next_item.name)
-                    value = (level*-1, next_item.class_type)
-                    struct_order_queue.put(value)
+                    if next_item.class_type not in structure_found_list and next_item.class_type not in previous_stucts:
+                        structure_found_list.append(next_item.class_type)
+                        value = (level*-1, next_item.class_type)
+                        struct_order_queue.put(value)
                     
-        return object_list, struct_order_queue, level+1
+        walk_object:WalkObjectReturn = WalkObjectReturn(structure_found_list=structure_found_list,
+                                                        struct_order_queue=struct_order_queue,
+                                                        level=level)    
+        return walk_object   
     
-    def walk_objects(self,yaml_data:Any, object_struct:str):
-        is_class:bool = False
+    # def walk_objects(self,yaml_data:Any, object_struct:str):
+    #     is_class:bool = False
         
-        current_struct:Any = yaml_data[object_struct]
-        object_list:List[Any] = current_struct.object_list
+    #     current_struct:Any = yaml_data[object_struct]
+    #     object_list:List[Any] = current_struct.object_list
         
-        return object_list
+    #     return object_list
         
     
     def build_class(self, yaml_data:Any):

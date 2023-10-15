@@ -4,8 +4,10 @@ from rna_squirrel.config.yaml_operations import (
     String,
     ClassDeclaration,
     ClassType,
-    Objects
+    Objects,
+    WalkObjectReturn
 )
+from queue import PriorityQueue
 
 
 import builtins
@@ -22,8 +24,10 @@ def yml_ops():
    return  YAMLOperations()
 
 from rna_squirrel.config.yaml_operations import YAMLOperations
-CONFIG_PATH = Path('/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml')
+
+LINUX_PATH = Path('/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml')
 WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\test_class.yaml")
+CONFIG_PATH = LINUX_PATH
 
 def test_open_yaml(yaml_data):
     # yaml: YAMLOperations = YAMLOperations()
@@ -32,7 +36,7 @@ def test_open_yaml(yaml_data):
     
 def test_load_object_spec(yaml_data):
     test_object =  yaml_data["PrimaryStructure"].object_list[0]
-    test_object2 =  yaml_data["NUT"].object_list[0]
+    test_object2 =  yaml_data["NUT"].objects.object_list[0]
     assert  isinstance(test_object, String) == True
     assert  isinstance(test_object2, ClassType) == True
     
@@ -65,9 +69,40 @@ def test_get_objects(yml_ops:YAMLOperations):
     assert len(classes) == 2
     assert len(values) == 1
 
-def test_build_struct_dict(yml_ops:YAMLOperations):
+# def test_build_struct_dict(yml_ops:YAMLOperations):
+#     data = yml_ops.open_yml_config(CONFIG_PATH)
+#     declared_classes = yml_ops.get_declarations(yaml_data=data)
+#     stuct_dict:Dict[str, Objects] = yml_ops.build_struct_dict(yaml_data=data,
+#                                            declarations=declared_classes)
+#     assert isinstance(stuct_dict["PrimaryStructure"].object_list[0] , String) == True 
+    
+def test_walk_objects_list(yml_ops:YAMLOperations):
     data = yml_ops.open_yml_config(CONFIG_PATH)
     declared_classes = yml_ops.get_declarations(yaml_data=data)
-    stuct_dict:Dict[str, Objects] = yml_ops.build_struct_dict(yaml_data=data,
-                                           declarations=declared_classes)
-    assert isinstance(stuct_dict["PrimaryStructure"].object_list[0] , String) == True 
+    struct_order_queue:PriorityQueue = PriorityQueue()
+    
+    declare_list:List[str] = []
+    for item in declared_classes:
+        declare_list.append(item.name)
+        
+    walk_object:WalkObjectReturn = yml_ops.walk_objects_list(yaml_data=data,
+                                                object_structs=declare_list,
+                                                struct_order_queue=struct_order_queue,
+                                                level=1)
+    assert walk_object.structure_found_list == ['Energy', 'SecondaryStructure']
+
+def test_build_structure_dict(yml_ops:YAMLOperations):
+    data = yml_ops.open_yml_config(CONFIG_PATH)
+    declared_classes = yml_ops.get_declarations(yaml_data=data)
+    struct_dict:Dict[str, Objects] = yml_ops.build_struct_dict(yaml_data=data,
+                                                               declarations=declared_classes)
+    assert struct_dict['NUT'].object_list[0].name == 'primary_structure'
+
+def test_build_struct_queue(yml_ops:YAMLOperations):
+    data = yml_ops.open_yml_config(CONFIG_PATH)
+    declared_classes = yml_ops.get_declarations(yaml_data=data)
+    struct_dict:Dict[str, Objects] = yml_ops.build_struct_dict(yaml_data=data,
+                                                               declarations=declared_classes)
+    queue:PriorityQueue = yml_ops.build_struct_queue(yaml_data=data,
+                                       struct_dict=struct_dict)
+    assert queue.queue == [(-2, 'Energy'), (-2, 'SecondaryStructure'), (-1, 'Ensemble'), (-1, 'PrimaryStructure')]
