@@ -41,6 +41,7 @@ NUT:
     name: rna_strand
     objects:
       !Objects
+        name: NUT
         object_list:
           - !ClassType
             name: primary_structure
@@ -53,6 +54,7 @@ NUT:
 
 PrimaryStructure:
   !Objects
+    name: PrimaryStructure
     object_list:
       - !String
         name: strand
@@ -61,6 +63,7 @@ PrimaryStructure:
  
 Energy:
   !Objects
+    name: Energy
     object_list: 
     - !FloatingPoint
       name: kcal
@@ -69,6 +72,7 @@ Energy:
 
 SecondaryStructure:
   !Objects
+    name: SecondaryStructure
     object_list: 
       - !String
         name: dot_parens
@@ -83,6 +87,7 @@ SecondaryStructure:
 
 Ensemble:
   !Objects
+    name: Ensemble
     object_list:
       - !ClassType
         name: min_energy
@@ -93,11 +98,11 @@ Ensemble:
       - !Dictionary
         name: energy_groups
         key: 
-            - !ClassType
+          - !ClassType
             name: key
             class_type: Energy
         value: 
-            - !ClassType
+          - !ClassType
             name: value
             class_type: EnergyGroup
       - !ClassType

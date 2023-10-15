@@ -8,8 +8,6 @@ from rna_squirrel.config.yaml_operations import (
     WalkObjectReturn
 )
 from queue import PriorityQueue
-
-
 import builtins
 
 from typing import List, Dict
@@ -43,7 +41,9 @@ def test_load_object_spec(yaml_data):
 def test_load_object_type(yaml_data):
     test_object:String =  yaml_data["PrimaryStructure"].object_list[0]
     #test_type = getattr(builtins, test_object.python_type)  
-    assert test_object.python_type == str
+    assert test_object.python_type == "int"
+    attribute = getattr(builtins, test_object.python_type)
+    assert attribute == int
     #assert isinstance(test_object.python_type, str) == True
 
 def test_declarations(yaml_data):

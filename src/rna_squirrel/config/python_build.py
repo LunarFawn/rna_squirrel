@@ -6,7 +6,7 @@ after yaml operations reads the files
 
 import sys
 import os
-from typing import List
+from typing import List, Any
 from queue import PriorityQueue
 from rna_squirrel.config.yaml_operations import (    
     Objects,
@@ -80,7 +80,13 @@ class PythonBuild():
         class_lines.append('\n')             
                          
         #now build out the objects and the attributes
-
+    
+    # def generate_class_lines(self):
+    #     pass
+    
+    # def generate_value_lines(self):
+    #     pass
+    
     def generate_config_baseclass_structure(self, class_name:str, struct_object:Objects):
         """
         Dynamically build the classes for the python API
@@ -90,18 +96,47 @@ class PythonBuild():
         #first make the header
         struct_lines.append(f'class {class_name}(CustomAttribute):')
         
-        struct_lines.append('def __init__(self, parent: Any, current:Any, save_value:bool) -> None:')
+        struct_lines.append('\tdef __init__(self, parent: Any, current:Any, save_value:bool) -> None:')
         struct_lines.append('\t\tself.parent = parent')
         struct_lines.append('\t\tself.current = current')
         struct_lines.append('\t\tself.do_save = save_value')
         struct_lines.append('\n')
         
         #now build the python property getter and settes
+        #these are the same for value and class with the name 
+        #being the only difference
         for attribute in struct_object.object_list:
-            if isinstance(attribute, ClassType) == False:
-                #its a value
-                atr_name:str = attribute.name
-                return_type = None
-            else:
+            atr_name:str = attribute.name
+            atr_db_name:str = attribute.db_name
+            struct_db_name:str = struct_object.db_name
+            
+            return_type:Any = None
+            if isinstance(attribute, ClassType) is True:
                 #its a structure or class whatever im calling it
-                pass
+                #atr_name = attribute.name
+                return_type = attribute.class_type
+                #db_name = attribute.db_name
+            else:
+                #its a value
+                #atr_name = attribute.name
+                return_type:Any = attribute.python_type
+                #db_name = attribute.db_name
+            
+            #firest teh getter    
+            struct_lines.append('\t@property')
+            struct_lines.append(f'\tdef {atr_name}(self)->{return_type}:')
+            struct_lines.append(f'\t\treturn self.parent.{struct_db_name}.{atr_db_name}')
+            
+            #now the setter
+            struct_lines.append(f'\t@{atr_db_name}.setter')
+            struct_lines.append(f'\tdef {atr_name}(self, value{return_type}):')
+            struct_lines.append(f'\t\tself.parent.{struct_db_name}.{atr_db_name} = value')            
+            #now an empty line between attributes
+            struct_lines.append('\n')
+            
+        #now an empty line at the end of the structure to ensure it is seperated form 
+        #next structure
+        struct_lines.append('\n')    
+        
+        return struct_lines
+            

@@ -32,24 +32,38 @@ class VALUE:
 @dataclass
 class Integer:
     name:str
-    python_type:Any = int
-    string_castable:bool = True
-    status:ObjectStatus = ObjectStatus.VALUE
-
+    python_type:Any = field(init=False)
+    status:ObjectStatus = field(init=False)
+    db_name:str = field(init=False)
+    
+    def __post_init__(self) -> None:
+        self.python_type = 'int'
+        self.status = ObjectStatus.VALUE
+        self.db_name = f'{self.name}_db'
+        
 @dataclass
 class FloatingPoint:
     name:str
-    python_type:Any = float
-    string_castable:bool = True
-    status:ObjectStatus = ObjectStatus.VALUE
-
+    python_type:Any = field(init=False)
+    status:ObjectStatus = field(init=False)
+    db_name:str = field(init=False)
+    
+    def __post_init__(self) -> None:
+        self.python_type = 'float'
+        self.status = ObjectStatus.VALUE
+        self.db_name = f'{self.name}_db'
+        
 @dataclass
 class String:
     name:str
-    python_type:Any = str
-    string_castable:bool = True
-    status:ObjectStatus = ObjectStatus.VALUE
-
+    python_type:Any = field(init=False)
+    status:ObjectStatus = field(init=False)
+    db_name:str = field(init=False)
+    
+    def __post_init__(self) -> None:
+        self.python_type = 'str'
+        self.status = ObjectStatus.VALUE
+        self.db_name = f'{self.name}_db'
 
         
 @dataclass
@@ -58,28 +72,46 @@ class Dictionary:
     key: Any
     value: Any
     python_type:Any = field(init=False)
-    status:ObjectStatus = ObjectStatus.VALUE
+    status:ObjectStatus = field(init=False)
+    db_name:str = field(init=False)
 
     def __post_init__(self) -> None:
-        self.python_type = Dict[]
-
+        self.python_type = "Dict"
+        self.status = ObjectStatus.VALUE
+        self.db_name = f'{self.name}_db'
+        
 @dataclass
 class ClassType:
     name:str
     class_type:str
-    status:ObjectStatus = ObjectStatus.CLASS
+    status:ObjectStatus = field(init=False)
+    db_name:str = field(init=False)
+    
+    def __post_init__(self) -> None:
+        self.status = ObjectStatus.CLASS
+        self.db_name = f'{self.name}_db'
 
 @dataclass
 class ValueType:
     name:str
     python_type:str 
-    status:ObjectStatus = ObjectStatus.VALUE
+    status:ObjectStatus = field(init=False)
+    db_name:str = field(init=False)
+    
+    def __post_init__(self) -> None:
+        self.status = ObjectStatus.VALUE
+        self.db_name = f'{self.name}_db'
     
 @dataclass
 class CustomList:
     name: str
     list_type: str
-    status:ObjectStatus = ObjectStatus.VALUE
+    status:ObjectStatus = field(init=False)
+    db_name:str = field(init=False)
+    
+    def __post_init__(self) -> None:
+        self.status = ObjectStatus.CLASS
+        self.db_name = f'{self.name}_db'
     
 @dataclass
 class ClassDeclaration:
@@ -98,10 +130,12 @@ class Objects():
     
     #status:str #ObjectStatus
     #status_enum:ObjectStatus = field(init=False)   
+    name: str
     object_list: Any 
-          
-    #def __post_init__(self) -> None:
-    #    self.status_enum = ObjectStatus(self.status)
+    db_name:str = field(init=False)
+      
+    def __post_init__(self) -> None:
+        self.db_name = f'{self.name}_db'
 
 @dataclass
 class NUT():
