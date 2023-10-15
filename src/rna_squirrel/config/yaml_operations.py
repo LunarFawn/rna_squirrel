@@ -9,49 +9,10 @@ from typing import Any, List, ClassVar, Type
 #from attrs import define, field
 from enum import Enum
 from dataclasses import dataclass, field
+from queue import PriorityQueue
 
 
 from rna_squirrel.config.dynamic_rna_strand import AtrClass
-
-
-@dataclass
-class Integer:
-    name:str
-    python_type:Any = int
-    string_castable:bool = True
-
-@dataclass
-class FloatingPoint:
-    name:str
-    python_type:Any = float
-    string_castable:bool = True
-
-@dataclass
-class String:
-    name:str
-    python_type:Any = str
-    string_castable:bool = True
-
-@dataclass
-class Dictionary:
-    name:str
-    key: str
-    value: str
-
-@dataclass
-class CustomList:
-    name: str
-    list_type: str
-        
-
-@dataclass
-class ClassType:
-    name:str
-    class_type:str
-
-@dataclass
-class ClassDeclaration:
-    name:str
 
 class ObjectStatus(Enum):
     """
@@ -61,22 +22,75 @@ class ObjectStatus(Enum):
     VALUE = 'VALUE'
 
 @dataclass
-class ObjectSpec:
+class CLASS:
+    status:ObjectStatus = ObjectStatus.CLASS
+
+@dataclass
+class VALUE:
+    status:ObjectStatus = ObjectStatus.VALUE
+
+@dataclass
+class Integer:
+    name:str
+    python_type:Any = int
+    string_castable:bool = True
+    status:ObjectStatus = ObjectStatus.VALUE
+
+@dataclass
+class FloatingPoint:
+    name:str
+    python_type:Any = float
+    string_castable:bool = True
+    status:ObjectStatus = ObjectStatus.VALUE
+
+@dataclass
+class String():
+    name:str
+    python_type:Any = str
+    string_castable:bool = True
+    status:ObjectStatus = ObjectStatus.VALUE
+
+@dataclass
+class Dictionary:
+    name:str
+    key: str
+    value: str
+    status:ObjectStatus = ObjectStatus.VALUE
+
+@dataclass
+class ClassType:
+    name:str
+    class_type:str
+    status:ObjectStatus = ObjectStatus.CLASS
+
+@dataclass
+class CustomList:
+    name: str
+    list_type: str
+    status:ObjectStatus = ObjectStatus.VALUE
+
+@dataclass
+class ClassDeclaration:
+    name:str
+
+
+
+@dataclass
+class Objects:
     """
     class for the fields to define
     the attributes of an object.
     Classes and attributes both have specs
     """
     #yaml_tage: ClassVar = '!Spec'
-    name:str
+    #name:str
     
-    status:str #ObjectStatus
-    status_enum:ObjectStatus = field(init=False)   
-    
-    object_type: str # Any
+    #status:str #ObjectStatus
+    #status_enum:ObjectStatus = field(init=False)   
+    object_list: Any 
           
-    def __post_init__(self) -> None:
-        self.status_enum = ObjectStatus(self.status)
+    #def __post_init__(self) -> None:
+    #    self.status_enum = ObjectStatus(self.status)
 
 @dataclass
 class ValueSpec:
@@ -97,7 +111,7 @@ class YAMLOperations():
     
     def __init__(self) -> None:
         self.yaml = YAML()
-        self.yaml.register_class(ObjectSpec)
+        self.yaml.register_class(Objects)
         self.yaml.register_class(String)
         self.yaml.register_class(ClassType)
         self.yaml.register_class(ClassDeclaration)
@@ -108,7 +122,7 @@ class YAMLOperations():
         #builder will fail if class not found here
         self.classes_list: List[str] = []
         
-        self.nut_attributes: List[ObjectSpec] = []
+        self.nut_attributes: List[Objects] = []
         
 
     def run_python_build(self, yaml_filepath:Path):
@@ -132,11 +146,19 @@ class YAMLOperations():
             
         #now get NUT objects and build out from there
 
+    def build_class_queue(self):
+        """
+        Build the queue for all the classes
+        so that they get built in the API in the 
+        right order
+        """
+        pass
+    
     def build_class(self, yaml_data:Any):
         """
         build class entry to append to the API as well
         """
-
+        pass
         
     def open_yml_config(self, file_path:Path):
         """

@@ -1,11 +1,11 @@
 import pytest
 from pathlib import Path
-from rna_squirrel.config.yaml_operations import (
-    ObjectSpec, 
-    ObjectStatus,
+from rna_squirrel.config.yaml_operations import (    
     String,
-    ClassDeclaration
+    ClassDeclaration,
+    ClassType
 )
+
 import builtins
 
 from typing import List
@@ -13,7 +13,7 @@ from typing import List
 @pytest.fixture
 def yaml_data():
     yaml: YAMLOperations = YAMLOperations()
-    return yaml.open_yml_config(file_path=WINDOWS_PATH)
+    return yaml.open_yml_config(file_path=CONFIG_PATH)
 
 @pytest.fixture
 def yml_ops():
@@ -29,9 +29,11 @@ def test_open_yaml(yaml_data):
     assert yaml_data["CUSTOM_TYPES"][0]['name'] == 'PrimaryStructure'
     
 def test_load_object_spec(yaml_data):
-    test_object =  yaml_data["PrimaryStructure"]["objects"][0]
+    test_object =  yaml_data["PrimaryStructure"].object_list[0]
+    test_object2 =  yaml_data["NUT"].object_list[0]
     assert  isinstance(test_object, String) == True
-
+    assert  isinstance(test_object2, ClassType) == True
+    
 def test_load_object_type(yaml_data):
     test_object:String =  yaml_data["PrimaryStructure"]["objects"][0]
     #test_type = getattr(builtins, test_object.python_type)  
@@ -44,7 +46,7 @@ def test_declarations(yaml_data):
     assert test_data.name == "PrimaryStructure"
     
 def test_get_class_declaration(yml_ops:YAMLOperations):
-    data = yml_ops.open_yml_config(WINDOWS_PATH)
+    data = yml_ops.open_yml_config(CONFIG_PATH)
     class_list:List[ClassDeclaration] = yml_ops.get_declarations(yaml_data=data)
     assert isinstance(class_list, List) ==  True
     assert len(class_list) == 4
@@ -55,7 +57,7 @@ def test_get_class_declaration(yml_ops:YAMLOperations):
     assert class_list[3].name == "Ensemble"
 
 def test_get_objects(yml_ops:YAMLOperations):
-    data = yml_ops.open_yml_config(WINDOWS_PATH)
+    data = yml_ops.open_yml_config(CONFIG_PATH)
     classes, values = yml_ops.get_object_list(yaml_data=data,
                                               class_name="SecondaryStructure")
     assert len(classes) == 2
