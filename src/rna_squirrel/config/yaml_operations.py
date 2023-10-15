@@ -192,10 +192,53 @@ class YAMLOperations():
                 struct_order_queue.put(queue_item) 
                 nut_list.append(nut_object.class_type)
         
+        hold_tracker:int = level_tracker + 1
+        
+        
+        
+        stop = False
+        
+        while stop is False:
+            new_object_list:List[str] = self.walk_objects_list()
+        
         for item in nut_list:
+            #start over the tracker at the same level
+            #each time through
+            level_tracker = hold_tracker
+            stop:bool = False
+            while stop is False:                
+                object_list:List[Any] = self.walk_objects(yaml_data=yaml_data,
+                                                object_struct=item)            
+                has_class:bool =  any(isinstance(x, ClassType) for x in object_list)
+                if has_class is False:
+                    stop = True
+                    break    
+                else:
+                    pass
+                               
+    def walk_objects_list(self,yaml_data:Any, object_structs:List[str],struct_order_queue:PriorityQueue, level:int):
+        is_class:bool = False
+        
+        object_list:List[str] = []
+        
+        for item in object_structs:
+            next_object_structs:List[Any] = self.walk_objects(yaml_data=yaml_data,
+                                                object_struct=item)            
+            for next_item in next_object_structs:
+                if isinstance(next_item, ClassType) is True:
+                    object_list.append(next_item.name)
+                    value = (level*-1, next_item.class_type)
+                    struct_order_queue.put(value)
+                    
+        return object_list, struct_order_queue, level+1
     
     def walk_objects(self,yaml_data:Any, object_struct:str):
-        pass
+        is_class:bool = False
+        
+        current_struct:Any = yaml_data[object_struct]
+        object_list:List[Any] = current_struct.object_list
+        
+        return object_list
         
     
     def build_class(self, yaml_data:Any):
