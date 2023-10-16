@@ -119,7 +119,7 @@ class PythonBuild():
             else:
                 #its a value
                 #atr_name = attribute.name
-                return_type:Any = attribute.python_type
+                return_type = attribute.python_type
                 #db_name = attribute.db_name
             
             #firest teh getter    
@@ -129,7 +129,7 @@ class PythonBuild():
             
             #now the setter
             struct_lines.append(f'\t@{atr_db_name}.setter')
-            struct_lines.append(f'\tdef {atr_name}(self, value{return_type}):')
+            struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):')
             struct_lines.append(f'\t\tself.parent.{struct_db_name}.{atr_db_name} = value')            
             #now an empty line between attributes
             struct_lines.append('\n')

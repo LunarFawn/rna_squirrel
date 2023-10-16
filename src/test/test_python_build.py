@@ -21,3 +21,6 @@ def test_build_object_enum(python_build:PythonBuild):
 def test_config_definition_generation(python_build:PythonBuild):
     lines:str = python_build.generate_config_baseclass()
     assert lines[0] == 'class NupackStrand(Nut):'
+    
+def test_generate_config_baseclass_structure():
+    pass
