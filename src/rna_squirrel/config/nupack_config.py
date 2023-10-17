@@ -41,7 +41,7 @@ class PrimaryStructure_Attributes(Enum):
 
 class NupackStrand(Nut):
 
-   def __init__(self, use_db:bool = False) -> None:
+    def __init__(self, use_db:bool = False) -> None:
         super().__init__(enum_list=Nut_Attributes,
                          use_db=True,
                          db=None)

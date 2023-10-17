@@ -78,7 +78,8 @@ class PythonBuild():
         class_lines.append('\t\t\tuse_db=True,')
         class_lines.append('\t\t\tdb=None)')    
         class_lines.append('\n')             
-                         
+        
+        return class_lines
         #now build out the objects and the attributes
     
     # def generate_class_lines(self):
@@ -100,7 +101,6 @@ class PythonBuild():
         struct_lines.append('\t\tself.parent = parent')
         struct_lines.append('\t\tself.current = current')
         struct_lines.append('\t\tself.do_save = save_value')
-        struct_lines.append('\n')
         
         #now build the python property getter and settes
         #these are the same for value and class with the name 
@@ -121,22 +121,49 @@ class PythonBuild():
                 #atr_name = attribute.name
                 return_type = attribute.python_type
                 #db_name = attribute.db_name
-            
+            struct_lines.append('\n')
             #firest teh getter    
             struct_lines.append('\t@property')
             struct_lines.append(f'\tdef {atr_name}(self)->{return_type}:')
             struct_lines.append(f'\t\treturn self.parent.{struct_db_name}.{atr_db_name}')
+            struct_lines.append('\n')
             
             #now the setter
-            struct_lines.append(f'\t@{atr_db_name}.setter')
+            struct_lines.append(f'\t@{atr_name}.setter')
             struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):')
             struct_lines.append(f'\t\tself.parent.{struct_db_name}.{atr_db_name} = value')            
             #now an empty line between attributes
-            struct_lines.append('\n')
+ 
             
         #now an empty line at the end of the structure to ensure it is seperated form 
         #next structure
         struct_lines.append('\n')    
         
         return struct_lines
-            
+        
+    def generate_config_file_nut_entry(self, class_name:str, ):
+        """
+        Dynamically build the main object that calls the code
+        that builds the many structures in the object
+        """   
+        
+        obj_lines:List[str] = []
+        
+        obj_lines.append(f'class {class_name}(Nut):')
+        obj_lines.append('\n')
+        obj_lines.append(f'\tdef __init__(self, use_db:bool = False) -> None:')
+        obj_lines.append(f'\t\tsuper().__init__(enum_list=Nut_Attributes,')
+        obj_lines.append(f'\t\t\tuse_db=True,')
+        obj_lines.append(f'\t\t\tdb=None)')
+        obj_lines.append('\n')
+        
+        #now need to build each structure and attribute. The structs
+        #defined in the nut are ready to have things assigned to them
+        
+        obj_lines.append()
+        obj_lines.append()
+        obj_lines.append()
+        obj_lines.append()
+        
+        
+        

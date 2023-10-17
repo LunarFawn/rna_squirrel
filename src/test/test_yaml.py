@@ -25,7 +25,7 @@ from rna_squirrel.config.yaml_operations import YAMLOperations
 
 LINUX_PATH = Path('/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml')
 WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\test_class.yaml")
-CONFIG_PATH = LINUX_PATH
+CONFIG_PATH = WINDOWS_PATH
 
 def test_open_yaml(yaml_data):
     # yaml: YAMLOperations = YAMLOperations()
