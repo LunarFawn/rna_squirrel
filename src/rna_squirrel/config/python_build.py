@@ -6,7 +6,7 @@ after yaml operations reads the files
 
 import sys
 import os
-from typing import List, Any
+from typing import List, Any, Dict
 from queue import PriorityQueue
 from rna_squirrel.config.yaml_operations import (    
     Objects,
@@ -141,7 +141,7 @@ class PythonBuild():
         
         return struct_lines
         
-    def generate_config_file_nut_entry(self, class_name:str, ):
+    def generate_config_file_nut_entry(self, class_name:str, struct_list:Dict[str, Objects],  ):
         """
         Dynamically build the main object that calls the code
         that builds the many structures in the object
@@ -157,8 +157,9 @@ class PythonBuild():
         obj_lines.append(f'\t\t\tdb=None)')
         obj_lines.append('\n')
         
-        #now need to build each structure and attribute. The structs
+        #now need to build each attribute from a list of objects. The structs
         #defined in the nut are ready to have things assigned to them
+        # this does not have to be in order
         
         obj_lines.append()
         obj_lines.append()

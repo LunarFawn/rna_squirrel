@@ -31,7 +31,7 @@ class Group():
 class GenericAttribute():
     atr_class:AtrClass = field()
     atr_type:Type = None
-    atr_default_value:Any = None
+    #atr_default_value:Any = None
     attributes:Enum = field()
 
 class CustomAttribute(GenericAttribute):
@@ -51,12 +51,15 @@ class CustomAttribute(GenericAttribute):
             if atr.atr_class == AtrClass.PARENT:
                 self.__setattr__(attribute.value, CustomAttribute(save_value=True))
             elif atr.atr_class == AtrClass.CHILD:
-                self.__setattr__(attribute.value, atr.atr_default_value)
+                self.__setattr__(attribute.value, None)
     
     def __setattr__(self, __name: str, __value: Any) -> None:
         #this is where to put the code to save to db
         #use parent table location to place current
         #table data
+        
+        #if setattr value is None then do not update 
+        #the db
         super().__setattr__(__name, __value)
     
     def __getattribute__(self, __name: str) -> Any:
