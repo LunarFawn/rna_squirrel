@@ -57,4 +57,4 @@ def test_generate_config_baseclass_structure(python_build:PythonBuild, yml_ops:Y
     assert class_lines[0] == 'class PrimaryStructure(CustomAttribute):'
 
 def test_generate_main_object_call():
-    
+    pass

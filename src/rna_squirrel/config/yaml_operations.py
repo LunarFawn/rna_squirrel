@@ -10,6 +10,7 @@ from typing import Any, List, ClassVar, Type, Dict
 from enum import Enum
 from dataclasses import dataclass, field
 from queue import PriorityQueue
+import heapq
 
 
 from rna_squirrel.config.dynamic_rna_strand import AtrClass
@@ -232,6 +233,8 @@ class YAMLOperations():
         Walk the classes in the yaml and then end up with a
         prioritizedqueue of all the classes to make in the api
         """
+        
+        #need to replace with heapq
         struct_order_queue:PriorityQueue = PriorityQueue()
         
         #start with nut and then go from there only adding structures
