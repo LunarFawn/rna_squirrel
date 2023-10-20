@@ -2,7 +2,9 @@
 
 
 !NutStructure
-  name: n/a
+  db_info:
+    !NutDatabaseInfo
+    db_name: test_db
   nut_container_declarations:
     - !NutDeclaration
       name: PrimaryStructure
@@ -14,7 +16,77 @@
       name: Ensemble
   nut_main_struct:
     !NutContainer
-      name: rna_strand
+    name: rna_strand
+    object_list:
+      - !NutObject
+        name: primary_structure
+        object_type: !NutObjectType CONTAINER
+        object_info: PrimaryStructure
+      - !NutObject
+        name: ensemble
+        object_type: CONTAINER
+        object_info: Ensemble
+  nut_containers_dict:
+    - !NutContainer
+      name: PrimaryStructure
       object_list:
         - !NutObject
+          name: strand
+          object_type: !NutObjectType STRING
+          object_info: None
+    - !NutContainer
+      name: Energy
+      object_list:
+        - !NutObject
+          name: kcal 
+          object_type: !NutObjectType FLOATINGPOINT
+          object_info: None
+    - !NutContainer
+      name: SecondaryStructure
+      object_list:
+        - !NutObject
+          name: dot_parens 
+          object_type: !NutObjectType STRING
+          object_info: None
+        - !NutObject
+          name: free_energy 
+          object_type: !NutObjectType CONTAINER
+          object_info: Energy
+        - !NutObject
+          name: stack_energy 
+          object_type: !NutObjectType CONTAINER
+          object_info: Energy
+    - !NutContainer
+      name: Ensemble
+      object_list:
+        - !NutObject
+          name: min_energy 
+          object_type: !NutObjectType CONTAINER
+          object_info: Energy
+        - !NutObject
+          name: max_energy 
+          object_type: !NutObjectType CONTAINER
+          object_info: Energy
+        - !NutObject
+          name: energy_groups 
+          object_type: !NutObjectType DICTIONARY
+          object_info: !!python/tuple [Energy,EnergyGroup]
+        - !NutObject
+          name: mfe_structure 
+          object_type: !NutObjectType CONTAINER
+          object_info: SecondaryStructure
+        - !NutObject
+          name: mea_structure 
+          object_type: !NutObjectType CONTAINER
+          object_info: SecondaryStructure 
+
+
+
+
+
+
+
+
+
+  
             
