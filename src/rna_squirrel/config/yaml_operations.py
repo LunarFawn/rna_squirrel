@@ -118,7 +118,16 @@ class CustomList:
 class ClassDeclaration:
     name:str
 
+class NutObjectType(Enum):
+    INT="INT"
+    FLOAT="FLOAT"
+    STRING="STRING"
+    BOOL="BOOL"
 
+    @classmethod
+    def from_yaml(cls, loader, node):
+        test = cls(node.value)
+        return test
 
 @dataclass
 class Objects():
@@ -171,6 +180,7 @@ class YAMLOperations():
         self.yaml.register_class(ClassType)
         self.yaml.register_class(ClassDeclaration)
         self.yaml.register_class(NUT)
+        self.yaml.register_class(NutObjectType)
         self.yml_data: Any = None
         
         #list of classes that is the master list of 
