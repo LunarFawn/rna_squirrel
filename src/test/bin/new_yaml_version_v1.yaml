@@ -1,0 +1,20 @@
+
+
+
+!NutStructure
+  name: n/a
+  nut_container_declarations:
+    - !NutDeclaration
+      name: PrimaryStructure
+    - !NutDeclaration
+      name: Energy
+    - !NutDeclaration
+      name: SecondaryStructure
+    - !NutDeclaration
+      name: Ensemble
+  nut_main_struct:
+    !NutContainer
+      name: rna_strand
+      object_list:
+        - !NutObject
+            

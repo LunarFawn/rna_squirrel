@@ -11,6 +11,10 @@ import heapq
 
 from rna_squirrel.config.dynamic_rna_strand import AtrClass
 
+@dataclass
+class NutDeclaration:
+    name:str
+
 class NutObjectStatus(Enum):
     """
     The enum for type of object
@@ -55,10 +59,13 @@ class NutContainer:
     db_name:str = field(init=False)
     
     object_list: List[NutObject]
+    object_dict: Dict[str, NutObject]
     
     def __post_init__(self) -> None:
         self.db_name = f'{self.name}_db'
-        
+
+
+     
 @dataclass
 class NutStructure():
     """
@@ -66,6 +73,7 @@ class NutStructure():
     """
     name:str
     db_name:str = field(init=False)
+    nut_container_declarations:List[NutDeclaration]
     
     nut_main_struct:NutContainer    
     nut_containers_dict:Dict[str,NutContainer]
@@ -73,9 +81,7 @@ class NutStructure():
     def __post_init__(self) -> None:
         self.db_name = f'{self.name}_db'
 
-@dataclass
-class ClassDeclaration:
-    name:str
+
     
 
 @dataclass
