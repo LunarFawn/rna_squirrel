@@ -18,6 +18,8 @@ from rna_squirrel.config.dynamic_rna_strand import AtrClass
 @dataclass
 class NutDeclaration:
     name:str
+    
+    
 
 
 class NutObjectType(Enum):
@@ -74,6 +76,20 @@ class NutContainer:
         self.db_name = f'{self.name}_db'
 
 @dataclass
+class NutContainerDefinitions:
+    """
+    Holds the definitions for all the containers
+    that were declared in the NUT. If it was not
+    declared in NutStructure then it will be ignored
+    here and by system, but still be loaded (for now)
+    """
+    nut_containers_definitions:List[NutContainer]
+    
+
+    
+    
+    
+@dataclass
 class NutDatabaseInfo:
     db_name:str
      
@@ -84,13 +100,16 @@ class NutStructure:
     """
     db_info:str
     #db_name:str = field(init=False)
-    # nut_container_declarations:List[NutDeclaration]
+    nut_container_declarations:List[NutDeclaration]
     
-    # nut_main_struct:NutContainer    
-    # nut_containers_list:List[NutContainer]
+    nut_main_struct:NutContainer    
+    #nut_containers_list:List[NutContainer]
     
-    # #def __post_init__(self) -> None:
-    #    self.db_name = f'{self.name}_db'
+    def __post_init__(self) -> None:
+        new_list: List[NutDeclaration] = []
+        for item in self.nut_container_declarations:
+            new_list.append(item)
+        self.nut_container_declarations = new_list
 
 
 

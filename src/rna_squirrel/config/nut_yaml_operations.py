@@ -18,7 +18,8 @@ from rna_squirrel.config.nut_yaml_objects import (
     NutContainer,
     NutDatabaseInfo,
     NutStructure,
-    NutObjectType
+    NutObjectType,
+    NutContainerDefinitions
 )
 
 class YAMLOperations():
@@ -31,6 +32,7 @@ class YAMLOperations():
         self.yaml.register_class(NutDatabaseInfo)
         self.yaml.register_class(NutStructure)
         self.yaml.register_class(NutObjectType)
+        self.yaml.register_class(NutContainerDefinitions)
         self.yml_data: Any = None
         
         #list of classes that is the master list of 
