@@ -1,10 +1,7 @@
-
-
-
 !NutStructure
   db_info:
     !NutDatabaseInfo
-    db_name: test_db
+      db_name: test_db
   nut_container_declarations:
     - !NutDeclaration
       name: PrimaryStructure
@@ -16,17 +13,17 @@
       name: Ensemble
   nut_main_struct:
     !NutContainer
-    name: rna_strand
-    object_list:
-      - !NutObject
-        name: primary_structure
-        object_type: !NutObjectType CONTAINER
-        object_info: PrimaryStructure
-      - !NutObject
-        name: ensemble
-        object_type: CONTAINER
-        object_info: Ensemble
-  nut_containers_dict:
+      name: rna_strand
+      object_list:
+        - !NutObject
+          name: primary_structure
+          object_type: !NutObjectType CONTAINER
+          object_info: PrimaryStructure
+        - !NutObject
+          name: ensemble
+          object_type: !NutObjectType CONTAINER
+          object_info: Ensemble
+  nut_containers_list:
     - !NutContainer
       name: PrimaryStructure
       object_list:
@@ -40,7 +37,7 @@
         - !NutObject
           name: kcal 
           object_type: !NutObjectType FLOATINGPOINT
-          object_info: None
+          object_info: Value
     - !NutContainer
       name: SecondaryStructure
       object_list:

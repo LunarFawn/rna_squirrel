@@ -49,7 +49,6 @@ class NupackStrand(Nut):
         #build the Primary Structure first
         self.PrimaryStructure_DB.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
                                         attributes=PrimaryStructure_Attributes,
-                                        atr_type=str,
-                                        atr_default_value='yes?'))
+                                        atr_type=str))
     
 
