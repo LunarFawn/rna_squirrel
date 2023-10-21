@@ -7,7 +7,10 @@ from rna_squirrel.config.nut_yaml_objects import (
     NutDatabaseInfo,
     NutContainerDefinitions,
     NutDatabaseInfo,
-    NutDeclaration
+    NutDeclaration,
+    NutContainer,
+    NutObject,
+    NutObjectType
 )
 
 from pathlib import Path
@@ -69,3 +72,31 @@ def test_nut_container_declarations(yaml_nut:NutStructure):
     assert nut_declarations[2].name == "SecondaryStructure"
     assert nut_declarations[3].name == "Ensemble"
     
+def test_nut_main_struct(yaml_nut:NutStructure):
+    main_struct: NutContainer = yaml_nut.nut_main_struct
+    assert isinstance(main_struct, NutContainer) == True
+    attributes:List[str] = list(vars(main_struct).keys())
+    assert len(attributes) == 3
+    assert ('name' in attributes) == True
+    assert ('db_name' in attributes) == True
+    assert ('object_list' in attributes) == True    
+    assert main_struct.name == "rna_strand"
+    assert main_struct.db_name == "rna_strand_db"    
+    assert type(main_struct.object_list) == list
+    for item in main_struct.object_list:
+        assert isinstance(item, NutObject) == True
+        assert isinstance(item.object_type, NutObjectType) == True
+        attributes:List[str] = list(vars(item).keys())
+        assert len(attributes) == 4
+        assert ('name' in attributes) == True
+        assert ('db_name' in attributes) == True
+        assert ('object_info' in attributes) == True
+        assert ('object_type' in attributes) == True
+    assert main_struct.object_list[0].name == "primary_structure"
+    assert main_struct.object_list[0].db_name == "primary_structure_db"
+    assert main_struct.object_list[0].object_type == NutObjectType.CONTAINER
+    assert main_struct.object_list[0].object_info == 'PrimaryStructure'
+    assert main_struct.object_list[1].name == "ensemble"
+    assert main_struct.object_list[1].db_name == "ensemble_db"
+    assert main_struct.object_list[1].object_type == NutObjectType.CONTAINER
+    assert main_struct.object_list[1].object_info == 'Ensemble'

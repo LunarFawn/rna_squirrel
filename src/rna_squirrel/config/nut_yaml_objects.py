@@ -74,6 +74,11 @@ class NutContainer:
     
     def __post_init__(self) -> None:
         self.db_name = f'{self.name}_db'
+        new_list: List[NutObject] = []
+        for item in self.object_list:
+            new_list.append(item)
+        self.object_list = new_list
+        
 
 @dataclass
 class NutContainerDefinitions:
