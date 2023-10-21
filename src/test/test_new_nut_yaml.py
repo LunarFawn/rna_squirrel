@@ -44,22 +44,24 @@ def test_open_yaml(yaml_data):
     assert isinstance(yaml_data['NUT'], NutStructure) == True
     assert isinstance(yaml_data['DEFINITIONS'], NutContainerDefinitions) == True
     
-def test_load_yaml_nut(yaml_nut):
+def test_load_yaml_nut_class(yaml_nut):
     assert isinstance(yaml_nut, NutStructure) == True
 
-def test_load_yaml_definitions(yaml_def):
+def test_load_yaml_definitions_class(yaml_def):
     assert isinstance(yaml_def, NutContainerDefinitions) == True
 
-def test_db_info(yaml_nut:NutStructure):
+def test_load_NutDatabaseInfo_class(yaml_nut:NutStructure):
     db_info:NutDatabaseInfo = yaml_nut.db_info
     assert isinstance(db_info, NutDatabaseInfo) == True
-    #now verify count and content of db_info
     attributes:List[str] = list(vars(db_info).keys())
     assert len(attributes) == 1
     assert ('db_name' in attributes) == True
+    
+def test_get_db_info(yaml_nut:NutStructure):
+    db_info:NutDatabaseInfo = yaml_nut.db_info
     assert db_info.db_name == "test_db"
 
-def test_nut_container_declarations(yaml_nut:NutStructure):
+def test_load_nut_container_declarations_class(yaml_nut:NutStructure):
     nut_declarations:List[NutDeclaration] = yaml_nut.nut_container_declarations 
     assert type(nut_declarations) == list
     for declaration in nut_declarations:
@@ -67,21 +69,23 @@ def test_nut_container_declarations(yaml_nut:NutStructure):
         attributes:List[str] = list(vars(declaration).keys())
         assert len(attributes) == 1
         assert ('name' in attributes) == True
+
+def test_get_nut_container_declarations(yaml_nut:NutStructure):
+    nut_declarations:List[NutDeclaration] = yaml_nut.nut_container_declarations 
     assert nut_declarations[0].name == "PrimaryStructure"
     assert nut_declarations[1].name == "Energy"
     assert nut_declarations[2].name == "SecondaryStructure"
     assert nut_declarations[3].name == "Ensemble"
     
-def test_nut_main_struct(yaml_nut:NutStructure):
+def test_load_nut_main_struct_class(yaml_nut:NutStructure):
     main_struct: NutContainer = yaml_nut.nut_main_struct
     assert isinstance(main_struct, NutContainer) == True
     attributes:List[str] = list(vars(main_struct).keys())
     assert len(attributes) == 3
     assert ('name' in attributes) == True
     assert ('db_name' in attributes) == True
-    assert ('object_list' in attributes) == True    
-    assert main_struct.name == "rna_strand"
-    assert main_struct.db_name == "rna_strand_db"    
+    assert ('object_list' in attributes) == True  
+    
     assert type(main_struct.object_list) == list
     for item in main_struct.object_list:
         assert isinstance(item, NutObject) == True
@@ -92,6 +96,11 @@ def test_nut_main_struct(yaml_nut:NutStructure):
         assert ('db_name' in attributes) == True
         assert ('object_info' in attributes) == True
         assert ('object_type' in attributes) == True
+ 
+def test_get_main_nut_struct(yaml_nut:NutStructure):
+    main_struct: NutContainer = yaml_nut.nut_main_struct
+    assert main_struct.name == "rna_strand"
+    assert main_struct.db_name == "rna_strand_db"    
     assert main_struct.object_list[0].name == "primary_structure"
     assert main_struct.object_list[0].db_name == "primary_structure_db"
     assert main_struct.object_list[0].object_type == NutObjectType.CONTAINER
