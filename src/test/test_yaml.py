@@ -55,7 +55,7 @@ def test_get_class_declaration(yml_ops:YAMLOperations):
     data = yml_ops.open_yml_config(CONFIG_PATH)
     class_list:List[ClassDeclaration] = yml_ops.get_declarations(yaml_data=data)
     assert isinstance(class_list, List) ==  True
-    assert len(class_list) == 4
+    assert len(class_list) == 5
     assert isinstance(class_list[0], ClassDeclaration) == True
     assert class_list[0].name == "PrimaryStructure"
     assert class_list[1].name == "Energy"

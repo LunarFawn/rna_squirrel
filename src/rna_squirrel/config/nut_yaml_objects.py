@@ -18,9 +18,7 @@ from rna_squirrel.config.dynamic_rna_strand import AtrClass
 @dataclass
 class NutDeclaration:
     name:str
-    
-    
-
+  
 
 class NutObjectType(Enum):
     INTEGER="INTEGER"
@@ -89,10 +87,18 @@ class NutContainerDefinitions:
     here and by system, but still be loaded (for now)
     """
     nut_containers_definitions:List[NutContainer]
+    definition_dict:Dict[str, NutContainer] = field(init=False)
     
-
-    
-    
+    def __post_init__(self) -> None:
+        new_list: List[NutContainer] = []
+        self.definition_dict = {}
+        for item in self.nut_containers_definitions:
+            new_list.append(item)
+            #also while here build the dict
+            self.definition_dict[item.name] = item
+        self.nut_containers_definitions = new_list
+        
+        
     
 @dataclass
 class NutDatabaseInfo:
@@ -106,14 +112,18 @@ class NutStructure:
     db_info:str
     #db_name:str = field(init=False)
     nut_container_declarations:List[NutDeclaration]
+    nut_containers:List[str] = field(init=False)
     
     nut_main_struct:NutContainer    
     #nut_containers_list:List[NutContainer]
     
     def __post_init__(self) -> None:
         new_list: List[NutDeclaration] = []
+        self.nut_containers = []
         for item in self.nut_container_declarations:
             new_list.append(item)
+            #now build the nut containers name
+            self.nut_containers.append(item.name)
         self.nut_container_declarations = new_list
 
 
