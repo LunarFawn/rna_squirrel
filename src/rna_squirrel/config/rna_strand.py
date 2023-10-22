@@ -36,12 +36,12 @@ class PrimaryStructure(CustomAttribute):
     @property
     def strand(self):
         #return self.Strand_DB
-        return self.parent.PrimaryStructure_DB.Strand_DB
+        return self.parent.primaryStructure_db.strand_DB
     
     @strand.setter
     def strand(self, value:str):
         #self.Strand_DB = value
-        self.parent.PrimaryStructure_DB.Strand_DB = value
+        self.parent.primaryStructure_db.strand_DB = value
 
 @define
 class SecondaryStructure():

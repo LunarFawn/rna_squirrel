@@ -28,7 +28,7 @@ class Nut_Attributes(Enum):
     Ensemble = "ensemble_DB"
 
 class PrimaryStructure_Attributes(Enum):
-    Strand = "Strand_DB"
+    Strand = "strand_DB"
     
 # class PrimaryStructure_Stats(GenericAttribute):
 #     atr_class:AtrClass = AtrClass.PARENT
@@ -52,7 +52,7 @@ class NupackStrand(Nut):
         #and if it is a class then it will populate new option
         #for us
         self.primaryStructure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
-                                        attributes=PrimaryStructure_Attributes,
+                                        attribute="strand_DB",
                                         atr_type=str))
     
 

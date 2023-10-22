@@ -47,11 +47,11 @@ def python_build():
 
 def test_generate_header_strings(python_build:PythonBuild):
     file_header:List[str] = python_build.generate_config_header()
-    assert file_header[1]  == "from typing import TypeVar, Type, List"
+    assert file_header[1]  == 'Config file built from yaml\n'
 
 def test_build_nut_enum(python_build:PythonBuild, yaml_ops:YAMLOperations):
     lines: List[str] = python_build.generate_nut_enums(nut_structure=yaml_ops.nut)
-    assert lines[1] == '\tPrimaryStructure = "primary_structure_db"'
+    assert lines[1] == '\tPrimaryStructure = "primary_structure_db"\n'
     
 def test_build_object_enum(python_build:PythonBuild, yaml_ops:YAMLOperations):
 
@@ -61,7 +61,7 @@ def test_build_object_enum(python_build:PythonBuild, yaml_ops:YAMLOperations):
     parent_lines, child_lines = python_build.generate_object_enum(container=yaml_ops.definitions.definition_dict[class_name])
     assert len(parent_lines) == 1
     assert len(child_lines) == 2
-    assert child_lines[1] == '\tstrand = "strand_db"'
+    assert child_lines[1] == '\tstrand = "strand_db"\n'
     
 def test_config_definition_generation(python_build:PythonBuild,yaml_ops:YAMLOperations):
     lines:str = python_build.generate_config_baseclass(class_name="NupackStrand",
@@ -87,4 +87,4 @@ def test_generate_api_containers_structure(python_build:PythonBuild, yaml_ops:YA
     class_object:NutContainer = yaml_ops._struct_dict[class_name]
     class_lines:List[str] = python_build.generate_api_containers_structure(class_name=class_name,
                                                                    struct_object=class_object)
-    assert class_lines[0] == 'class PrimaryStructure(CustomAttribute):'
+    assert class_lines[0] == 'class PrimaryStructure(CustomAttribute):\n'
