@@ -61,13 +61,24 @@ class CustomAttribute(GenericAttribute):
         
         #if setattr value is None then do not update 
         #the db
+        name_end:str = __name[-3:]
+        if name_end == '_db' or name_end == '_DB':
+            if type(__value) == str:
+                __value = f'{__value}_from_db'
         super().__setattr__(__name, __value)
     
     def __getattribute__(self, __name: str) -> Any:
         #this is where to put the code to pull from db
         #use parent table location to get current table
         #to get the attribute value
-        return super().__getattribute__(__name)
+        name_end:str = __name[-3:]
+        if name_end == '_db' or name_end == '_DB':
+            value = super().__getattribute__(__name)
+            if type(value) == str:
+                value = f'{value}_returned'
+                return value
+        else:
+            return super().__getattribute__(__name)
 
     def new_table(self):
         pass
