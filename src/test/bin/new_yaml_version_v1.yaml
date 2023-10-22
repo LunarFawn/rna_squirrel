@@ -82,7 +82,11 @@ DEFINITIONS:
           - !NutObject
             name: mea_structure 
             object_type: !NutObjectType CONTAINER
-            object_info: SecondaryStructure 
+            object_info: SecondaryStructure
+          - !NutObject
+            name: what_structure
+            object_type: !NutObjectType CONTAINER
+            object_info: PrimaryStructure
 
 
 

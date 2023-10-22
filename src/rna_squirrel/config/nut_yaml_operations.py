@@ -3,6 +3,7 @@ This is the file for yaml operations when reading config files
 """
 
 from ruamel.yaml import YAML
+import copy
 import sys
 from pathlib import Path
 from typing import Any, List, ClassVar, Type, Dict
@@ -44,7 +45,9 @@ class YAMLOperations():
         
         #use heapq to turn list into a priority queue list
         self._priority_queue:List[tuple] = []
+        self._backup_priority_queue:List[tuple] = []
         heapq.heapify(self._priority_queue)
+        heapq.heapify(self._backup_priority_queue)
         
         #list of classes that is the master list of 
         #custom classes. If it is not here then the 
@@ -73,7 +76,25 @@ class YAMLOperations():
     @property
     def priority_queue(self):
         return self._priority_queue
-        
+    
+    @priority_queue.setter
+    def priority_queue(self, queue:List[tuple]):
+        self._priority_queue = queue
+        heapq.heapify(self._priority_queue)
+    
+    @property
+    def pop_priority_queue(self):
+        return heapq.heappop(self._priority_queue)
+    
+    @property
+    def get_original_priorty_queue_copy(self):
+        heapq.heapify(self._backup_priority_queue)
+        return copy.deepcopy(self._backup_priority_queue)
+    
+    @property
+    def reset_priority_queue(self):
+        self.priority_queue = self.get_original_priorty_queue_copy
+    
     def open_yml_config(self, file_path:Path):
         """
         Open config yml file used to build the dynamic
@@ -92,13 +113,13 @@ class YAMLOperations():
         self.build_struct_queue()
         return data
     
-    def walk_objects_list(self, object_structs:List[str], level:int, previous_stucts:List[str]=[]):
+    def walk_objects_list(self, object_structs:List[str], level:int,struct_priority_queue: List[tuple] = [], previous_stucts:List[str]=[]):
         """
         Assumed that object_structs is non-empty
         """        
         structure_found_list:List[str] = []
-        # struct_priority_queue: List[tuple] = []
-        # heapq.heapify(struct_priority_queue)
+        
+        heapq.heapify(struct_priority_queue)
         
         for item in object_structs:
             current_item:NutContainer = self.definitions.definition_dict[item]
@@ -110,12 +131,12 @@ class YAMLOperations():
                     if next_item.object_info not in structure_found_list and next_item.object_info not in previous_stucts:
                         structure_found_list.append(next_item.object_info)                        
                         value = (level*-1, next_item.object_info)
-                        heapq.heappush(self._priority_queue, value)
+                        heapq.heappush(struct_priority_queue, value)
                         #struct_priority_queue.append(value)
                         #struct_order_queue.put(value)
                     
         walk_object:WalkObjectReturn = WalkObjectReturn(structure_found_list=structure_found_list,
-                                                        struct_priority_queue=self._priority_queue,
+                                                        struct_priority_queue=struct_priority_queue,
                                                         level=level)    
         return walk_object  
     
@@ -149,8 +170,8 @@ class YAMLOperations():
         """
         
         #need to replace with heapq
-        # struct_priority_queue: List[tuple] = []
-        # heapq.heapify(struct_priority_queue)
+        struct_priority_queue: List[tuple] = []
+        heapq.heapify(struct_priority_queue)
         
         #start with nut and then go from there only adding structures
         level_tracker:int = 1
@@ -161,7 +182,7 @@ class YAMLOperations():
         for item in nut_ojects:
             if item.object_type == NutObjectType.CONTAINER:
                 queue_item = (level_tracker*-1, item.object_info)
-                heapq.heappush(self._priority_queue, queue_item)
+                heapq.heappush(struct_priority_queue, queue_item)
                 nut_list.append(item.object_info)
         level_tracker += 1
         hold_tracker:int = level_tracker
@@ -171,7 +192,8 @@ class YAMLOperations():
         stop = False
         
         walk_object:WalkObjectReturn = self.walk_objects_list(object_structs=nut_list,
-                                                              level=level_tracker)
+                                                              level=level_tracker,
+                                                              struct_priority_queue=struct_priority_queue)
         nut_list = nut_list + walk_object.structure_found_list
         
         while walk_object.structure_found_list != []:
@@ -180,8 +202,14 @@ class YAMLOperations():
             level_tracker += 1
             walk_object = self.walk_objects_list(object_structs=walk_object.structure_found_list,
                                                 level=level_tracker,
-                                                previous_stucts=nut_list)
+                                                previous_stucts=nut_list,
+                                                struct_priority_queue=walk_object.struct_priority_queue)
             nut_list = nut_list + walk_object.structure_found_list
+        
+        heapq.heapify(walk_object.struct_priority_queue)
+        
+        self._priority_queue =  copy.deepcopy(walk_object.struct_priority_queue)
+        self._backup_priority_queue = copy.deepcopy(walk_object.struct_priority_queue)
         
         #now the struct_order_queue should be built and be a priority queue
         #now build all the API classes in order of pop

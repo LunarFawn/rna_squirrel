@@ -1,5 +1,6 @@
 import pytest
 import inspect
+import heapq
 
 from rna_squirrel.config.nut_yaml_operations import (
     YAMLOperations,
@@ -161,8 +162,8 @@ def test_walk_objects_list(yaml_ops:YAMLOperations):
         
     walk_object:WalkObjectReturn = yaml_ops.walk_objects_list(object_structs=yaml_ops.nut.nut_containers,
                                                             level=1)
-    assert walk_object.structure_found_list == ['Energy', 'SecondaryStructure']
-    assert walk_object.struct_priority_queue == [(-1, 'Energy'), (-1, 'SecondaryStructure')]
+    assert walk_object.structure_found_list == ['Energy', 'SecondaryStructure', 'PrimaryStructure']
+    assert walk_object.struct_priority_queue == [(-1, 'Energy'), (-1, 'SecondaryStructure'), (-1, 'PrimaryStructure')]
 
 def test_build_structure_dict(yaml_ops:YAMLOperations):   
     #yaml_ops.build_struct_dict()
@@ -173,6 +174,15 @@ def test_build_structure_dict(yaml_ops:YAMLOperations):
         assert (item in keys_list) == True
     
 def test_build_struct_queue(yaml_ops:YAMLOperations):
-    queue:List[tuple] = yaml_ops.priority_queue
-    assert queue == [(-2, 'Energy'), (-2, 'SecondaryStructure'), (-1, 'Ensemble'), (-1, 'PrimaryStructure')]
-    
+    poped_order:List[tuple] = []
+    for _ in range(len(yaml_ops.priority_queue)):
+      poped = yaml_ops.pop_priority_queue
+      poped_order.append(poped)
+    assert poped_order == [(-2, 'Energy'), (-2, 'PrimaryStructure'), (-2, 'SecondaryStructure'), (-1, 'Ensemble'), (-1, 'PrimaryStructure')]
+
+def test_copy_priority_queue(yaml_ops:YAMLOperations):
+    new_queue: List[tuple] = yaml_ops.get_prioity_queue_copy
+    assert new_queue == yaml_ops.get_prioity_queue_copy
+    yaml_ops.pop_priority_queue
+    assert len(new_queue) == 5
+    assert len(yaml_ops.get_prioity_queue_copy) == 4
