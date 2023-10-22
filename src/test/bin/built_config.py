@@ -35,7 +35,7 @@ class NupackStrand(Nut):
 			attribute="min_energy_db",
 			atr_type=None))
 
-		self.min_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+		self.ensemble_db.min_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="kcal_db",
 			atr_type=float))
 
@@ -43,7 +43,7 @@ class NupackStrand(Nut):
 			attribute="max_energy_db",
 			atr_type=None))
 
-		self.max_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+		self.ensemble_db.max_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="kcal_db",
 			atr_type=float))
 
@@ -55,23 +55,23 @@ class NupackStrand(Nut):
 			attribute="mfe_structure_db",
 			atr_type=None))
 
-		self.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+		self.ensemble_db.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="dot_parens_db",
 			atr_type=str))
 
-		self.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
+		self.ensemble_db.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="free_energy_db",
 			atr_type=None))
 
-		self.free_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+		self.ensemble_db.mfe_structure_db.free_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="kcal_db",
 			atr_type=float))
 
-		self.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
+		self.ensemble_db.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="stack_energy_db",
 			atr_type=None))
 
-		self.stack_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+		self.ensemble_db.mfe_structure_db.stack_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="kcal_db",
 			atr_type=float))
 
@@ -79,23 +79,23 @@ class NupackStrand(Nut):
 			attribute="mea_structure_db",
 			atr_type=None))
 
-		self.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+		self.ensemble_db.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="dot_parens_db",
 			atr_type=str))
 
-		self.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
+		self.ensemble_db.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="free_energy_db",
 			atr_type=None))
 
-		self.free_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+		self.ensemble_db.mea_structure_db.free_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="kcal_db",
 			atr_type=float))
 
-		self.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
+		self.ensemble_db.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="stack_energy_db",
 			atr_type=None))
 
-		self.stack_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+		self.ensemble_db.mea_structure_db.stack_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="kcal_db",
 			atr_type=float))
 
@@ -103,7 +103,7 @@ class NupackStrand(Nut):
 			attribute="what_structure_db",
 			atr_type=None))
 
-		self.what_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+		self.ensemble_db.what_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="strand_db",
 			atr_type=str))
 

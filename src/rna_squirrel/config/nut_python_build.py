@@ -149,7 +149,7 @@ class PythonBuild():
                 current_lines.append('\n') 
                 
                 next_container:NutContainer = container_definitions.definition_dict[item.object_info]
-                parent_container:str = item.db_name
+                parent_container:str =f'{parent_container_name}.{item.db_name}' 
                 
                 current_lines = self.generate_recursive_config_baseline_attributes(container_definitions=container_definitions,
                                                                    container=next_container,
