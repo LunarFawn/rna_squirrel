@@ -181,8 +181,8 @@ def test_build_struct_queue(yaml_ops:YAMLOperations):
     assert poped_order == [(-2, 'Energy'), (-2, 'PrimaryStructure'), (-2, 'SecondaryStructure'), (-1, 'Ensemble'), (-1, 'PrimaryStructure')]
 
 def test_copy_priority_queue(yaml_ops:YAMLOperations):
-    new_queue: List[tuple] = yaml_ops.get_prioity_queue_copy
-    assert new_queue == yaml_ops.get_prioity_queue_copy
+    new_queue: List[tuple] = yaml_ops.get_original_priorty_queue_copy
+    assert new_queue == yaml_ops.priority_queue
     yaml_ops.pop_priority_queue
     assert len(new_queue) == 5
-    assert len(yaml_ops.get_prioity_queue_copy) == 4
+    assert len(yaml_ops.priority_queue) == 4

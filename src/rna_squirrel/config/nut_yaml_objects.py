@@ -21,17 +21,16 @@ class NutDeclaration:
   
 
 class NutObjectType(Enum):
-    INTEGER="INTEGER"
-    FLOATINGPOINT="FLOATINGPOINT"
-    STRING="STRING"
-    BOOLEAN="BOOLEAN"
-    DICTIONARY="DICTIONARY"
+    INTEGER="int"
+    FLOATINGPOINT="float"
+    STRING="str"
+    BOOLEAN="bool"
+    DICTIONARY="Dict"
     CONTAINER="CONTAINER"
     
     @classmethod
     def from_yaml(cls, loader, node):
-        test = cls(node.value)
-        return test
+        return NutObjectType[node.value]
 
         
 @dataclass
