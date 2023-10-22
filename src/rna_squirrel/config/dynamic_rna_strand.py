@@ -32,8 +32,9 @@ class GenericAttribute():
     atr_class:AtrClass = field()
     atr_type:Type = None
     #atr_default_value:Any = None
-    attributes:Enum = field()
-
+    #attributes:Enum = field()
+    attribute:str = field()
+    
 class CustomAttribute(GenericAttribute):
     """
     I think that each CustomAttribute needs
@@ -47,11 +48,11 @@ class CustomAttribute(GenericAttribute):
         self.parent_table:Any = None
         self.current_table:Any = None
     def new_attr(self, atr: GenericAttribute) -> None:
-        for attribute in atr.attributes:
-            if atr.atr_class == AtrClass.PARENT:
-                self.__setattr__(attribute.value, CustomAttribute(save_value=True))
-            elif atr.atr_class == AtrClass.CHILD:
-                self.__setattr__(attribute.value, None)
+        # for attribute in atr.attributes:
+        if atr.atr_class == AtrClass.PARENT:
+            self.__setattr__(atr.attribute, CustomAttribute(save_value=True))
+        elif atr.atr_class == AtrClass.CHILD:
+            self.__setattr__(atr.attribute, None)
     
     def __setattr__(self, __name: str, __value: Any) -> None:
         #this is where to put the code to save to db

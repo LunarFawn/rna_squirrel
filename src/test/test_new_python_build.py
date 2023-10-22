@@ -55,14 +55,20 @@ def test_build_nut_enum(python_build:PythonBuild, yaml_ops:YAMLOperations):
 def test_build_object_enum(python_build:PythonBuild, yaml_ops:YAMLOperations):
 
     class_name:str = "PrimaryStructure"
-    lines: List[str] = python_build.generate_object_enum(container=yaml_ops.definitions.definition_dict[class_name])
-    assert lines[1] == '\tstrand = "strand_db"'
+    parent_lines:List[str] = []
+    child_lines:List[str] = []
+    parent_lines, child_lines = python_build.generate_object_enum(container=yaml_ops.definitions.definition_dict[class_name])
+    assert len(parent_lines) == 1
+    assert len(child_lines) == 2
+    assert child_lines[1] == '\tstrand = "strand_db"'
     
-def test_config_definition_generation(python_build:PythonBuild):
-    lines:str = python_build.generate_config_baseclass(class_name="NupackStrand")
+def test_config_definition_generation(python_build:PythonBuild,yaml_ops:YAMLOperations):
+    lines:str = python_build.generate_config_baseclass(class_name="NupackStrand",
+                                                       container_definitions=yaml_ops.definitions,
+                                                       nut_structure=yaml_ops.nut)
     assert lines[0] == 'class NupackStrand(Nut):'
 
-def generate_api_containers_structure(python_build:PythonBuild, yaml_ops:YAMLOperations):
+def test_generate_api_containers_structure(python_build:PythonBuild, yaml_ops:YAMLOperations):
 
     class_name:str = 'PrimaryStructure'
     class_object:NutContainer = yaml_ops._struct_dict[class_name]

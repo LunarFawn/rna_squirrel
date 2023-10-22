@@ -24,8 +24,8 @@ class Nut_Attributes(Enum):
     needs to be published for the dynamic
     strand to build the correct object
     """
-    PrimaryStructure = "PrimaryStructure_DB"
-    Ensemble = "Ensemble_DB"
+    PrimaryStructure = "primaryStructure_db"
+    Ensemble = "ensemble_DB"
 
 class PrimaryStructure_Attributes(Enum):
     Strand = "Strand_DB"
@@ -51,7 +51,7 @@ class NupackStrand(Nut):
         #we just need to add attributes
         #and if it is a class then it will populate new option
         #for us
-        self.PrimaryStructure_DB.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+        self.primaryStructure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
                                         attributes=PrimaryStructure_Attributes,
                                         atr_type=str))
     

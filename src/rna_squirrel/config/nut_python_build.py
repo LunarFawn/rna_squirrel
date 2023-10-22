@@ -60,28 +60,33 @@ class PythonBuild():
         
         return enum_lines
 
-    def generate_object_enum(self, container:NutContainer, db_posfix:str = "DB"):
+    def generate_object_enum(self, container:NutContainer):
         """
         Generate the list of string that make up the attribute enums
         These feed into the dynamic class builder and tells it what to
         name things
         """
-        class_lines:List[str] = []
+        parent_lines:List[str] = []
+        child_lines:List[str] = []
         
-        enum_title:str = f'class {container.name}_Attributes(Enum):'
-        class_lines.append(enum_title)
+        parent_title:str = f'class {container.name}_Parent_Attributes(Enum):'
+        child_title:str = f'class {container.name}_Child_Attributes(Enum):'
+        parent_lines.append(parent_title)
+        child_lines.append(child_title)
+        
         #now build the attribute enums
         for item in container.object_list:
-            line:str = ''
             if item.object_type == NutObjectType.CONTAINER:
-                line = f'\t{item.object_info} = "{item.db_name}"'
+                line:str = f'\t{item.object_info} = "{item.db_name}"'
+                parent_lines.append(line)
             else:                
-                line = f'\t{item.name} = "{item.db_name}"'
-            class_lines.append(line)
+                line:str = f'\t{item.name} = "{item.db_name}"'
+                child_lines.append(line)
+
         
-        return class_lines  
+        return parent_lines, child_lines   
     
-    def generate_config_baseclass(self, class_name:str):
+    def generate_config_baseclass(self, class_name:str, nut_structure:NutStructure, container_definitions: NutContainerDefinitions):
         """
         Generate the list of strings that make up the
         config baseclass. This class can be considered the
@@ -98,18 +103,61 @@ class PythonBuild():
         class_lines.append('\t\t\tuse_db=True,')
         class_lines.append('\t\t\tdb=None)')    
         class_lines.append('\n')             
+        class_lines.append('\n') 
+        
+        
+        #walk the nut structure now
+        for nut_object in nut_structure.nut_main_struct.object_list:
+            #check if container or value
+            if nut_object.object_type == NutObjectType.CONTAINER:
+                #walk this container and populate with the assumption that
+                #this container has already been initialized
+                next_container:NutContainer = container_definitions.definition_dict[nut_object.object_info]
+                class_lines = self.generate_recursive_config_baseline_attributes(container_definitions=container_definitions,
+                                                                   container=next_container,
+                                                                   current_lines=class_lines,
+                                                                   parent_container_name=nut_object.db_name)                
+                # for item in next_container.object_list:
+                #     if item.object_type == NutObjectType.CONTAINER:
+                #         class_lines.append(f'\t\tself.{nut_object.db_name}.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,')
+                #         class_lines.append(f'\t\t\tattribute={item.db_name}')
+                #         class_lines.append(f'\t\t\tatr_type=None))')
+                #         class_lines.append('\n') 
+                        
+                #     else:
+                #         class_lines.append(f'\t\tself.{nut_object.db_name}.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,')
+                #         class_lines.append(f'\t\t\tattribute={item.db_name}')
+                #         class_lines.append(f'\t\t\tatr_type={item.object_type.value}))')
+                #         class_lines.append('\n') 
+            else:
+                pass
         
         return class_lines
-
-    def generate_config_baseline_attrib_add(self, container:NutContainer):
-        pass
     
-    
-    
-    
-    
-    
-
+    def generate_recursive_config_baseline_attributes(self, container_definitions: NutContainerDefinitions, container:NutContainer, current_lines:List[str], parent_container_name:str):
+        for item in container.object_list:
+            if item.object_type == NutObjectType.CONTAINER:
+                current_lines.append(f'\t\tself.{parent_container_name}.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,')
+                current_lines.append(f'\t\t\tattribute={item.db_name}')
+                current_lines.append(f'\t\t\tatr_type=None))')
+                current_lines.append('\n') 
+                
+                next_container:NutContainer = container_definitions.definition_dict[item.object_info]
+                parent_container:str = item.db_name
+                
+                current_lines = self.generate_recursive_config_baseline_attributes(container_definitions=container_definitions,
+                                                                   container=next_container,
+                                                                   current_lines=current_lines,
+                                                                   parent_container_name=parent_container)
+                
+            else:
+                current_lines.append(f'\t\tself.{parent_container_name}.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,')
+                current_lines.append(f'\t\t\tattribute={item.db_name}')
+                current_lines.append(f'\t\t\tatr_type={item.object_type.value}))')
+                current_lines.append('\n')
+        
+        return current_lines
+        
     def generate_api_containers_structure(self, class_name:str, struct_object:NutContainer):
         """
         Dynamically build the classes for the python API
