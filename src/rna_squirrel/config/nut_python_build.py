@@ -48,7 +48,19 @@ class PythonBuild():
         
         return header
 
-    def generate_object_enum(self, class_name:str, atr_list:List[str], db_posfix:str = "DB"):
+    def generate_nut_enums(self, nut_structure:NutStructure):
+        enum_lines:List[str] = []
+        
+        enum_title:str = f'class Nut_Attributes(Enum):'
+        enum_lines.append(enum_title)
+        #now build the attribute enums
+        for item in nut_structure.nut_main_struct.object_list:
+            line:str = f'\t{item.object_info} = "{item.db_name}"'
+            enum_lines.append(line)
+        
+        return enum_lines
+
+    def generate_object_enum(self, container:NutContainer, db_posfix:str = "DB"):
         """
         Generate the list of string that make up the attribute enums
         These feed into the dynamic class builder and tells it what to
@@ -56,12 +68,16 @@ class PythonBuild():
         """
         class_lines:List[str] = []
         
-        enum_title:str = f'class {class_name}_Attributes(Enum):'
+        enum_title:str = f'class {container.name}_Attributes(Enum):'
         class_lines.append(enum_title)
         #now build the attribute enums
-        for atr in atr_list:
-          line:str = f'\t{atr} = "{atr}_{db_posfix}"'
-          class_lines.append(line)
+        for item in container.object_list:
+            line:str = ''
+            if item.object_type == NutObjectType.CONTAINER:
+                line = f'\t{item.object_info} = "{item.db_name}"'
+            else:                
+                line = f'\t{item.name} = "{item.db_name}"'
+            class_lines.append(line)
         
         return class_lines  
     
@@ -84,6 +100,15 @@ class PythonBuild():
         class_lines.append('\n')             
         
         return class_lines
+
+    def generate_config_baseline_attrib_add(self, container:NutContainer):
+        pass
+    
+    
+    
+    
+    
+    
 
     def generate_api_containers_structure(self, class_name:str, struct_object:NutContainer):
         """

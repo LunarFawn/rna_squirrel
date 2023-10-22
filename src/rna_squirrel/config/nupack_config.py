@@ -47,6 +47,10 @@ class NupackStrand(Nut):
                          db=None)
     
         #build the Primary Structure first
+        #dont forget that at this point the NUT container exits
+        #we just need to add attributes
+        #and if it is a class then it will populate new option
+        #for us
         self.PrimaryStructure_DB.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
                                         attributes=PrimaryStructure_Attributes,
                                         atr_type=str))
