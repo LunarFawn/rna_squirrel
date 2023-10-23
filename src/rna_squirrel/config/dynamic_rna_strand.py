@@ -44,15 +44,24 @@ class CustomAttribute(GenericAttribute):
     # def __init__(self, save_value: bool = False) -> None:
     #     super().__init__(save_value)
     def __init__(self, save_value:bool = False) -> None:
+        super().__init__(atr_class=AtrClass.PARENT,
+                         atr_type=None,
+                         attribute='')
         self.do_save:bool = save_value
         self.parent_table:Any = None
         self.current_table:Any = None
+        self._attrib_dict:Dict[str,Any] = {}
     def new_attr(self, atr: GenericAttribute) -> None:
         # for attribute in atr.attributes:
         if atr.atr_class == AtrClass.PARENT:
+            self._attrib_dict[atr.attribute] = CustomAttribute(save_value=True)
             self.__setattr__(atr.attribute, CustomAttribute(save_value=True))
         elif atr.atr_class == AtrClass.CHILD:
+            self._attrib_dict[atr.attribute] = None
             self.__setattr__(atr.attribute, None)
+    
+    def get_custom_attr(self, name:str):
+        return self._attrib_dict[name]
     
     def __setattr__(self, __name: str, __value: Any) -> None:
         #this is where to put the code to save to db
@@ -73,13 +82,16 @@ class CustomAttribute(GenericAttribute):
         #to get the attribute value
         name_end:str = __name[-3:]
         if name_end == '_db' or name_end == '_DB':
+            #value = self.__dict__[__name]
             value = super().__getattribute__(__name)
             if type(value) == str:
                 value = f'{value}_returned'
                 return value
+            return value
         else:
             return super().__getattribute__(__name)
-
+    
+        
     def new_table(self):
         pass
     #strand = "taco"

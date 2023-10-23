@@ -71,10 +71,10 @@ DEFINITIONS:
             name: max_energy 
             object_type: !NutObjectType CONTAINER
             object_info: Energy
-          - !NutObject
-            name: energy_groups 
-            object_type: !NutObjectType DICTIONARY
-            object_info: [Energy,EnergyGroup]
+          # - !NutObject
+          #   name: energy_groups 
+          #   object_type: !NutObjectType DICTIONARY
+          #   object_info: [Energy,EnergyGroup]
           - !NutObject
             name: mfe_structure 
             object_type: !NutObjectType CONTAINER

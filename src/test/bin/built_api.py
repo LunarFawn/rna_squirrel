@@ -57,11 +57,11 @@ class SecondaryStructure(CustomAttribute):
 		self.do_save = save_value
 		self._free_energy: Energy = Energy(save_value=True,
 			current=None,
-			parent=self.free_energy_db)
+			parent=self.parent.free_energy_db)
 
 		self._stack_energy: Energy = Energy(save_value=True,
 			current=None,
-			parent=self.stack_energy_db)
+			parent=self.parent.stack_energy_db)
 
 
 	@property
@@ -98,23 +98,23 @@ class Ensemble(CustomAttribute):
 		self.do_save = save_value
 		self._min_energy: Energy = Energy(save_value=True,
 			current=None,
-			parent=self.min_energy_db)
+			parent=self.parent.min_energy_db)
 
 		self._max_energy: Energy = Energy(save_value=True,
 			current=None,
-			parent=self.max_energy_db)
+			parent=self.parent.max_energy_db)
 
 		self._mfe_structure: SecondaryStructure = SecondaryStructure(save_value=True,
 			current=None,
-			parent=self.mfe_structure_db)
+			parent=self.parent.mfe_structure_db)
 
 		self._mea_structure: SecondaryStructure = SecondaryStructure(save_value=True,
 			current=None,
-			parent=self.mea_structure_db)
+			parent=self.parent.mea_structure_db)
 
 		self._what_structure: PrimaryStructure = PrimaryStructure(save_value=True,
 			current=None,
-			parent=self.what_structure_db)
+			parent=self.parent.what_structure_db)
 
 
 	@property
@@ -133,15 +133,6 @@ class Ensemble(CustomAttribute):
 	@max_energy.setter
 	def max_energy(self, value:Energy):
 		self.parent.max_energy_db = value
-
-
-	# @property
-	# def energy_groups(self)->Dict[Energy, EnergyGroup]:
-	# 	return self.parent.energy_groups_db
-
-	# @energy_groups.setter
-	# def energy_groups(self, value:Dict[Energy, EnergyGroup]):
-	# 	self.parent.energy_groups_db = value
 
 
 	@property

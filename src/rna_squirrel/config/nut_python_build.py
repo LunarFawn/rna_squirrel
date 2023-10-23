@@ -183,7 +183,7 @@ class PythonBuild():
                 line = f'\t\tself._{item.name}: {item.object_info} = {item.object_info}(save_value=True,\n'
                 struct_lines.append(line)
                 struct_lines.append('\t\t\tcurrent=None,\n')
-                struct_lines.append(f'\t\t\tparent=self.{item.db_name})\n') 
+                struct_lines.append(f'\t\t\tparent=self.parent.{item.db_name})\n') 
                 struct_lines.append('\n')
             else:
                 pass
