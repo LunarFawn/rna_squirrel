@@ -81,6 +81,15 @@ def test_build_config_file(python_build:PythonBuild,yaml_ops:YAMLOperations):
         file.writelines(full_list)
     assert os.path.isfile(dst) == True
 
+def test_generate_api_header(python_build:PythonBuild, yaml_ops:YAMLOperations):
+    nut_struct_name:str = "NupackStrand"
+    path_to_config:str = 'rna_squirrel.config.nupack_config'
+    header:List[str] = python_build.generate_api_header(config_file_path=path_to_config,
+                                                        nut_struct_name=nut_struct_name)
+    assert header[1] == 'File that defines the main RNA sequence data\n'
+    assert header[9] == 'from rna_squirrel.config.nupack_config import (\n'
+    assert header[10] == '\tNupackStrand,\n'
+
 def test_generate_api_containers_structure(python_build:PythonBuild, yaml_ops:YAMLOperations):
 
     class_name:str = 'PrimaryStructure'
@@ -88,3 +97,12 @@ def test_generate_api_containers_structure(python_build:PythonBuild, yaml_ops:YA
     class_lines:List[str] = python_build.generate_api_containers_structure(class_name=class_name,
                                                                    struct_object=class_object)
     assert class_lines[0] == 'class PrimaryStructure(CustomAttribute):\n'
+
+def test_generate_api_main_call(python_build:PythonBuild, yaml_ops:YAMLOperations):
+    config_class:str = 'NupackStrand'
+    main_call:List[str] = python_build.generate_api_main_call(config_class_name=config_class,
+                                                              nut_container=yaml_ops.nut.nut_main_struct)
+    assert main_call[2] == '\tdef __init__(self, use_db:bool = False) -> None:\n'
+    assert main_call[24] == '\tdef ensemble(self)->Ensemble:\n'
+    
+    

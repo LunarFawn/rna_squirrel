@@ -15,7 +15,7 @@ def test_set_strand_attribute(empty_default_strand:RNAStrand):
     # new_struct.strand = "yo"
     empty_default_strand.primary_structure.strand = "yo"# = new_struct
     assert empty_default_strand.primary_structure.strand == "yo_from_db_returned"
-
+    assert empty_default_strand.primary_structure.strand == "yo_from_db_returned"
 # def test_get_empty_ensemble():
 #     new_strand:RNAStrand = RNAStrand()
 #     new_strand.ensemble = Ensemble()

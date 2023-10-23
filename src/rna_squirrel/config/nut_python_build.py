@@ -218,3 +218,99 @@ class PythonBuild():
         struct_lines.append('\n')    
         
         return struct_lines
+
+    def generate_api_header(self, config_file_path:str, nut_struct_name:str):
+        """
+        Generate the header for the API
+        """
+        
+        header_lines:List[str] = []
+        
+        header_lines.append('"""\n')
+        header_lines.append('File that defines the main RNA sequence data\n')
+        header_lines.append('"""\n')
+        header_lines.append('\n')
+        header_lines.append('\n')
+        header_lines.append('from attrs import define, field\n')
+        header_lines.append('from collections import namedtuple\n')
+        header_lines.append('from typing import List, Dict, Any\n')
+        header_lines.append('\n')
+        header_lines.append(f'from {config_file_path} import (\n')
+        header_lines.append(f'\t{nut_struct_name},\n')
+        header_lines.append(')\n')
+        header_lines.append('\n')
+        header_lines.append('from rna_squirrel.config.dynamic_rna_strand import (\n')
+        header_lines.append('\tNut,\n')
+        header_lines.append('\tValue,\n')
+        header_lines.append('\tGenericAttribute,\n')
+        header_lines.append('\tAtrClass,\n')
+        header_lines.append('\tCustomAttribute\n')
+        header_lines.append(')\n')
+        header_lines.append('\n')
+        header_lines.append('\n')
+        
+        return header_lines
+        
+        
+    def generate_api_main_call(self, config_class_name:str, nut_container:NutContainer):
+        """
+        Generate the man entry call in the api file
+        """
+    
+        main_call_line:List[str] = []
+        main_call_line.append(f'class {nut_container.name}({config_class_name}):\n')
+        main_call_line.append('\n')
+        main_call_line.append('\tdef __init__(self, use_db:bool = False) -> None:\n')
+        main_call_line.append('\t\tsuper().__init__(use_db=use_db)\n')
+        main_call_line.append('\n')
+        main_call_line.append('\n')
+        
+        
+        for item in nut_container.object_list:
+            line:str = ''
+            if item.object_type == NutObjectType.CONTAINER:
+                line = f'\t\tself._{item.name}: {item.object_info} = {item.object_info}(save_value=True,\n'
+                main_call_line.append(line)
+                main_call_line.append('\t\t\tcurrent=None,\n')
+                main_call_line.append('\t\t\tparent=self)\n') 
+                main_call_line.append('\n')
+            else:
+                pass
+                #i think if it is a value then do nothing
+                #line = f'\t\tself._{item.name}: {item.object_type.value}\n'
+        
+        #now build the getter and setters
+        
+        for item in nut_container.object_list:
+            main_call_line.append('\t@property\n')
+            line:str = ''
+            if item.object_type == NutObjectType.CONTAINER:
+                main_call_line.append(f'\tdef {item.name}(self)->{item.object_info}:\n')
+                main_call_line.append(f'\t\treturn self._{item.name}\n')
+            else:
+                main_call_line.append(f'\tdef {item.name}(self)->{item.object_type.value}:\n')
+                main_call_line.append(f'\t\treturn self.{item.db_name}\n')
+            main_call_line.append('\n')  
+        
+            main_call_line.append(f'\t@{item.name}.setter\n')
+            line:str = ''
+            if item.object_type == NutObjectType.CONTAINER:
+                main_call_line.append(f'\tdef {item.name}(self, struct:{item.object_info}):\n')
+                main_call_line.append(f'\t\tself._{item.name} = struct\n')
+            else:
+                main_call_line.append(f'\tdef {item.name}(self, value:{item.object_type.value}):\n')
+                main_call_line.append(f'\t\tself.{item.db_name} = value\n')
+            main_call_line.append('\n')
+            main_call_line.append('\n')
+            
+        return main_call_line
+        
+            
+        
+
+
+    
+
+    
+    
+    
