@@ -36,12 +36,12 @@ class PrimaryStructure(CustomAttribute):
     @property
     def strand(self):
         #return self.Strand_DB
-        return self.parent.primaryStructure_db.strand_DB
+        return self.parent.strand_DB
     
     @strand.setter
     def strand(self, value:str):
         #self.Strand_DB = value
-        self.parent.primaryStructure_db.strand_DB = value
+        self.parent.strand_DB = value
 
 @define
 class SecondaryStructure():
@@ -82,7 +82,7 @@ class RNAStrand(NupackStrand):
         #                  db=None)
         self._primary_structure: PrimaryStructure = PrimaryStructure(save_value=True,
                                                                      current=None,
-                                                                     parent=self)
+                                                                     parent=self.primaryStructure_db)
         self.ensemble:Ensemble# = Ensemble()
         # self.strand:NupackStrand = NupackStrand(enum_list=Strand_Attributes,
         #                                         use_db=use_db)

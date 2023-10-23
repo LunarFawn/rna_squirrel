@@ -92,11 +92,11 @@ def test_generate_api_header(python_build:PythonBuild, yaml_ops:YAMLOperations):
 
 def test_generate_api_containers_structure(python_build:PythonBuild, yaml_ops:YAMLOperations):
 
-    class_name:str = 'PrimaryStructure'
+    class_name:str = 'SecondaryStructure'
     class_object:NutContainer = yaml_ops._struct_dict[class_name]
     class_lines:List[str] = python_build.generate_api_containers_structure(class_name=class_name,
                                                                    struct_object=class_object)
-    assert class_lines[0] == 'class PrimaryStructure(CustomAttribute):\n'
+    assert class_lines[0] == 'class SecondaryStructure(CustomAttribute):\n'
 
 def test_generate_api_main_call(python_build:PythonBuild, yaml_ops:YAMLOperations):
     config_class:str = 'NupackStrand'
@@ -104,5 +104,34 @@ def test_generate_api_main_call(python_build:PythonBuild, yaml_ops:YAMLOperation
                                                               nut_container=yaml_ops.nut.nut_main_struct)
     assert main_call[2] == '\tdef __init__(self, use_db:bool = False) -> None:\n'
     assert main_call[24] == '\tdef ensemble(self)->Ensemble:\n'
+
+def test_build_api_file(python_build:PythonBuild, yaml_ops:YAMLOperations):
+    full_list:List[str] = []
+    nut_struct_name:str = "NupackStrand"
+    path_to_config:str = 'test.bin.built_config'
+    header_list:List[str]= python_build.generate_api_header(config_file_path=path_to_config,
+                                                            nut_struct_name=nut_struct_name)
+    full_list = full_list + header_list
+    found_structs_list:List[str] = []
+    yaml_ops.reset_priority_queue
+    while len(yaml_ops.priority_queue) > 0:
+        current_entry:tuple = yaml_ops.pop_priority_queue
+        struct_name:str = current_entry[1]
+        if struct_name not in found_structs_list:
+            found_structs_list.append(struct_name)
+            struct_container: NutContainer = yaml_ops.definitions.definition_dict[struct_name]
+            current_list:List[str] = python_build.generate_api_containers_structure(class_name=struct_name,
+                                                                                    struct_object=struct_container)
+            full_list = full_list + current_list
     
+    #now make main call
+    main_call_list:List[str] = python_build.generate_api_main_call(config_class_name=nut_struct_name,
+                                                                   nut_container=yaml_ops.nut.nut_main_struct)
+    
+    full_list = full_list + main_call_list
+    dst:Path = Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_api.py')
+    with open(dst, 'w') as file:
+        file.writelines(full_list)
+    assert os.path.isfile(dst) == True
+
     

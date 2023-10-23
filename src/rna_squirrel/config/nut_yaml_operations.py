@@ -88,8 +88,9 @@ class YAMLOperations():
     
     @property
     def get_original_priorty_queue_copy(self):
-        heapq.heapify(self._backup_priority_queue)
-        return copy.deepcopy(self._backup_priority_queue)
+        new_copy = copy.deepcopy(self._backup_priority_queue)
+        heapq.heapify(new_copy)
+        return new_copy
     
     @property
     def reset_priority_queue(self):

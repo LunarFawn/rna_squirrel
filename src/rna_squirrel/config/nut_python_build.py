@@ -177,7 +177,18 @@ class PythonBuild():
         struct_lines.append('\t\tself.parent = parent\n')
         struct_lines.append('\t\tself.current = current\n')
         struct_lines.append('\t\tself.do_save = save_value\n')
-        
+        for item in struct_object.object_list:
+            line:str = ''
+            if item.object_type == NutObjectType.CONTAINER:
+                line = f'\t\tself._{item.name}: {item.object_info} = {item.object_info}(save_value=True,\n'
+                struct_lines.append(line)
+                struct_lines.append('\t\t\tcurrent=None,\n')
+                struct_lines.append(f'\t\t\tparent=self.{item.db_name})\n') 
+                struct_lines.append('\n')
+            else:
+                pass
+                #i think if it is a value then do nothing
+                #line = f'\t\tself._{item.name}: {item.object_type.value}\n'
         #now build the python property getter and settes
         #these are the same for value and class with the name 
         #being the only difference
@@ -194,7 +205,8 @@ class PythonBuild():
                 #db_name = attribute.db_name
             else:
                 if attribute.object_type == NutObjectType.DICTIONARY:
-                    return_type = f'{NutObjectType.DICTIONARY.value}{attribute.object_info}'
+                    new_string:str = str(attribute.object_info).replace("'","")
+                    return_type = f'{NutObjectType.DICTIONARY.value}{new_string}'
                 else:
                     return_type = f'{attribute.object_type.value}'
 
@@ -202,13 +214,13 @@ class PythonBuild():
             #firest teh getter    
             struct_lines.append('\t@property\n')
             struct_lines.append(f'\tdef {atr_name}(self)->{return_type}:\n')
-            struct_lines.append(f'\t\treturn self.parent.{struct_db_name}.{atr_db_name}\n')
+            struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')
             struct_lines.append('\n')
             
             #now the setter
             struct_lines.append(f'\t@{atr_name}.setter\n')
             struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):\n')
-            struct_lines.append(f'\t\tself.parent.{struct_db_name}.{atr_db_name} = value\n') 
+            struct_lines.append(f'\t\tself.parent.{atr_db_name} = value\n') 
             struct_lines.append('\n')           
             #now an empty line between attributes
  
@@ -272,7 +284,7 @@ class PythonBuild():
                 line = f'\t\tself._{item.name}: {item.object_info} = {item.object_info}(save_value=True,\n'
                 main_call_line.append(line)
                 main_call_line.append('\t\t\tcurrent=None,\n')
-                main_call_line.append('\t\t\tparent=self)\n') 
+                main_call_line.append(f'\t\t\tparent=self.{item.db_name})\n') 
                 main_call_line.append('\n')
             else:
                 pass
