@@ -135,13 +135,13 @@ class Ensemble(CustomAttribute):
 		self.parent.max_energy_db = value
 
 
-	@property
-	def energy_groups(self)->Dict[Energy, EnergyGroup]:
-		return self.parent.energy_groups_db
+	# @property
+	# def energy_groups(self)->Dict[Energy, EnergyGroup]:
+	# 	return self.parent.energy_groups_db
 
-	@energy_groups.setter
-	def energy_groups(self, value:Dict[Energy, EnergyGroup]):
-		self.parent.energy_groups_db = value
+	# @energy_groups.setter
+	# def energy_groups(self, value:Dict[Energy, EnergyGroup]):
+	# 	self.parent.energy_groups_db = value
 
 
 	@property

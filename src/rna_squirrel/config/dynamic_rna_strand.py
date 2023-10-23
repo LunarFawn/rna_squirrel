@@ -50,8 +50,7 @@ class CustomAttribute(GenericAttribute):
     def new_attr(self, atr: GenericAttribute) -> None:
         # for attribute in atr.attributes:
         if atr.atr_class == AtrClass.PARENT:
-            new_attrib:CustomAttribute = CustomAttribute(save_value=True)
-            self.__setattr__(atr.attribute, atr)
+            self.__setattr__(atr.attribute, CustomAttribute(save_value=True))
         elif atr.atr_class == AtrClass.CHILD:
             self.__setattr__(atr.attribute, None)
     
