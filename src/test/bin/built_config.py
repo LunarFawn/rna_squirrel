@@ -6,6 +6,8 @@ Config file built from yaml
 from enum import Enum
 from typing import TypeVar, Type, List, Dict
 from attrs import define, field
+
+
 from rna_squirrel.config.dynamic_rna_strand import (
 	Nut,
 	Value,

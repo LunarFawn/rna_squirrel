@@ -134,4 +134,32 @@ def test_build_api_file(python_build:PythonBuild, yaml_ops:YAMLOperations):
         file.writelines(full_list)
     assert os.path.isfile(dst) == True
 
+def test_build_one_file_api(python_build:PythonBuild, yaml_ops:YAMLOperations):
+    full_list:List[str] = []
+    nut_struct_name:str = "NupackStrand"
+    header_list:List[str] = python_build.generate_one_file_api_header()
+    enum_lines: List[str] = python_build.generate_nut_enums(nut_structure=yaml_ops.nut)
+    basecode_lines:List[str] = python_build.generate_config_baseclass(class_name=nut_struct_name,
+                                                       container_definitions=yaml_ops.definitions,
+                                                       nut_structure=yaml_ops.nut)
+    full_list:List[str] = header_list + enum_lines + basecode_lines
+    found_structs_list:List[str] = []
+    yaml_ops.reset_priority_queue
+    while len(yaml_ops.priority_queue) > 0:
+        current_entry:tuple = yaml_ops.pop_priority_queue
+        struct_name:str = current_entry[1]
+        if struct_name not in found_structs_list:
+            found_structs_list.append(struct_name)
+            struct_container: NutContainer = yaml_ops.definitions.definition_dict[struct_name]
+            current_list:List[str] = python_build.generate_api_containers_structure(class_name=struct_name,
+                                                                                    struct_object=struct_container)
+            full_list = full_list + current_list
     
+    #now make main call
+    main_call_list:List[str] = python_build.generate_api_main_call(config_class_name=nut_struct_name,
+                                                                   nut_container=yaml_ops.nut.nut_main_struct)
+    full_list = full_list + main_call_list
+    dst:Path = Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_single_api.py')
+    with open(dst, 'w') as file:
+        file.writelines(full_list)
+    assert os.path.isfile(dst) == True

@@ -316,12 +316,32 @@ class PythonBuild():
             main_call_line.append('\n')
             
         return main_call_line
-        
-            
-        
 
+    def generate_one_file_api_header(self)->List[str]:
+        header_lines:List[str] = []
+        
+        header_lines.append('"""\n')
+        header_lines.append('File that defines the main RNA sequence data\n')
+        header_lines.append('"""\n')
+        header_lines.append('\n')
+        header_lines.append('\n')
+        header_lines.append('from enum import Enum\n')
+        header_lines.append('from attrs import define, field\n')
+        header_lines.append('from collections import namedtuple\n')
+        header_lines.append('from typing import List, Dict, Any,TypeVar, Type\n')
+        header_lines.append('\n')
+        header_lines.append('from rna_squirrel.config.dynamic_rna_strand import (\n')
+        header_lines.append('\tNut,\n')
+        header_lines.append('\tValue,\n')
+        header_lines.append('\tGenericAttribute,\n')
+        header_lines.append('\tAtrClass,\n')
+        header_lines.append('\tCustomAttribute\n')
+        header_lines.append(')\n')
+        header_lines.append('\n')
+        header_lines.append('\n')
+        
+        return header_lines
 
-    
 
     
     

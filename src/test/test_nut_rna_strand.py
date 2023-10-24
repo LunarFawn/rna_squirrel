@@ -1,6 +1,7 @@
 import pytest
 
 from test.bin.built_api import Energy, PrimaryStructure, rna_strand, Ensemble
+from test.bin.built_single_api import rna_strand
 CONFIG_PATH = '/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
 
 @pytest.fixture
@@ -24,4 +25,8 @@ def test_set_strand_attribute(empty_default_strand:rna_strand):
 #     new_strand:RNAStrand = RNAStrand()
 #     new_strand.ensemble = Ensemble()
 #     assert new_strand.ensemble.mfe_structure.dot_parens == None
+
+def test_single_strand_attribute(empty_default_strand:rna_strand):
+    empty_default_strand.ensemble.mea_structure = 'AUGC'
+    assert empty_default_strand.ensemble.mea_structure == 'AUGC_from_db_returned'
     
