@@ -1,0 +1,116 @@
+
+#first declare all the classes
+#at this point it is best to just think
+#of them as objects and
+#further as parent/child
+# CLASSES:
+#   #number: 4
+#   - name: PrimaryStructure
+#   - name: Energy
+#   - name: SecondaryStructure
+#   - name: Ensemble
+
+# VALUES:
+#   - name: str
+#   - name: float
+#   - name: Dict 
+#     key: Energy
+#     value: EnergyGroup
+
+DECLARATIONS:
+  - !ClassDeclaration
+    name: PrimaryStructure
+  - !ClassDeclaration
+    name: Energy
+  - !ClassDeclaration
+    name: SecondaryStructure
+  - !ClassDeclaration
+    name: Ensemble
+  - !NutObjectType INT
+
+  
+  
+  # - !String
+  #   name: strand
+  # - !FloatingPoint
+  #   name: kcal
+  # - !String
+  #   name: dot_parens
+
+NUT:
+  !NUT
+    name: rna_strand
+    objects:
+      !Objects
+        name: NUT
+        object_list:
+          - !ClassType
+            name: primary_structure
+            class_type: PrimaryStructure
+          - !ClassType
+            name: ensemble
+            class_type: Ensemble
+  # object_count:
+  #   count: 2
+
+PrimaryStructure:
+  !Objects
+    name: PrimaryStructure
+    object_list:
+      - !String
+        name: strand
+  #object_count:
+  #  count: 1
+ 
+Energy:
+  !Objects
+    name: Energy
+    object_list: 
+    - !FloatingPoint
+      name: kcal
+  # object_count:
+  #   count: 1
+
+SecondaryStructure:
+  !Objects
+    name: SecondaryStructure
+    object_list: 
+      - !String
+        name: dot_parens
+      - !ClassType
+        name: free_energy
+        class_type: Energy
+      - !ClassType
+        name: stack_energy
+        class_type: Energy
+  # object_count:
+  #   count: 3
+
+Ensemble:
+  !Objects
+    name: Ensemble
+    object_list:
+      - !ClassType
+        name: min_energy
+        class_type: Energy
+      - !ClassType
+        name: max_energy
+        class_type: Energy
+      - !Dictionary
+        name: energy_groups
+        key: 
+          - !ClassType
+            name: key
+            class_type: Energy
+        value: 
+          - !ClassType
+            name: value
+            class_type: EnergyGroup
+      - !ClassType
+        name: mfe_structure
+        class_type: SecondaryStructure
+      - !ClassType
+        name: mea_structure
+        class_type: SecondaryStructure
+  # object_count:
+  #   count: 5
