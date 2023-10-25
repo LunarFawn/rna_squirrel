@@ -41,8 +41,8 @@ def yaml_def(yaml_ops:YAMLOperations):
     return yaml_ops.definitions
 
 
-LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v1.yaml')
-WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v1.yaml")
+LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v2.yaml')
+WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v2.yaml")
 CONFIG_PATH = WINDOWS_PATH
 
 def test_open_yaml(yaml_ops:YAMLOperations):
@@ -155,8 +155,8 @@ def test_populate_yaml_definitions(yaml_def:NutContainerDefinitions):
     assert len(definitions[0].object_list) == 1
     assert definitions[0].object_list[0].name == "strand"
     assert definitions[0].object_list[0].db_name == f'{definitions[0].object_list[0].name}_db'
-    assert definitions[0].object_list[0].object_type == NutObjectType.STRING
-    assert definitions[0].object_list[0].object_info == "None"
+    assert definitions[0].object_list[0].object_type == NutObjectType.VALUE
+    assert definitions[0].object_list[0].object_info == "str"
 
 def test_walk_objects_list(yaml_ops:YAMLOperations):
         

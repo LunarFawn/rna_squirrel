@@ -1,6 +1,6 @@
 import pytest
 
-from test.bin.built_api import Energy, PrimaryStructure, rna_strand, Ensemble
+#from test.bin.built_api import Energy, PrimaryStructure, rna_strand, Ensemble
 from test.bin.built_single_api import rna_strand
 CONFIG_PATH = '/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
 

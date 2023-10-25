@@ -27,6 +27,7 @@ class NutObjectType(Enum):
     BOOLEAN="bool"
     DICTIONARY="Dict"
     CONTAINER="CONTAINER"
+    VALUE="VALUE"
     
     @classmethod
     def from_yaml(cls, loader, node):

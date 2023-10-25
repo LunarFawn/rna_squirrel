@@ -159,7 +159,7 @@ class PythonBuild():
             else:
                 current_lines.append(f'\t\tself.{parent_container_name}.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,\n')
                 current_lines.append(f'\t\t\tattribute="{item.db_name}",\n')
-                current_lines.append(f'\t\t\tatr_type={item.object_type.value}))\n')
+                current_lines.append(f'\t\t\tatr_type={item.object_info}))\n')
                 current_lines.append('\n')
         
         return current_lines
@@ -208,7 +208,7 @@ class PythonBuild():
                     new_string:str = str(attribute.object_info).replace("'","")
                     return_type = f'{NutObjectType.DICTIONARY.value}{new_string}'
                 else:
-                    return_type = f'{attribute.object_type.value}'
+                    return_type = f'{attribute.object_info}'
 
             struct_lines.append('\n')
             #firest teh getter    
@@ -300,7 +300,7 @@ class PythonBuild():
                 main_call_line.append(f'\tdef {item.name}(self)->{item.object_info}:\n')
                 main_call_line.append(f'\t\treturn self._{item.name}\n')
             else:
-                main_call_line.append(f'\tdef {item.name}(self)->{item.object_type.value}:\n')
+                main_call_line.append(f'\tdef {item.name}(self)->{item.object_info}:\n')
                 main_call_line.append(f'\t\treturn self.{item.db_name}\n')
             main_call_line.append('\n')  
         
@@ -310,7 +310,7 @@ class PythonBuild():
                 main_call_line.append(f'\tdef {item.name}(self, struct:{item.object_info}):\n')
                 main_call_line.append(f'\t\tself._{item.name} = struct\n')
             else:
-                main_call_line.append(f'\tdef {item.name}(self, value:{item.object_type.value}):\n')
+                main_call_line.append(f'\tdef {item.name}(self, value:{item.object_info}):\n')
                 main_call_line.append(f'\t\tself.{item.db_name} = value\n')
             main_call_line.append('\n')
             main_call_line.append('\n')
