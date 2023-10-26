@@ -47,7 +47,7 @@ class CustomAttribute(GenericAttribute):
     """
     # def __init__(self, save_value: bool = False) -> None:
     #     super().__init__(save_value)
-    def __init__(self,parent:Any, save_value:bool = False, ) -> None:
+    def __init__(self,parent:Any,source_name:str, save_value:bool = False, ) -> None:
         super().__init__(atr_class=AtrClass.NONE,
                          atr_type=None,
                          attribute='')
@@ -56,12 +56,18 @@ class CustomAttribute(GenericAttribute):
         self.current_table:Any = None
         self._attrib_dict:Dict[str,Any] = {}
         self.parent:Any = parent
+        self.source_name: str = source_name
         
     def new_attr(self, atr: GenericAttribute) -> None:
         # for attribute in atr.attributes:
         if atr.atr_class == AtrClass.PARENT:
-            self._attrib_dict[atr.attribute] = CustomAttribute(self, save_value=True)
-            self.__setattr__(atr.attribute, CustomAttribute(self, save_value=True))
+            # self._attrib_dict[atr.attribute] = CustomAttribute(parent=getattr(self.parent, atr.attribute),
+            #                                                    source_name=atr.attribute, 
+            #                                                    save_value=True)
+            self.__setattr__(atr.attribute, CustomAttribute(parent=getattr(self.parent, self.source_name),
+                                                               source_name=atr.attribute,
+                                                               save_value=True))
+            test = 1
         elif atr.atr_class == AtrClass.CHILD:
             self._attrib_dict[atr.attribute] = None
             self.__setattr__(atr.attribute, None)
@@ -122,7 +128,8 @@ class Nut():
   
     def __attrs_post_init__(self):
        for thing in self.enum_list:
-            self.__setattr__(thing.value, CustomAttribute(parent=self, save_value=True))
+            self.__setattr__(thing.value, CustomAttribute(parent=self,
+                                                               source_name=thing.value, save_value=True))
   
         
     # @property
