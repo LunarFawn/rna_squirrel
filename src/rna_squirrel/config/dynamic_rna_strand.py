@@ -7,6 +7,9 @@ from enum import Enum
 from typing import TypeVar, List, Dict, Any, Protocol, Type
 import pickle
 
+from rna_squirrel.config.nut_filter_definitions import NutFilterDefinitions, ValueFlow
+
+nut_filter:NutFilterDefinitions = NutFilterDefinitions()
 
 T = TypeVar("T", bound=Enum)
 
@@ -75,8 +78,10 @@ class CustomAttribute(GenericAttribute):
         #the db
         name_end:str = __name[-3:]
         if name_end == '_db' or name_end == '_DB':
-            if type(__value) == str:
-                __value = f'{__value}_from_db'
+            __value = nut_filter.filter(flow_direction=ValueFlow.OUTBOUND,
+                              value=__value)
+            # if type(__value) == str:
+            #     __value = f'{__value}_from_db'
         super().__setattr__(__name, __value)
     
     def __getattribute__(self, __name: str) -> Any:
@@ -87,9 +92,11 @@ class CustomAttribute(GenericAttribute):
         if name_end == '_db' or name_end == '_DB':
             #value = self.__dict__[__name]
             value = super().__getattribute__(__name)
-            if type(value) == str:
-                value = f'{value}_returned'
-                return value
+            # if type(value) == str:
+            #     value = f'{value}_returned'
+            #     return value
+            value = nut_filter.filter(flow_direction=ValueFlow.INBOUND,
+                              value=value)
             return value
         else:
             return super().__getattribute__(__name)

@@ -45,4 +45,8 @@ class NutFilterDefinitions():
         This is the 
         """
         new_value:Any = value
+        
+        if type(value) == str:
+                new_value = f'{value}_returned'
+            
         return new_value
