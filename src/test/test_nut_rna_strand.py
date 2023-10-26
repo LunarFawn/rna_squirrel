@@ -29,4 +29,9 @@ def test_set_strand_attribute(empty_default_strand:rna_strand):
 def test_single_strand_attribute(empty_default_strand:rna_strand):
     empty_default_strand.ensemble.mea_structure = 'AUGC'
     assert empty_default_strand.ensemble.mea_structure == 'AUGC_from_db_returned'
+
+def test_new_thing(empty_default_strand:rna_strand):
+    empty_default_strand.primary_structure.jumping = "yo"# = new_struct
+    assert empty_default_strand.primary_structure.jumping == "yo_from_db_returned"
+    assert empty_default_strand.primary_structure.jumping == "yo_from_db_returned"
     

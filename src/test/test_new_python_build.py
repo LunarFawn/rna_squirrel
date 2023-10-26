@@ -33,7 +33,7 @@ from typing import List, Dict, Any
 
 LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v2.yaml')
 WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v2.yaml")
-CONFIG_PATH = LINUX_PATH
+CONFIG_PATH = WINDOWS_PATH
 
 @pytest.fixture
 def yaml_ops():
@@ -159,8 +159,8 @@ def test_build_one_file_api(python_build:PythonBuild, yaml_ops:YAMLOperations):
     main_call_list:List[str] = python_build.generate_api_main_call(config_class_name=nut_struct_name,
                                                                    nut_container=yaml_ops.nut.nut_main_struct)
     full_list = full_list + main_call_list
-    dst:Path = Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_single_api.py')
-    #dst:Path = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\built_single_api.py")
+    #dst:Path = Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_single_api.py')
+    dst:Path = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\built_single_api.py")
     with open(dst, 'w') as file:
         file.writelines(full_list)
     assert os.path.isfile(dst) == True

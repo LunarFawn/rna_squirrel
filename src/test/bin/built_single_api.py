@@ -34,6 +34,10 @@ class NupackStrand(Nut):
 			attribute="strand_db",
 			atr_type=str))
 
+		self.primary_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="jumping_db",
+			atr_type=str))
+
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="min_energy_db",
 			atr_type=None))
@@ -106,6 +110,10 @@ class NupackStrand(Nut):
 			attribute="strand_db",
 			atr_type=str))
 
+		self.ensemble_db.what_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="jumping_db",
+			atr_type=str))
+
 class Energy(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
 		self.parent = parent
@@ -134,6 +142,15 @@ class PrimaryStructure(CustomAttribute):
 	@strand.setter
 	def strand(self, value:str):
 		self.parent.strand_db = value
+
+
+	@property
+	def jumping(self)->str:
+		return self.parent.jumping_db
+
+	@jumping.setter
+	def jumping(self, value:str):
+		self.parent.jumping_db = value
 
 
 class SecondaryStructure(CustomAttribute):

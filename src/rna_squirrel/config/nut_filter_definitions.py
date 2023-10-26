@@ -7,8 +7,8 @@ from typing import Any
 from enum import Enum
 
 class ValueFlow(Enum):
-    UPSTREAM="UPSTREAM"
-    DOWNSTREAM="DOWNSTREAM"
+    OUTBOUND="OUTBOUND"
+    INBOUND="INBOUND"
     BOTH="BOTH"
     
 class NutFilterDefinitions():
@@ -17,22 +17,32 @@ class NutFilterDefinitions():
         pass
     
     def filter(self, value:Any, flow_direction:ValueFlow):
+        new_value:Any = value
         
-        if type(value) == str:
-            pass
+        if flow_direction == ValueFlow.OUTBOUND:
+            new_value = self.filter_out_flow(value=new_value)
+        elif flow_direction == ValueFlow.INBOUND:
+            new_value = self.filter_in_flow(value=new_value)
         
-    def filter_both_flow(self):
-        pass
+        
+        return new_value
+        
+    def filter_both_flow(self, value:Any):
+        new_value:Any = value
+        return new_value
     
     def filter_out_flow(self,  value:Any):
         """
         This is the 
         """
-        pass
+        new_value:Any = value
+        if type(value) == str:
+            new_value = f'{value}_from_db'
+        return new_value
     
     def filter_in_flow(self,  value:Any):
         """
         This is the 
         """
-        pass
-    
+        new_value:Any = value
+        return new_value

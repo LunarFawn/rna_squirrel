@@ -38,6 +38,10 @@ DEFINITIONS:
             name: strand
             object_type: !NutObjectType VALUE
             object_info: str
+          - !NutObject
+            name: jumping
+            object_type: !NutObjectType VALUE
+            object_info: str
       - !NutContainer
         name: Energy
         object_list:
