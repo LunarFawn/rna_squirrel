@@ -16,8 +16,11 @@ class NutFilterDefinitions():
     def __init__(self) -> None:
         pass
     
-    def filter(self, value:Any, flow_direction:ValueFlow):
+    def filter(self, parent:Any, attr_name:str, value:Any, flow_direction:ValueFlow):
         new_value:Any = value
+        
+        routing:NutAdressing = NutAdressing()
+        routing.get_attr_address(attribute=parent)
         
         if flow_direction == ValueFlow.OUTBOUND:
             new_value = self.filter_out_flow(value=new_value)
@@ -60,4 +63,19 @@ class NutAdvancedFilterRules():
         pass
 
     def process_dict(self, dict_container:Dict):
+        pass
+
+class NutAdressing():
+    """
+    Class to handle the addressing and routing
+    of the attributes and the data
+    """
+    
+    def __init__(self) -> None:
+        pass
+    
+    def get_attr_address(self, attribute:Any):
+        """
+        get the attribute parent
+        """
         pass

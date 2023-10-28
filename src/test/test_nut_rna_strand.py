@@ -6,7 +6,7 @@ CONFIG_PATH = '/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
 
 @pytest.fixture
 def empty_default_strand():
-    return rna_strand()
+    return rna_strand(var_name="I am RNA")
 
 def test_get_empty_strand(empty_default_strand:rna_strand):
     assert empty_default_strand.primary_structure.strand == None

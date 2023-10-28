@@ -24,10 +24,11 @@ class Nut_Attributes(Enum):
 
 class NupackStrand(Nut):
 
-	def __init__(self, use_db:bool = False) -> None:
+	def __init__(self,var_name:str, use_db:bool = False) -> None:
 		super().__init__(enum_list=Nut_Attributes,
 			use_db=True,
-			db=None)
+			db=None,
+   			var_name=var_name)
 
 
 		self.primary_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
@@ -267,8 +268,9 @@ class Ensemble(CustomAttribute):
 
 class rna_strand(NupackStrand):
 
-	def __init__(self, use_db:bool = False) -> None:
-		super().__init__(use_db=use_db)
+	def __init__(self,var_name:str, use_db:bool = False) -> None:
+		super().__init__(use_db=use_db,
+                   var_name=var_name)
 
 
 		self._primary_structure: PrimaryStructure = PrimaryStructure(save_value=True,

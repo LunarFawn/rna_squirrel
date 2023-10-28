@@ -47,10 +47,10 @@ class CustomAttribute(GenericAttribute):
     """
     # def __init__(self, save_value: bool = False) -> None:
     #     super().__init__(save_value)
-    def __init__(self,parent:Any,source_name:str, save_value:bool = False, ) -> None:
-        super().__init__(atr_class=AtrClass.NONE,
-                         atr_type=None,
-                         attribute='')
+    def __init__(self,parent:Any,source_name:str,atr_class:AtrClass,atr_type:Any,attr_name:str, save_value:bool = False, ) -> None:
+        super().__init__(atr_class=atr_class,
+                         atr_type=atr_type,
+                         attribute=attr_name)
         self.do_save:bool = save_value
         self.parent_table:Any = None
         self.current_table:Any = None
@@ -66,7 +66,10 @@ class CustomAttribute(GenericAttribute):
             #                                                    save_value=True)
             self.__setattr__(atr.attribute, CustomAttribute(parent=getattr(self.parent, self.source_name),
                                                                source_name=atr.attribute,
-                                                               save_value=True))
+                                                               save_value=True,
+                                                               atr_class=atr.atr_class,
+                                                               atr_type=atr.atr_type,
+                                                               attr_name=atr.attribute))
             test = 1
         elif atr.atr_class == AtrClass.CHILD:
             self._attrib_dict[atr.attribute] = None
@@ -85,7 +88,9 @@ class CustomAttribute(GenericAttribute):
         name_end:str = __name[-3:]
         if name_end == '_db' or name_end == '_DB':
             __value = nut_filter.filter(flow_direction=ValueFlow.OUTBOUND,
-                              value=__value)
+                              value=__value,
+                              parent=self,
+                              attr_name=__name)
             # if type(__value) == str:
             #     __value = f'{__value}_from_db'
         super().__setattr__(__name, __value)
@@ -102,7 +107,9 @@ class CustomAttribute(GenericAttribute):
             #     value = f'{value}_returned'
             #     return value
             value = nut_filter.filter(flow_direction=ValueFlow.INBOUND,
-                              value=value)
+                              value=value,
+                              parent=self,
+                              attr_name=__name)
             return value
         else:
             return super().__getattribute__(__name)
@@ -117,46 +124,13 @@ class Nut():
     enum_list: T = field()
     use_db:bool = field()
     db:Any = field()
-    # attributes:Dict[T, Any] = field()
-    # @attributes.default
-    # def _do_the_attributes(self):
-    #     new_dict:Dict[T, Any] = {}
-    #     for thing in self.enum_list:
-    #         new_dict[thing] = None
-    #         self.__setattr__(thing.name, None)
-    #     return new_dict
-  
+    var_name:str = field()
+
     def __attrs_post_init__(self):
        for thing in self.enum_list:
             self.__setattr__(thing.value, CustomAttribute(parent=self,
-                                                               source_name=thing.value, save_value=True))
-  
-        
-    # @property
-    # def attributes(self):
-    #     if self.use_db is True:
-    #         #first pupulate property with
-    #         #value from db
-    #         pass
-       
-    #     return self._attributes
-    
-    # def set_attributes(self, atr:T, value:Any):
-    #     self._attributes[atr] = value
-    #     if self.use_db is True:
-    #         #write value to property in db
-    #         pass
-
-    
-    # @property
-    # def attributes(self):
-    #     return self._attributes
-
-    # @attributes.setter
-    # def attributes(self,type:T, value):
-    #     self._attributes[type] = value
-    
-    # @attributes.on_setattr
-    # def _do_the_next_thing(self, attribute, value):
-    #     record_to_db(attribute=attribute, value=value)
-    
+                                                               source_name=thing.value,
+                                                               save_value=True,
+                                                               atr_type=Any,
+                                                               atr_class=AtrClass.PARENT,
+                                                               attr_name=thing.value))
