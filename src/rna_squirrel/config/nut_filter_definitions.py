@@ -3,7 +3,7 @@ File to hold teh default classes for manipulating
 data that goes throught the setter and getter
 of the dynamic backend
 """
-from typing import Any
+from typing import Any, Dict
 from enum import Enum
 
 class ValueFlow(Enum):
@@ -50,3 +50,14 @@ class NutFilterDefinitions():
                 new_value = f'{value}_returned'
             
         return new_value
+
+class NutAdvancedFilterRules():
+    """
+    Class to hold all the rules for types
+    """
+
+    def __init__(self) -> None:
+        pass
+
+    def process_dict(self, dict_container:Dict):
+        pass
