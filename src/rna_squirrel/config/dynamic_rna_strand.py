@@ -7,7 +7,7 @@ from enum import Enum
 from typing import TypeVar, List, Dict, Any, Protocol, Type
 import pickle
 
-from rna_squirrel.config.nut_yaml_objects import AtrClass
+from rna_squirrel.config.nut_yaml_objects import AtrClass, GenericAttribute, ValuePacket
 
 from rna_squirrel.config.nut_filter_definitions import NutFilterDefinitions, ValueFlow
 
@@ -30,14 +30,7 @@ class Object():
 class Group():
     objects:List[T]
 
-@define(kw_only=True)
-class GenericAttribute():
-    atr_class:AtrClass = field()
-    atr_type:Type = None
-    #atr_default_value:Any = None
-    #attributes:Enum = field()
-    attribute:str = field()
-    
+
 class CustomAttribute(GenericAttribute):
     """
     I think that each CustomAttribute needs
@@ -54,9 +47,17 @@ class CustomAttribute(GenericAttribute):
         self.parent_table:Any = None
         self.current_table:Any = None
         self._attrib_dict:Dict[str,Any] = {}
-        self.parent:Any = parent
+        self._parent:Any = parent
         self.source_name: str = source_name
-        
+    
+    @property
+    def parent(self):
+        return self._parent
+
+    @parent.setter
+    def parent(self, thing:Any):
+        self._parent = thing
+       
     def new_attr(self, atr: GenericAttribute) -> None:
         # for attribute in atr.attributes:
         if atr.atr_class == AtrClass.PARENT:
@@ -72,6 +73,7 @@ class CustomAttribute(GenericAttribute):
             test = 1
         elif atr.atr_class == AtrClass.CHILD:
             self._attrib_dict[atr.attribute] = None
+
             self.__setattr__(atr.attribute, None)
     
     def get_custom_attr(self, name:str):
@@ -86,6 +88,13 @@ class CustomAttribute(GenericAttribute):
         #the db
         name_end:str = __name[-3:]
         if name_end == '_db' or name_end == '_DB':
+            
+            if isinstance(__value, CustomAttribute) != True:
+                __value:ValuePacket = ValuePacket(name=__name,
+                                        value=__value,
+                                        parent=self,
+                                        type=type(__value))
+                         
             __value = nut_filter.filter(flow_direction=ValueFlow.OUTBOUND,
                               value=__value,
                               parent=self,

@@ -7,6 +7,7 @@ from enum import Enum
 from dataclasses import dataclass, field
 from queue import PriorityQueue
 import heapq
+import attrs
 
 import sys
 import ruamel.yaml
@@ -131,5 +132,37 @@ class NutStructure:
         self.nut_container_declarations = new_list
 
 
+@attrs.define(kw_only=True)
+class GenericAttribute():
+    atr_class:AtrClass = attrs.field()
+    atr_type:Type = None
+    #atr_default_value:Any = None
+    #attributes:Enum = field()
+    attribute:str = attrs.field()
+
+
+class ValuePacket(GenericAttribute):
+      
+    def __init__(self, name:str, value:Any, parent:str, type:Any) -> None:
+        super().__init__(atr_class=AtrClass.CHILD,
+                         atr_type=type,
+                         attribute=name)
+        self._parent:str = parent
+        self._value:Any = value
+        self._address_list:List[str] = []  
+    
+    @property
+    def parent(self)->str:
+        return self._parent
+    
+    @property 
+    def value(self)->Any:
+        return self._value 
+    
+    @property
+    def address_list(self):
+        return self._address_list 
+    
+    address_list:List[str]
 
 

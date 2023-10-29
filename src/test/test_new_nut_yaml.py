@@ -152,7 +152,7 @@ def test_populate_yaml_definitions(yaml_def:NutContainerDefinitions):
     definitions: List[NutContainer] = yaml_def.nut_containers_definitions
     assert definitions[0].name == "PrimaryStructure"
     assert definitions[0].db_name == f'{definitions[0].name}_db'
-    assert len(definitions[0].object_list) == 1
+    assert len(definitions[0].object_list) == 2
     assert definitions[0].object_list[0].name == "strand"
     assert definitions[0].object_list[0].db_name == f'{definitions[0].object_list[0].name}_db'
     assert definitions[0].object_list[0].object_type == NutObjectType.VALUE

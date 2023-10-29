@@ -60,7 +60,7 @@ def test_build_object_enum(python_build:PythonBuild, yaml_ops:YAMLOperations):
     child_lines:List[str] = []
     parent_lines, child_lines = python_build.generate_object_enum(container=yaml_ops.definitions.definition_dict[class_name])
     assert len(parent_lines) == 1
-    assert len(child_lines) == 2
+    assert len(child_lines) == 3
     assert child_lines[1] == '\tstrand = "strand_db"\n'
     
 def test_config_definition_generation(python_build:PythonBuild,yaml_ops:YAMLOperations):
@@ -102,8 +102,8 @@ def test_generate_api_main_call(python_build:PythonBuild, yaml_ops:YAMLOperation
     config_class:str = 'NupackStrand'
     main_call:List[str] = python_build.generate_api_main_call(config_class_name=config_class,
                                                               nut_container=yaml_ops.nut.nut_main_struct)
-    assert main_call[2] == '\tdef __init__(self, use_db:bool = False) -> None:\n'
-    assert main_call[24] == '\tdef ensemble(self)->Ensemble:\n'
+    assert main_call[2] == '\tdef __init__(self, var_name:str, use_db:bool = False) -> None:\n'
+    assert main_call[24] == '\t@property\n'
 
 def test_build_api_file(python_build:PythonBuild, yaml_ops:YAMLOperations):
     full_list:List[str] = []

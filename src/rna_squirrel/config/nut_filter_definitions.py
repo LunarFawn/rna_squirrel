@@ -7,7 +7,7 @@ from typing import Any, Dict, List
 from enum import Enum
 import heapq
 
-from rna_squirrel.config.nut_yaml_objects import AtrClass
+from rna_squirrel.config.nut_yaml_objects import AtrClass, ValuePacket, GenericAttribute
 
 class ValueFlow(Enum):
     OUTBOUND="OUTBOUND"
@@ -45,14 +45,17 @@ class NutFilterDefinitions():
         """
         This is the 
         """
-        for _ in range(len(address)):
-            test_value:tuple = heapq.heappop(address)
-            order:int = test_value[0]
-            jump_name:str = test_value[1]
-            print(f'{order} {jump_name}')
         new_value:Any = value
-        if type(value) == str:
-            new_value = f'{value}_from_db'
+        if isinstance(value, ValuePacket) == True:
+            #this is a value and not a parent custom attribe
+            packet:ValuePacket = value
+            new_value = packet.value
+            if type(packet.value) == str:
+                new_value = f'{new_value}_from_db'
+        else:
+            #it is a parent struct
+            pass     
+       
         return new_value
     
     def filter_in_flow(self,  value:Any):
