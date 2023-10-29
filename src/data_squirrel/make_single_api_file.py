@@ -6,13 +6,13 @@ from typing import List
 from pathlib import Path
 import os
 
-from rna_squirrel.config.nut_yaml_operations import (
+from data_squirrel.config.nut_yaml_operations import (
     YAMLOperations,
     WalkObjectReturn
 )
-from rna_squirrel.config.nut_python_build import PythonBuild
+from data_squirrel.config.nut_python_build import PythonBuild
 
-from rna_squirrel.config.nut_yaml_objects import (
+from data_squirrel.config.nut_yaml_objects import (
     NutStructure,
     NutDatabaseInfo,
     NutContainerDefinitions,

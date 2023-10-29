@@ -9,7 +9,7 @@ from collections import namedtuple
 from typing import List, Dict, Any,TypeVar, Type
 from pathlib import Path
 
-from rna_squirrel.config.dynamic_rna_strand import (
+from data_squirrel.config.dynamic_data_nut import (
 	Nut,
 	Value,
 	GenericAttribute,
@@ -268,7 +268,7 @@ class Ensemble(CustomAttribute):
 		self._what_structure = value
 
 
-class rna_strand(RNAStruct):
+class RNAStrand(RNAStruct):
 
 	def __init__(self, working_folder:str, var_name:str, use_db:bool = False) -> None:
 		super().__init__(use_db=use_db,

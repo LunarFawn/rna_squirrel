@@ -7,7 +7,7 @@ import sys
 import os
 from typing import List, Any, Dict
 
-from rna_squirrel.config.nut_yaml_objects import (
+from data_squirrel.config.nut_yaml_objects import (
     NutStructure,
     NutDatabaseInfo,
     NutContainerDefinitions,
@@ -42,7 +42,7 @@ class PythonBuild():
         header.append("from enum import Enum\n")
         header.append("from typing import TypeVar, Type, List, Dict\n")
         header.append("from attrs import define, field\n")
-        header.append("from rna_squirrel.config.dynamic_rna_strand import (\n")
+        header.append("from data_squirrel.config.dynamic_data_nut import (\n")
         header.append("\tNut,\n")
         header.append("\tValue,\n")
         header.append("\tGenericAttribute,\n")
@@ -259,7 +259,7 @@ class PythonBuild():
         header_lines.append(f'\t{nut_struct_name},\n')
         header_lines.append(')\n')
         header_lines.append('\n')
-        header_lines.append('from rna_squirrel.config.dynamic_rna_strand import (\n')
+        header_lines.append('from data_squirrel.config.dynamic_data_nut import (\n')
         header_lines.append('\tNut,\n')
         header_lines.append('\tValue,\n')
         header_lines.append('\tGenericAttribute,\n')
@@ -341,7 +341,7 @@ class PythonBuild():
         header_lines.append('from typing import List, Dict, Any,TypeVar, Type\n')
         header_lines.append('from pathlib import Path\n')
         header_lines.append('\n')
-        header_lines.append('from rna_squirrel.config.dynamic_rna_strand import (\n')
+        header_lines.append('from data_squirrel.config.dynamic_data_nut import (\n')
         header_lines.append('\tNut,\n')
         header_lines.append('\tValue,\n')
         header_lines.append('\tGenericAttribute,\n')

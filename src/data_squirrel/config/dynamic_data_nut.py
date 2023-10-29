@@ -8,11 +8,11 @@ from typing import TypeVar, List, Dict, Any, Protocol, Type
 from pathlib import Path
 import pickle
 
-from rna_squirrel.config.nut_yaml_objects import AtrClass, GenericAttribute, ValuePacket
+from data_squirrel.config.nut_yaml_objects import AtrClass, GenericAttribute, ValuePacket
 
-from rna_squirrel.config.nut_filter_definitions import NutFilterDefinitions, ValueFlow
+from data_squirrel.config.nut_filter_definitions import NutFilterDefinitions, ValueFlow
 
-from rna_squirrel.config.nut_data_manager import init_variable_folder
+from data_squirrel.config.nut_data_manager import init_variable_folder
 
 #nut_filter:NutFilterDefinitions = NutFilterDefinitions(working_dir=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
 

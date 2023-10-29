@@ -9,8 +9,8 @@ import heapq
 from pathlib import Path
 from dataclasses import dataclass, field
 
-from rna_squirrel.config.nut_yaml_objects import AtrClass, ValuePacket, GenericAttribute, String
-from rna_squirrel.config.nut_data_manager import YamlDataOperations
+from data_squirrel.config.nut_yaml_objects import AtrClass, ValuePacket, GenericAttribute, String
+from data_squirrel.config.nut_data_manager import YamlDataOperations
 
 class ValueFlow(Enum):
     OUTBOUND="OUTBOUND"

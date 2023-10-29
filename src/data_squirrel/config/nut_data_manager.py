@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 import os
 
-from rna_squirrel.config.nut_yaml_objects import String, Integer, FloatingPoint, Dictionary
+from data_squirrel.config.nut_yaml_objects import String, Integer, FloatingPoint, Dictionary
 
 def init_variable_folder(working_folder:Path, nut_name:str):
     nut_folder_path:Path = working_folder.joinpath(nut_name)

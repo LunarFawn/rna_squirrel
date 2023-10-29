@@ -16,7 +16,7 @@ NUT:
         name: Ensemble
     nut_main_struct:
       !NutContainer
-        name: rna_strand
+        name: RNAStrand
         object_list:
           - !NutObject
             name: primary_structure

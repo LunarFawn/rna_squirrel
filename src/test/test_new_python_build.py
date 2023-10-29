@@ -4,13 +4,13 @@ import pytest
 import inspect
 import heapq
 
-from rna_squirrel.config.nut_yaml_operations import (
+from data_squirrel.config.nut_yaml_operations import (
     YAMLOperations,
     WalkObjectReturn
 )
 
 
-from rna_squirrel.config.nut_yaml_objects import (
+from data_squirrel.config.nut_yaml_objects import (
     NutStructure,
     NutDatabaseInfo,
     NutContainerDefinitions,
@@ -21,7 +21,7 @@ from rna_squirrel.config.nut_yaml_objects import (
     NutObjectType
 )
 
-from rna_squirrel.config.nut_python_build import PythonBuild
+from data_squirrel.config.nut_python_build import PythonBuild
 
 from pathlib import Path
 
@@ -31,10 +31,10 @@ import os
 import sys
 from typing import List, Dict, Any
 
-from rna_squirrel.make_single_api_file import GenerateSingleApifile
+from data_squirrel.make_single_api_file import GenerateSingleApifile
 
-LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v2.yaml')
-WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v2.yaml")
+LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v3.yaml')
+WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v3.yaml")
 CONFIG_PATH = LINUX_PATH
 
 @pytest.fixture

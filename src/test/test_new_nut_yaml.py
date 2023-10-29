@@ -2,13 +2,13 @@ import pytest
 import inspect
 import heapq
 
-from rna_squirrel.config.nut_yaml_operations import (
+from data_squirrel.config.nut_yaml_operations import (
     YAMLOperations,
     WalkObjectReturn
 )
 
 
-from rna_squirrel.config.nut_yaml_objects import (
+from data_squirrel.config.nut_yaml_objects import (
     NutStructure,
     NutDatabaseInfo,
     NutContainerDefinitions,
