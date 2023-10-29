@@ -164,5 +164,26 @@ class ValuePacket(GenericAttribute):
         return self._address_list 
     
     address_list:List[str]
+    
+
+
+@dataclass
+class Integer:
+    value:int
+    
+        
+@dataclass
+class FloatingPoint:
+    value:float
+        
+@dataclass
+class String:
+    value:str
+
+        
+@dataclass
+class Dictionary:
+    value:Dict[Any,Any]
+
 
 

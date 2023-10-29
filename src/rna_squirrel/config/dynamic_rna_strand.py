@@ -5,13 +5,14 @@ Class for defining a rna strand dynamically
 from attrs import define, field, Factory
 from enum import Enum
 from typing import TypeVar, List, Dict, Any, Protocol, Type
+from pathlib import Path
 import pickle
 
 from rna_squirrel.config.nut_yaml_objects import AtrClass, GenericAttribute, ValuePacket
 
 from rna_squirrel.config.nut_filter_definitions import NutFilterDefinitions, ValueFlow
 
-nut_filter:NutFilterDefinitions = NutFilterDefinitions()
+nut_filter:NutFilterDefinitions = NutFilterDefinitions(working_dir=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
 
 T = TypeVar("T", bound=Enum)
 
@@ -134,11 +135,13 @@ class Nut():
     db:Any = field()
     var_name:str = field()
     atr_class:AtrClass = AtrClass.NUT
+    
+    
     def __attrs_post_init__(self):
        for thing in self.enum_list:
             self.__setattr__(thing.value, CustomAttribute(parent=self,
-                                                               source_name=thing.value,
-                                                               save_value=True,
-                                                               atr_type=Any,
-                                                               atr_class=AtrClass.PARENT,
-                                                               attr_name=thing.value))
+                                                        source_name=thing.value,
+                                                        save_value=True,
+                                                        atr_type=Any,
+                                                        atr_class=AtrClass.PARENT,
+                                                        attr_name=thing.value))
