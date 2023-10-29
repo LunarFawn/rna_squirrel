@@ -31,6 +31,8 @@ import os
 import sys
 from typing import List, Dict, Any
 
+from rna_squirrel.make_single_api_file import GenerateSingleApifile
+
 LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v2.yaml')
 WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v2.yaml")
 CONFIG_PATH = LINUX_PATH
@@ -164,3 +166,10 @@ def test_build_one_file_api(python_build:PythonBuild, yaml_ops:YAMLOperations):
     with open(dst, 'w') as file:
         file.writelines(full_list)
     assert os.path.isfile(dst) == True
+    
+def test_main_call_run():
+    new_generator:GenerateSingleApifile = GenerateSingleApifile()
+    new_generator.run(nut_struct_name="RNAStruct",
+                      yaml_config_path=CONFIG_PATH,
+                      dst_save_filename=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_single_api_2.py'))
+    assert os.path.isfile(Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_single_api_2.py')) == True

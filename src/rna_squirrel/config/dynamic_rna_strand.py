@@ -14,7 +14,7 @@ from rna_squirrel.config.nut_filter_definitions import NutFilterDefinitions, Val
 
 from rna_squirrel.config.nut_data_manager import init_variable_folder
 
-nut_filter:NutFilterDefinitions = NutFilterDefinitions(working_dir=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
+#nut_filter:NutFilterDefinitions = NutFilterDefinitions(working_dir=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
 
 T = TypeVar("T", bound=Enum)
 
@@ -42,7 +42,7 @@ class CustomAttribute(GenericAttribute):
     """
     # def __init__(self, save_value: bool = False) -> None:
     #     super().__init__(save_value)
-    def __init__(self,parent:Any,source_name:str,atr_class:AtrClass,atr_type:Any,attr_name:str, save_value:bool = False, ) -> None:
+    def __init__(self,parent:Any,source_name:str,atr_class:AtrClass,atr_type:Any,attr_name:str,nut_filter:NutFilterDefinitions, save_value:bool = False, ) -> None:
         super().__init__(atr_class=atr_class,
                          atr_type=atr_type,
                          attribute=attr_name)
@@ -52,6 +52,7 @@ class CustomAttribute(GenericAttribute):
         self._attrib_dict:Dict[str,Any] = {}
         self._parent:Any = parent
         self.source_name: str = source_name
+        self.nut_filter:NutFilterDefinitions = nut_filter
     
     @property
     def parent(self):
@@ -72,7 +73,8 @@ class CustomAttribute(GenericAttribute):
                                                                save_value=True,
                                                                atr_class=atr.atr_class,
                                                                atr_type=atr.atr_type,
-                                                               attr_name=atr.attribute))
+                                                               attr_name=atr.attribute,
+                                                               nut_filter=self.nut_filter))
             test = 1
         elif atr.atr_class == AtrClass.CHILD:
             self._attrib_dict[atr.attribute] = None
@@ -98,7 +100,7 @@ class CustomAttribute(GenericAttribute):
                                         parent=self,
                                         type=type(__value))
                          
-            __value = nut_filter.filter(flow_direction=ValueFlow.OUTBOUND,
+            __value = self.nut_filter.filter(flow_direction=ValueFlow.OUTBOUND,
                               value=__value,
                               parent=self,
                               attr_name=__name)
@@ -122,7 +124,7 @@ class CustomAttribute(GenericAttribute):
             # if type(value) == str:
             #     value = f'{value}_returned'
             #     return value
-            value = nut_filter.filter(flow_direction=ValueFlow.INBOUND,
+            value = self.nut_filter.filter(flow_direction=ValueFlow.INBOUND,
                               value=value,
                               parent=self,
                               attr_name=__name)
@@ -141,18 +143,21 @@ class Nut():
     use_db:bool = field()
     db:Any = field()
     var_name:str = field()
-    working_folder:Path = field
+    working_folder:Path = field()
     atr_class:AtrClass = AtrClass.NUT
-    
+    nut_filter:NutFilterDefinitions = field(init=False)#NutFilterDefinitions(working_dir=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
+
    
     
     def __attrs_post_init__(self):
+        self.nut_filter = NutFilterDefinitions(working_dir=self.working_folder)
         init_variable_folder(working_folder=self.working_folder,
-                                nut_name=self.var_name)
+                                nut_name=self.var_name)        
         for thing in self.enum_list:
                 self.__setattr__(thing.value, CustomAttribute(parent=self,
                                                             source_name=thing.value,
                                                             save_value=True,
                                                             atr_type=Any,
                                                             atr_class=AtrClass.PARENT,
-                                                            attr_name=thing.value))
+                                                            attr_name=thing.value,
+                                                            nut_filter=self.nut_filter))
