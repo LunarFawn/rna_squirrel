@@ -7,8 +7,9 @@ from enum import Enum
 from attrs import define, field
 from collections import namedtuple
 from typing import List, Dict, Any,TypeVar, Type
+from pathlib import Path
 
-from rna_squirrel.config.dynamic_rna_strand import (
+from data_squirrel.config.dynamic_data_nut import (
 	Nut,
 	Value,
 	GenericAttribute,
@@ -22,16 +23,22 @@ class Nut_Attributes(Enum):
 	Ensemble = "ensemble_db"
 
 
-class NupackStrand(Nut):
+class RNAStruct(Nut):
 
-	def __init__(self, use_db:bool = False) -> None:
+	def __init__(self, working_folder:Path, var_name:str, use_db:bool = False) -> None:
 		super().__init__(enum_list=Nut_Attributes,
 			use_db=True,
-			db=None)
+			db=None,
+			var_name=var_name,
+			working_folder=working_folder)
 
 
 		self.primary_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="strand_db",
+			atr_type=str))
+
+		self.primary_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="jumping_db",
 			atr_type=str))
 
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
@@ -106,6 +113,10 @@ class NupackStrand(Nut):
 			attribute="strand_db",
 			atr_type=str))
 
+		self.ensemble_db.what_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="jumping_db",
+			atr_type=str))
+
 class Energy(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
 		self.parent = parent
@@ -136,6 +147,15 @@ class PrimaryStructure(CustomAttribute):
 		self.parent.strand_db = value
 
 
+	@property
+	def jumping(self)->str:
+		return self.parent.jumping_db
+
+	@jumping.setter
+	def jumping(self, value:str):
+		self.parent.jumping_db = value
+
+
 class SecondaryStructure(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
 		self.parent = parent
@@ -161,20 +181,20 @@ class SecondaryStructure(CustomAttribute):
 
 	@property
 	def free_energy(self)->Energy:
-		return self.parent.free_energy_db
+		return self._free_energy
 
 	@free_energy.setter
 	def free_energy(self, value:Energy):
-		self.parent.free_energy_db = value
+		self._free_energy = value
 
 
 	@property
 	def stack_energy(self)->Energy:
-		return self.parent.stack_energy_db
+		return self._stack_energy
 
 	@stack_energy.setter
 	def stack_energy(self, value:Energy):
-		self.parent.stack_energy_db = value
+		self._stack_energy = value
 
 
 class Ensemble(CustomAttribute):
@@ -205,53 +225,55 @@ class Ensemble(CustomAttribute):
 
 	@property
 	def min_energy(self)->Energy:
-		return self.parent.min_energy_db
+		return self._min_energy
 
 	@min_energy.setter
 	def min_energy(self, value:Energy):
-		self.parent.min_energy_db = value
+		self._min_energy = value
 
 
 	@property
 	def max_energy(self)->Energy:
-		return self.parent.max_energy_db
+		return self._max_energy
 
 	@max_energy.setter
 	def max_energy(self, value:Energy):
-		self.parent.max_energy_db = value
+		self._max_energy = value
 
 
 	@property
 	def mfe_structure(self)->SecondaryStructure:
-		return self.parent.mfe_structure_db
+		return self._mfe_structure
 
 	@mfe_structure.setter
 	def mfe_structure(self, value:SecondaryStructure):
-		self.parent.mfe_structure_db = value
+		self._mfe_structure = value
 
 
 	@property
 	def mea_structure(self)->SecondaryStructure:
-		return self.parent.mea_structure_db
+		return self._mea_structure
 
 	@mea_structure.setter
 	def mea_structure(self, value:SecondaryStructure):
-		self.parent.mea_structure_db = value
+		self._mea_structure = value
 
 
 	@property
 	def what_structure(self)->PrimaryStructure:
-		return self.parent.what_structure_db
+		return self._what_structure
 
 	@what_structure.setter
 	def what_structure(self, value:PrimaryStructure):
-		self.parent.what_structure_db = value
+		self._what_structure = value
 
 
-class rna_strand(NupackStrand):
+class RNAStrand(RNAStruct):
 
-	def __init__(self, use_db:bool = False) -> None:
-		super().__init__(use_db=use_db)
+	def __init__(self, working_folder:str, var_name:str, use_db:bool = False) -> None:
+		super().__init__(use_db=use_db,
+			var_name=var_name,
+			working_folder=Path(working_folder))
 
 
 		self._primary_structure: PrimaryStructure = PrimaryStructure(save_value=True,

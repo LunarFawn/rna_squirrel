@@ -7,13 +7,18 @@ from enum import Enum
 from dataclasses import dataclass, field
 from queue import PriorityQueue
 import heapq
+import attrs
 
 import sys
 import ruamel.yaml
 
+class AtrClass(Enum):
+    PARENT = "PARENT"
+    CHILD = "CHILD"
+    NUT="NUT"
+    NONE = "NONE"
 
 
-from rna_squirrel.config.dynamic_rna_strand import AtrClass
 
 @dataclass
 class NutDeclaration:
@@ -27,6 +32,7 @@ class NutObjectType(Enum):
     BOOLEAN="bool"
     DICTIONARY="Dict"
     CONTAINER="CONTAINER"
+    VALUE="VALUE"
     
     @classmethod
     def from_yaml(cls, loader, node):
@@ -125,6 +131,59 @@ class NutStructure:
             self.nut_containers.append(item.name)
         self.nut_container_declarations = new_list
 
+
+@attrs.define(kw_only=True)
+class GenericAttribute():
+    atr_class:AtrClass = attrs.field()
+    atr_type:Type = None
+    #atr_default_value:Any = None
+    #attributes:Enum = field()
+    attribute:str = attrs.field()
+
+
+class ValuePacket(GenericAttribute):
+      
+    def __init__(self, name:str, value:Any, parent:str, type:Any) -> None:
+        super().__init__(atr_class=AtrClass.CHILD,
+                         atr_type=type,
+                         attribute=name)
+        self._parent:str = parent
+        self._value:Any = value
+        self._address_list:List[str] = []  
+    
+    @property
+    def parent(self)->str:
+        return self._parent
+    
+    @property 
+    def value(self)->Any:
+        return self._value 
+    
+    @property
+    def address_list(self):
+        return self._address_list 
+    
+    address_list:List[str]
+    
+
+
+@dataclass
+class Integer:
+    value:int
+    
+        
+@dataclass
+class FloatingPoint:
+    value:float
+        
+@dataclass
+class String:
+    value:str
+
+        
+@dataclass
+class Dictionary:
+    value:Dict[Any,Any]
 
 
 

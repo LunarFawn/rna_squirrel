@@ -8,7 +8,7 @@ for a generic system for later extensability
 from enum import Enum
 from typing import TypeVar, Type, List
 from attrs import define, field
-from rna_squirrel.config.dynamic_rna_strand import (
+from data_squirrel.config.dynamic_data_nut import (
     Nut,
     Value,
     GenericAttribute,

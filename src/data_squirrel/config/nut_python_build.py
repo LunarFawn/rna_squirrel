@@ -7,7 +7,7 @@ import sys
 import os
 from typing import List, Any, Dict
 
-from rna_squirrel.config.nut_yaml_objects import (
+from data_squirrel.config.nut_yaml_objects import (
     NutStructure,
     NutDatabaseInfo,
     NutContainerDefinitions,
@@ -42,7 +42,7 @@ class PythonBuild():
         header.append("from enum import Enum\n")
         header.append("from typing import TypeVar, Type, List, Dict\n")
         header.append("from attrs import define, field\n")
-        header.append("from rna_squirrel.config.dynamic_rna_strand import (\n")
+        header.append("from data_squirrel.config.dynamic_data_nut import (\n")
         header.append("\tNut,\n")
         header.append("\tValue,\n")
         header.append("\tGenericAttribute,\n")
@@ -104,10 +104,12 @@ class PythonBuild():
         class_lines:List[str] = []
         class_lines.append(f'class {class_name}(Nut):\n')
         class_lines.append('\n')
-        class_lines.append('\tdef __init__(self, use_db:bool = False) -> None:\n')
+        class_lines.append('\tdef __init__(self, working_folder:Path, var_name:str, use_db:bool = False) -> None:\n')
         class_lines.append('\t\tsuper().__init__(enum_list=Nut_Attributes,\n')
         class_lines.append('\t\t\tuse_db=True,\n')
-        class_lines.append('\t\t\tdb=None)\n')    
+        class_lines.append('\t\t\tdb=None,\n') 
+        class_lines.append('\t\t\tvar_name=var_name,\n')
+        class_lines.append('\t\t\tworking_folder=working_folder)\n')   
         class_lines.append('\n')             
         class_lines.append('\n') 
         
@@ -159,7 +161,7 @@ class PythonBuild():
             else:
                 current_lines.append(f'\t\tself.{parent_container_name}.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,\n')
                 current_lines.append(f'\t\t\tattribute="{item.db_name}",\n')
-                current_lines.append(f'\t\t\tatr_type={item.object_type.value}))\n')
+                current_lines.append(f'\t\t\tatr_type={item.object_info}))\n')
                 current_lines.append('\n')
         
         return current_lines
@@ -208,19 +210,25 @@ class PythonBuild():
                     new_string:str = str(attribute.object_info).replace("'","")
                     return_type = f'{NutObjectType.DICTIONARY.value}{new_string}'
                 else:
-                    return_type = f'{attribute.object_type.value}'
+                    return_type = f'{attribute.object_info}'
 
             struct_lines.append('\n')
             #firest teh getter    
             struct_lines.append('\t@property\n')
             struct_lines.append(f'\tdef {atr_name}(self)->{return_type}:\n')
-            struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')
+            if attribute.object_type == NutObjectType.CONTAINER:
+                struct_lines.append(f'\t\treturn self._{atr_name}\n')
+            else:                
+                struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')
             struct_lines.append('\n')
             
             #now the setter
             struct_lines.append(f'\t@{atr_name}.setter\n')
             struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):\n')
-            struct_lines.append(f'\t\tself.parent.{atr_db_name} = value\n') 
+            if attribute.object_type == NutObjectType.CONTAINER:
+                struct_lines.append(f'\t\tself._{atr_name} = value\n')
+            else:   
+                struct_lines.append(f'\t\tself.parent.{atr_db_name} = value\n') 
             struct_lines.append('\n')           
             #now an empty line between attributes
  
@@ -251,7 +259,7 @@ class PythonBuild():
         header_lines.append(f'\t{nut_struct_name},\n')
         header_lines.append(')\n')
         header_lines.append('\n')
-        header_lines.append('from rna_squirrel.config.dynamic_rna_strand import (\n')
+        header_lines.append('from data_squirrel.config.dynamic_data_nut import (\n')
         header_lines.append('\tNut,\n')
         header_lines.append('\tValue,\n')
         header_lines.append('\tGenericAttribute,\n')
@@ -272,8 +280,10 @@ class PythonBuild():
         main_call_line:List[str] = []
         main_call_line.append(f'class {nut_container.name}({config_class_name}):\n')
         main_call_line.append('\n')
-        main_call_line.append('\tdef __init__(self, use_db:bool = False) -> None:\n')
-        main_call_line.append('\t\tsuper().__init__(use_db=use_db)\n')
+        main_call_line.append('\tdef __init__(self, working_folder:str, var_name:str, use_db:bool = False) -> None:\n')
+        main_call_line.append('\t\tsuper().__init__(use_db=use_db,\n')
+        main_call_line.append('\t\t\tvar_name=var_name,\n')
+        main_call_line.append('\t\t\tworking_folder=Path(working_folder))\n')
         main_call_line.append('\n')
         main_call_line.append('\n')
         
@@ -300,7 +310,7 @@ class PythonBuild():
                 main_call_line.append(f'\tdef {item.name}(self)->{item.object_info}:\n')
                 main_call_line.append(f'\t\treturn self._{item.name}\n')
             else:
-                main_call_line.append(f'\tdef {item.name}(self)->{item.object_type.value}:\n')
+                main_call_line.append(f'\tdef {item.name}(self)->{item.object_info}:\n')
                 main_call_line.append(f'\t\treturn self.{item.db_name}\n')
             main_call_line.append('\n')  
         
@@ -310,7 +320,7 @@ class PythonBuild():
                 main_call_line.append(f'\tdef {item.name}(self, struct:{item.object_info}):\n')
                 main_call_line.append(f'\t\tself._{item.name} = struct\n')
             else:
-                main_call_line.append(f'\tdef {item.name}(self, value:{item.object_type.value}):\n')
+                main_call_line.append(f'\tdef {item.name}(self, value:{item.object_info}):\n')
                 main_call_line.append(f'\t\tself.{item.db_name} = value\n')
             main_call_line.append('\n')
             main_call_line.append('\n')
@@ -329,8 +339,9 @@ class PythonBuild():
         header_lines.append('from attrs import define, field\n')
         header_lines.append('from collections import namedtuple\n')
         header_lines.append('from typing import List, Dict, Any,TypeVar, Type\n')
+        header_lines.append('from pathlib import Path\n')
         header_lines.append('\n')
-        header_lines.append('from rna_squirrel.config.dynamic_rna_strand import (\n')
+        header_lines.append('from data_squirrel.config.dynamic_data_nut import (\n')
         header_lines.append('\tNut,\n')
         header_lines.append('\tValue,\n')
         header_lines.append('\tGenericAttribute,\n')

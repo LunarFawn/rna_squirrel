@@ -4,13 +4,13 @@ import pytest
 import inspect
 import heapq
 
-from rna_squirrel.config.nut_yaml_operations import (
+from data_squirrel.config.nut_yaml_operations import (
     YAMLOperations,
     WalkObjectReturn
 )
 
 
-from rna_squirrel.config.nut_yaml_objects import (
+from data_squirrel.config.nut_yaml_objects import (
     NutStructure,
     NutDatabaseInfo,
     NutContainerDefinitions,
@@ -21,7 +21,7 @@ from rna_squirrel.config.nut_yaml_objects import (
     NutObjectType
 )
 
-from rna_squirrel.config.nut_python_build import PythonBuild
+from data_squirrel.config.nut_python_build import PythonBuild
 
 from pathlib import Path
 
@@ -31,8 +31,10 @@ import os
 import sys
 from typing import List, Dict, Any
 
-LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v1.yaml')
-WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v1.yaml")
+from data_squirrel.make_single_api_file import GenerateSingleApifile
+
+LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v3.yaml')
+WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v3.yaml")
 CONFIG_PATH = LINUX_PATH
 
 @pytest.fixture
@@ -60,7 +62,7 @@ def test_build_object_enum(python_build:PythonBuild, yaml_ops:YAMLOperations):
     child_lines:List[str] = []
     parent_lines, child_lines = python_build.generate_object_enum(container=yaml_ops.definitions.definition_dict[class_name])
     assert len(parent_lines) == 1
-    assert len(child_lines) == 2
+    assert len(child_lines) == 3
     assert child_lines[1] == '\tstrand = "strand_db"\n'
     
 def test_config_definition_generation(python_build:PythonBuild,yaml_ops:YAMLOperations):
@@ -102,8 +104,8 @@ def test_generate_api_main_call(python_build:PythonBuild, yaml_ops:YAMLOperation
     config_class:str = 'NupackStrand'
     main_call:List[str] = python_build.generate_api_main_call(config_class_name=config_class,
                                                               nut_container=yaml_ops.nut.nut_main_struct)
-    assert main_call[2] == '\tdef __init__(self, use_db:bool = False) -> None:\n'
-    assert main_call[24] == '\tdef ensemble(self)->Ensemble:\n'
+    assert main_call[2] == '\tdef __init__(self, var_name:str, use_db:bool = False) -> None:\n'
+    assert main_call[24] == '\t@property\n'
 
 def test_build_api_file(python_build:PythonBuild, yaml_ops:YAMLOperations):
     full_list:List[str] = []
@@ -160,6 +162,14 @@ def test_build_one_file_api(python_build:PythonBuild, yaml_ops:YAMLOperations):
                                                                    nut_container=yaml_ops.nut.nut_main_struct)
     full_list = full_list + main_call_list
     dst:Path = Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_single_api.py')
+    #dst:Path = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\built_single_api.py")
     with open(dst, 'w') as file:
         file.writelines(full_list)
     assert os.path.isfile(dst) == True
+    
+def test_main_call_run():
+    new_generator:GenerateSingleApifile = GenerateSingleApifile()
+    new_generator.run(nut_struct_name="RNAStruct",
+                      yaml_config_path=CONFIG_PATH,
+                      dst_save_filename=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_single_api_2.py'))
+    assert os.path.isfile(Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_single_api_2.py')) == True

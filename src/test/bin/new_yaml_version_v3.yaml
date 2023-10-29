@@ -16,7 +16,7 @@ NUT:
         name: Ensemble
     nut_main_struct:
       !NutContainer
-        name: rna_strand
+        name: RNAStrand
         object_list:
           - !NutObject
             name: primary_structure
@@ -36,22 +36,26 @@ DEFINITIONS:
         object_list:
           - !NutObject
             name: strand
-            object_type: !NutObjectType STRING
-            object_info: None
+            object_type: !NutObjectType VALUE
+            object_info: str
+          - !NutObject
+            name: jumping
+            object_type: !NutObjectType VALUE
+            object_info: str
       - !NutContainer
         name: Energy
         object_list:
           - !NutObject
             name: kcal 
             object_type: !NutObjectType FLOATINGPOINT
-            object_info: Value
+            object_info: float
       - !NutContainer
         name: SecondaryStructure
         object_list:
           - !NutObject
             name: dot_parens 
-            object_type: !NutObjectType STRING
-            object_info: None
+            object_type: !NutObjectType VALUE
+            object_info: str
           - !NutObject
             name: free_energy 
             object_type: !NutObjectType CONTAINER
