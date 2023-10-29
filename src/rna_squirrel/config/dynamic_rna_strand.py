@@ -12,6 +12,8 @@ from rna_squirrel.config.nut_yaml_objects import AtrClass, GenericAttribute, Val
 
 from rna_squirrel.config.nut_filter_definitions import NutFilterDefinitions, ValueFlow
 
+from rna_squirrel.config.nut_data_manager import init_variable_folder
+
 nut_filter:NutFilterDefinitions = NutFilterDefinitions(working_dir=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
 
 T = TypeVar("T", bound=Enum)
@@ -112,6 +114,11 @@ class CustomAttribute(GenericAttribute):
         if name_end == '_db' or name_end == '_DB':
             #value = self.__dict__[__name]
             value = super().__getattribute__(__name)
+            if isinstance(value, CustomAttribute) == False:
+                value:ValuePacket = ValuePacket(name=None,
+                                        value=None,
+                                        parent=None,
+                                        type=None)
             # if type(value) == str:
             #     value = f'{value}_returned'
             #     return value
@@ -134,14 +141,18 @@ class Nut():
     use_db:bool = field()
     db:Any = field()
     var_name:str = field()
+    working_folder:Path = field
     atr_class:AtrClass = AtrClass.NUT
     
+   
     
     def __attrs_post_init__(self):
-       for thing in self.enum_list:
-            self.__setattr__(thing.value, CustomAttribute(parent=self,
-                                                        source_name=thing.value,
-                                                        save_value=True,
-                                                        atr_type=Any,
-                                                        atr_class=AtrClass.PARENT,
-                                                        attr_name=thing.value))
+        init_variable_folder(working_folder=self.working_folder,
+                                nut_name=self.var_name)
+        for thing in self.enum_list:
+                self.__setattr__(thing.value, CustomAttribute(parent=self,
+                                                            source_name=thing.value,
+                                                            save_value=True,
+                                                            atr_type=Any,
+                                                            atr_class=AtrClass.PARENT,
+                                                            attr_name=thing.value))

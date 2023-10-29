@@ -9,7 +9,8 @@ import heapq
 from pathlib import Path
 from dataclasses import dataclass, field
 
-from rna_squirrel.config.nut_yaml_objects import AtrClass, ValuePacket, GenericAttribute
+from rna_squirrel.config.nut_yaml_objects import AtrClass, ValuePacket, GenericAttribute, String
+from rna_squirrel.config.nut_data_manager import YamlDataOperations
 
 class ValueFlow(Enum):
     OUTBOUND="OUTBOUND"
@@ -18,6 +19,7 @@ class ValueFlow(Enum):
 
 @dataclass
 class AddressInfo():
+    name:str
     address_list: List[str]
     working_folder:Path 
     address_string:str = field(init=False)
@@ -25,13 +27,14 @@ class AddressInfo():
     
     def __post_init__(self) -> None:
         self.address_string = f'{"_".join(self.address_list)}.yaml'
-        self.address_file_path = self.working_folder.joinpath(self.address_string)
+        self.address_file_path = self.working_folder.joinpath(self.address_list[-1],self.address_string)
         
         
 class NutFilterDefinitions():
 
     def __init__(self, working_dir:Path) -> None:
         self.working_dir:Path = working_dir
+        self.yaml_operations:YamlDataOperations = YamlDataOperations()
     
     def filter(self, parent:Any, attr_name:str, value:Any, flow_direction:ValueFlow):
         new_value:Any = value
@@ -40,14 +43,18 @@ class NutFilterDefinitions():
         jump_list: List[str] = routing.get_attr_address(parent_attr=parent,
                                  name=attr_name)
         address_info:AddressInfo = AddressInfo(address_list=jump_list,
-                                               working_folder=self.working_dir)
+                                               working_folder=self.working_dir,
+                                               name=attr_name)
         #heapq.heapify(jump_list)
         
         if flow_direction == ValueFlow.OUTBOUND:
             new_value = self.filter_out_flow(value=new_value,
-                                             address=address_info)
+                                             address=address_info,
+                                             ops=self.yaml_operations)
         elif flow_direction == ValueFlow.INBOUND:
-            new_value = self.filter_in_flow(value=new_value)
+            new_value = self.filter_in_flow(value=new_value,
+                                            address=address_info,
+                                            ops=self.yaml_operations)
         
         
         return new_value
@@ -56,7 +63,7 @@ class NutFilterDefinitions():
         new_value:Any = value
         return new_value
     
-    def filter_out_flow(self, value:Any, address:AddressInfo):
+    def filter_out_flow(self, value:Any, address:AddressInfo, ops:YamlDataOperations):
         """
         This is the 
         """
@@ -67,24 +74,33 @@ class NutFilterDefinitions():
             packet:ValuePacket = value
             new_value = packet.value
             if type(packet.value) == str:
-                
+                preped_data:String = String(value=packet.value)
                 #now save it to the yaml at the file target
-                
-                new_value = f'{new_value}_from_db'
+                ops.save_data(data=preped_data,
+                              working_folder=address.working_folder,
+                              nut_name=address.address_list[-1],
+                              filename=address.address_file_path)
+                #new_value = f'{new_value}_from_db'
+                new_value = None
         else:
             #it is a parent struct
             pass     
        
         return new_value
     
-    def filter_in_flow(self,  value:Any):
+    def filter_in_flow(self,  value:Any, address:AddressInfo, ops:YamlDataOperations):
         """
         This is the 
         """
         new_value:Any = value
         
-        if type(value) == str:
-                new_value = f'{value}_returned'
+        if isinstance(value, ValuePacket) == True:
+            new_data = ops.read_data(working_folder=address.working_folder,
+                          nut_name=address.address_list[-1],
+                          filename=address.address_file_path)
+            new_value = new_data.value
+            if type(new_value) == str:
+                    new_value = f'{new_value}_returned'
             
         return new_value
 

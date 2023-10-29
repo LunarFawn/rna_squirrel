@@ -7,6 +7,7 @@ from enum import Enum
 from attrs import define, field
 from collections import namedtuple
 from typing import List, Dict, Any,TypeVar, Type
+from pathlib import Path
 
 from rna_squirrel.config.dynamic_rna_strand import (
 	Nut,
@@ -24,11 +25,12 @@ class Nut_Attributes(Enum):
 
 class NupackStrand(Nut):
 
-	def __init__(self, var_name:str, use_db:bool = False) -> None:
+	def __init__(self, var_name:str, working_folder:Path, use_db:bool = False) -> None:
 		super().__init__(enum_list=Nut_Attributes,
 			use_db=True,
 			db=None,
-			var_name=var_name)
+			var_name=var_name,
+   			working_folder=working_folder)
 
 
 		self.primary_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
@@ -268,9 +270,10 @@ class Ensemble(CustomAttribute):
 
 class rna_strand(NupackStrand):
 
-	def __init__(self, var_name:str, use_db:bool = False) -> None:
+	def __init__(self, var_name:str, working_folder:str, use_db:bool = False) -> None:
 		super().__init__(use_db=use_db,
-			var_name=var_name)
+			var_name=var_name,
+   			working_folder=Path(working_folder))
 
 
 		self._primary_structure: PrimaryStructure = PrimaryStructure(save_value=True,
