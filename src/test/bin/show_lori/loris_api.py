@@ -57,6 +57,10 @@ class LoriStructure(Nut):
 			attribute="method_db",
 			atr_type=str))
 
+		self.favorites_db.education_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="date_db",
+			atr_type=str))
+
 		self.sexy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="boobs_names_db",
 			atr_type=str))
@@ -87,6 +91,15 @@ class Learning(CustomAttribute):
 	@method.setter
 	def method(self, value:str):
 		self.parent.method_db = value
+
+
+	@property
+	def date(self)->str:
+		return self.parent.date_db
+
+	@date.setter
+	def date(self, value:str):
+		self.parent.date_db = value
 
 
 class StarTrek(CustomAttribute):

@@ -72,3 +72,7 @@ DEFINITIONS:
             name: method
             object_type: !NutObjectType VALUE
             object_info: str
+          - !NutObject
+            name: date
+            object_type: !NutObjectType VALUE
+            object_info: str
