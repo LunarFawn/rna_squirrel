@@ -7,16 +7,15 @@ from enum import Enum
 from typing import TypeVar, List, Dict, Any, Protocol, Type
 import pickle
 
+from rna_squirrel.config.nut_yaml_objects import AtrClass
+
 from rna_squirrel.config.nut_filter_definitions import NutFilterDefinitions, ValueFlow
 
 nut_filter:NutFilterDefinitions = NutFilterDefinitions()
 
 T = TypeVar("T", bound=Enum)
 
-class AtrClass(Enum):
-    PARENT = "PARENT"
-    CHILD = "CHILD"
-    NONE = "NONE"
+
 
 @define
 class Value():
@@ -125,7 +124,7 @@ class Nut():
     use_db:bool = field()
     db:Any = field()
     var_name:str = field()
-
+    atr_class:AtrClass = AtrClass.NUT
     def __attrs_post_init__(self):
        for thing in self.enum_list:
             self.__setattr__(thing.value, CustomAttribute(parent=self,

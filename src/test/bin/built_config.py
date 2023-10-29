@@ -21,14 +21,19 @@ class Nut_Attributes(Enum):
 
 class NupackStrand(Nut):
 
-	def __init__(self, use_db:bool = False) -> None:
+	def __init__(self, var_name:str, use_db:bool = False) -> None:
 		super().__init__(enum_list=Nut_Attributes,
 			use_db=True,
-			db=None)
+			db=None,
+			var_name=var_name)
 
 
 		self.primary_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="strand_db",
+			atr_type=str))
+
+		self.primary_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="jumping_db",
 			atr_type=str))
 
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
@@ -101,5 +106,9 @@ class NupackStrand(Nut):
 
 		self.ensemble_db.what_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="strand_db",
+			atr_type=str))
+
+		self.ensemble_db.what_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="jumping_db",
 			atr_type=str))
 

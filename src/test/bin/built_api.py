@@ -50,6 +50,15 @@ class PrimaryStructure(CustomAttribute):
 		self.parent.strand_db = value
 
 
+	@property
+	def jumping(self)->str:
+		return self.parent.jumping_db
+
+	@jumping.setter
+	def jumping(self, value:str):
+		self.parent.jumping_db = value
+
+
 class SecondaryStructure(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
 		self.parent = parent
@@ -164,8 +173,9 @@ class Ensemble(CustomAttribute):
 
 class rna_strand(NupackStrand):
 
-	def __init__(self, use_db:bool = False) -> None:
-		super().__init__(use_db=use_db)
+	def __init__(self, var_name:str, use_db:bool = False) -> None:
+		super().__init__(use_db=use_db,
+			var_name=var_name)
 
 
 		self._primary_structure: PrimaryStructure = PrimaryStructure(save_value=True,

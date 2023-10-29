@@ -104,10 +104,11 @@ class PythonBuild():
         class_lines:List[str] = []
         class_lines.append(f'class {class_name}(Nut):\n')
         class_lines.append('\n')
-        class_lines.append('\tdef __init__(self, use_db:bool = False) -> None:\n')
+        class_lines.append('\tdef __init__(self, var_name:str, use_db:bool = False) -> None:\n')
         class_lines.append('\t\tsuper().__init__(enum_list=Nut_Attributes,\n')
         class_lines.append('\t\t\tuse_db=True,\n')
-        class_lines.append('\t\t\tdb=None)\n')    
+        class_lines.append('\t\t\tdb=None,\n') 
+        class_lines.append('\t\t\tvar_name=var_name)\n')   
         class_lines.append('\n')             
         class_lines.append('\n') 
         
@@ -272,8 +273,9 @@ class PythonBuild():
         main_call_line:List[str] = []
         main_call_line.append(f'class {nut_container.name}({config_class_name}):\n')
         main_call_line.append('\n')
-        main_call_line.append('\tdef __init__(self, use_db:bool = False) -> None:\n')
-        main_call_line.append('\t\tsuper().__init__(use_db=use_db)\n')
+        main_call_line.append('\tdef __init__(self, var_name:str, use_db:bool = False) -> None:\n')
+        main_call_line.append('\t\tsuper().__init__(use_db=use_db,\n')
+        main_call_line.append('\t\t\tvar_name=var_name)\n')
         main_call_line.append('\n')
         main_call_line.append('\n')
         

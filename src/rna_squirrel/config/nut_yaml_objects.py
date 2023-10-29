@@ -11,9 +11,13 @@ import heapq
 import sys
 import ruamel.yaml
 
+class AtrClass(Enum):
+    PARENT = "PARENT"
+    CHILD = "CHILD"
+    NUT="NUT"
+    NONE = "NONE"
 
 
-from rna_squirrel.config.dynamic_rna_strand import AtrClass
 
 @dataclass
 class NutDeclaration:
