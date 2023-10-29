@@ -21,11 +21,12 @@ class Nut_Attributes(Enum):
 
 class NupackStrand(Nut):
 
-	def __init__(self, var_name:str, use_db:bool = False) -> None:
+	def __init__(self, working_folder:Path, var_name:str, use_db:bool = False) -> None:
 		super().__init__(enum_list=Nut_Attributes,
 			use_db=True,
 			db=None,
-			var_name=var_name)
+			var_name=var_name,
+			working_folder=working_folder)
 
 
 		self.primary_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
