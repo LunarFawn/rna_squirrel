@@ -26,7 +26,7 @@ class NutFilterDefinitions():
         jump_list: List[str] = routing.get_attr_address(parent_attr=parent,
                                  name=attr_name)
         
-        heapq.heapify(jump_list)
+        #heapq.heapify(jump_list)
         
         if flow_direction == ValueFlow.OUTBOUND:
             new_value = self.filter_out_flow(value=new_value,
@@ -45,6 +45,8 @@ class NutFilterDefinitions():
         """
         This is the 
         """
+        address_string:str = '_'.join(address)
+        filename: str = ''
         new_value:Any = value
         if isinstance(value, ValuePacket) == True:
             #this is a value and not a parent custom attribe
@@ -96,20 +98,22 @@ class NutAdressing():
         order:int = 1
         jump_list:List[tuple] = []
         
-        jump_list.append((order,name)) 
-        
+        #jump_list.append((order,name)) 
+        jump_list.append(name)
         
         while hasattr(parent_attr, 'parent') == True:
             order += 1
             if getattr(parent_attr, 'atr_class') != AtrClass.NUT:
                 parent_name = parent_attr.attribute
-                jump_list.append((order, parent_name))                
+                #jump_list.append((order, parent_name))
+                jump_list.append(parent_name)                 
             parent_attr = getattr(parent_attr, 'parent')
         
         if getattr(parent_attr, 'atr_class') == AtrClass.NUT:
             order += 1
             parent_name = parent_attr.var_name
-            jump_list.append((order, parent_name))
+            #jump_list.append((order, parent_name))
+            jump_list.append(parent_name)  
         else:
             raise Exception("Error while getting address")
   
