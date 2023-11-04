@@ -3,8 +3,8 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "data_squirrel"
-version = "0.1.0.0"
+name = "data_nut_squirrel"
+version = "0.1.0.1"
 description = "Save data at time of generation and share via common Python API using architecture as code concept"
 readme = "README.md"
 authors = [{ name = "Jennifer Pearl", email = "jenpearl5@gmail.com" }]
