@@ -105,7 +105,7 @@ class NutFilterDefinitions():
                 if packet.value != None:
                     raise ValueError("Unsupported value type. Please update and try again maybe?")
             #new_value = f'{new_value}_from_db'
-            new_value = None
+            # new_value = None
         else:
             #it is a parent struct
             pass     
@@ -119,9 +119,10 @@ class NutFilterDefinitions():
         new_value:Any = value
         
         if isinstance(value, ValuePacket) == True:
+            # if value.value != None:
             new_data = ops.read_data(working_folder=address.working_folder,
-                          nut_name=address.address_list[-1],
-                          filename=address.address_file_path)
+                        nut_name=address.address_list[-1],
+                        filename=address.address_file_path)
             if isinstance(new_data, String) == True:
                     new_value = new_data.value
             if isinstance(new_data, Integer) == True:
@@ -130,7 +131,6 @@ class NutFilterDefinitions():
                     new_value = new_data.value        
             # if isinstance(new_data, Empty) == True:
             #         new_value = None
-            
         return new_value
 
 class NutAdvancedFilterRules():

@@ -51,5 +51,5 @@ class YamlDataOperations():
         try:
             return self.yaml.load(filename)
         except:
-            raise Exception('Failed to write data')
+            raise Exception('Failed to read data')
         

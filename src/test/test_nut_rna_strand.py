@@ -17,7 +17,7 @@ def test_get_empty_strand(empty_default_strand:RNAStruct):
 def test_set_strand_attribute(empty_default_strand:RNAStruct):
     # new_struct:PrimaryStructure = PrimaryStructure(save_value=True)
     # new_struct.strand = "yo"
-    empty_default_strand.primary_structure.strand = "yo"# = new_struct
+    empty_default_strand.primary_structure.strand = "yo"
     assert empty_default_strand.primary_structure.strand == "yo"
     assert empty_default_strand.primary_structure.strand == "yo"
 
