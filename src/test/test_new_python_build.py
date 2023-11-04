@@ -31,7 +31,7 @@ import os
 import sys
 from typing import List, Dict, Any
 
-from data_squirrel.make_single_api_file import GenerateSingleApifile
+from data_squirrel.make_single_api_file import build_shared_python_nut
 
 LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v3.yaml')
 WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v3.yaml")
@@ -104,8 +104,8 @@ def test_generate_api_main_call(python_build:PythonBuild, yaml_ops:YAMLOperation
     config_class:str = 'NupackStrand'
     main_call:List[str] = python_build.generate_api_main_call(config_class_name=config_class,
                                                               nut_container=yaml_ops.nut.nut_main_struct)
-    assert main_call[2] == '\tdef __init__(self, var_name:str, use_db:bool = False) -> None:\n'
-    assert main_call[24] == '\t@property\n'
+    assert main_call[2] == '\tdef __init__(self, working_folder:str, var_name:str, use_db:bool = False) -> None:\n'
+    assert main_call[24] == '\t\tself._primary_structure = struct\n'
 
 def test_build_api_file(python_build:PythonBuild, yaml_ops:YAMLOperations):
     full_list:List[str] = []
@@ -168,8 +168,7 @@ def test_build_one_file_api(python_build:PythonBuild, yaml_ops:YAMLOperations):
     assert os.path.isfile(dst) == True
     
 def test_main_call_run():
-    new_generator:GenerateSingleApifile = GenerateSingleApifile()
-    new_generator.run(nut_struct_name="RNAStruct",
+    build_shared_python_nut(nut_struct_name="RNAStruct",
                       yaml_config_path=CONFIG_PATH,
                       dst_save_filename=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_single_api_2.py'))
     assert os.path.isfile(Path('/home/rnauser/repo/rna_squirrel/src/test/bin/built_single_api_2.py')) == True

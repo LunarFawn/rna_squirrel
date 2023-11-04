@@ -4,6 +4,10 @@ File for generating the api file
 
 from typing import List
 from pathlib import Path
+import argparse
+import os
+from string import ascii_letters
+from pathvalidate import sanitize_filepath
 
 from data_squirrel.config.nut_yaml_operations import (
     YAMLOperations
@@ -18,7 +22,7 @@ from data_squirrel.config.nut_yaml_objects import (
 yaml_ops: YAMLOperations = YAMLOperations()
 python_build :PythonBuild = PythonBuild()
 
-def run(nut_struct_name:str, yaml_config_path:Path, dst_save_filename:Path):
+def build_shared_python_nut(nut_struct_name:str, yaml_config_path:Path, dst_save_filename:Path):
     """
     Build a data_squirrel python package file from nut yaml definitions
     """
@@ -26,7 +30,7 @@ def run(nut_struct_name:str, yaml_config_path:Path, dst_save_filename:Path):
     full_list:List[str] = []
     header_list:List[str] = python_build.generate_one_file_api_header()
     enum_lines: List[str] = python_build.generate_nut_enums(nut_structure=yaml_ops.nut)
-    basecode_lines:List[str] = python_build.generate_config_baseclass(class_name=nut_struct_name,
+    basecode_lines:List[str] = python_build.generate_config_baseclass(class_name=yaml_ops.nut.nut_main_struct.name,
                                                     container_definitions=yaml_ops.definitions,
                                                     nut_structure=yaml_ops.nut)
     full_list:List[str] = header_list + enum_lines + basecode_lines
@@ -53,3 +57,36 @@ def run(nut_struct_name:str, yaml_config_path:Path, dst_save_filename:Path):
             file.writelines(full_list)
     except Exception as error:
         raise Exception(f'unable to write to file {dst_save_filename} the file contents {full_list} Error: {error}')
+
+def script_run():
+    """
+    Build the Shared Python Framework Container API via command line arguments
+    """
+    parser = argparse.ArgumentParser()
+    print("Hi")
+
+    parser.add_argument("-n","--nut-struct", type=str, required=True)
+    parser.add_argument("-c","--config-file", type=str, required=True)
+    parser.add_argument("-s","--save-filename", type=str, required=True, help="This is just the name and not the full path. Do not add .py to it either. The file will be saved to the current working directory.")
+        
+    args = parser.parse_args()
+    nut_struct_name:str = args.nut_struct
+    nut_container_config_path:Path = Path(args.config_file)
+    save_path:Path = Path(sanitize_filepath(f'{os.getcwd()}/{args.save_filename}.py'))
+    
+    print(nut_struct_name)
+    print(nut_container_config_path)
+    print(save_path)
+    
+    # if os.path.isdir(save_path) == False:
+    #     raise FileExistsError(f'Path {save_path} is not a valid directory path')
+
+    if os.path.isfile(nut_container_config_path) == False:
+        raise FileExistsError(f'File path {nut_container_config_path} is not a valid file path')
+    
+    if set(nut_struct_name).difference(ascii_letters) or nut_struct_name.count(' ') > 0:
+        raise ValueError("Nut struct name is invalid and is contains characters other than asci or has spaces in it")
+    
+    build_shared_python_nut(nut_struct_name=nut_struct_name,
+                            yaml_config_path=nut_container_config_path,
+                            dst_save_filename=save_path)

@@ -41,8 +41,8 @@ def yaml_def(yaml_ops:YAMLOperations):
     return yaml_ops.definitions
 
 
-LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v2.yaml')
-WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v2.yaml")
+LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v3.yaml')
+WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v3.yaml")
 CONFIG_PATH = LINUX_PATH
 
 def test_open_yaml(yaml_ops:YAMLOperations):
@@ -110,8 +110,8 @@ def test_load_nut_main_struct_class(yaml_nut:NutStructure):
  
 def test_populate_main_nut_struct(yaml_nut:NutStructure):
     main_struct: NutContainer = yaml_nut.nut_main_struct
-    assert main_struct.name == "rna_strand"
-    assert main_struct.db_name == "rna_strand_db"    
+    assert main_struct.name == "RNAStrand"
+    assert main_struct.db_name == "RNAStrand_db"    
     assert main_struct.object_list[0].name == "primary_structure"
     assert main_struct.object_list[0].db_name == "primary_structure_db"
     assert main_struct.object_list[0].object_type == NutObjectType.CONTAINER

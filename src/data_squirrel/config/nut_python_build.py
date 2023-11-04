@@ -225,6 +225,8 @@ class PythonBuild():
             #now the setter
             struct_lines.append(f'\t@{atr_name}.setter\n')
             struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):\n')
+            struct_lines.append(f'\t\tif isinstance(value, {return_type}) == False:\n')
+            struct_lines.append(f'\t\t\traise ValueError("Invalid value assignment")\n')
             if attribute.object_type == NutObjectType.CONTAINER:
                 struct_lines.append(f'\t\tself._{atr_name} = value\n')
             else:   
@@ -278,7 +280,7 @@ class PythonBuild():
         """
     
         main_call_line:List[str] = []
-        main_call_line.append(f'class {nut_container.name}({config_class_name}):\n')
+        main_call_line.append(f'class {config_class_name}({nut_container.name}):\n')
         main_call_line.append('\n')
         main_call_line.append('\tdef __init__(self, working_folder:str, var_name:str, use_db:bool = False) -> None:\n')
         main_call_line.append('\t\tsuper().__init__(use_db=use_db,\n')
@@ -318,9 +320,13 @@ class PythonBuild():
             line:str = ''
             if item.object_type == NutObjectType.CONTAINER:
                 main_call_line.append(f'\tdef {item.name}(self, struct:{item.object_info}):\n')
+                main_call_line.append(f'\t\tif isinstance(struct, {item.object_info}) == False:\n')
+                main_call_line.append(f'\t\t\traise ValueError("Invalid value assignment")\n')
                 main_call_line.append(f'\t\tself._{item.name} = struct\n')
             else:
                 main_call_line.append(f'\tdef {item.name}(self, value:{item.object_info}):\n')
+                main_call_line.append(f'\t\tif isinstance(value, {item.object_info}) == False:\n')
+                main_call_line.append(f'\t\t\traise ValueError("Invalid value assignment")\n')
                 main_call_line.append(f'\t\tself.{item.db_name} = value\n')
             main_call_line.append('\n')
             main_call_line.append('\n')
