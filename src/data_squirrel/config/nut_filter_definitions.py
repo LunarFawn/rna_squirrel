@@ -9,7 +9,14 @@ import heapq
 from pathlib import Path
 from dataclasses import dataclass, field
 
-from data_squirrel.config.nut_yaml_objects import AtrClass, ValuePacket, GenericAttribute, String
+from data_squirrel.config.nut_yaml_objects import (
+    AtrClass,
+    ValuePacket,
+    GenericAttribute, 
+    String,
+    Integer,
+    FloatingPoint
+)
 from data_squirrel.config.nut_data_manager import YamlDataOperations
 
 class ValueFlow(Enum):
@@ -73,15 +80,32 @@ class NutFilterDefinitions():
             #this is a value and not a parent custom attribe
             packet:ValuePacket = value
             new_value = packet.value
+            is_valid:bool = False
+            preped_data: Any = None
             if type(packet.value) == str:
-                preped_data:String = String(value=packet.value)
+                preped_data = String(value=packet.value)
+                is_valid = True
                 #now save it to the yaml at the file target
+            if type(packet.value) == int:
+                preped_data = Integer(value=packet.value)
+                is_valid = True
+            if type(packet.value) == float:
+                preped_data = FloatingPoint(value=packet.value)
+                is_valid = True
+            # if packet.value == None:
+            #     preped_data = Empty()
+            #     is_valid = True
+                                
+            if is_valid == True:
                 ops.save_data(data=preped_data,
-                              working_folder=address.working_folder,
-                              nut_name=address.address_list[-1],
-                              filename=address.address_file_path)
-                #new_value = f'{new_value}_from_db'
-                new_value = None
+                                working_folder=address.working_folder,
+                                nut_name=address.address_list[-1],
+                                filename=address.address_file_path)
+            else:
+                if packet.value != None:
+                    raise ValueError("Unsupported value type. Please update and try again maybe?")
+            #new_value = f'{new_value}_from_db'
+            # new_value = None
         else:
             #it is a parent struct
             pass     
@@ -95,13 +119,18 @@ class NutFilterDefinitions():
         new_value:Any = value
         
         if isinstance(value, ValuePacket) == True:
+            # if value.value != None:
             new_data = ops.read_data(working_folder=address.working_folder,
-                          nut_name=address.address_list[-1],
-                          filename=address.address_file_path)
-            new_value = new_data.value
-            if type(new_value) == str:
-                    new_value = f'{new_value}_returned'
-            
+                        nut_name=address.address_list[-1],
+                        filename=address.address_file_path)
+            if isinstance(new_data, String) == True:
+                    new_value = new_data.value
+            if isinstance(new_data, Integer) == True:
+                    new_value = new_data.value
+            if isinstance(new_data, FloatingPoint) == True:
+                    new_value = new_data.value        
+            # if isinstance(new_data, Empty) == True:
+            #         new_value = None
         return new_value
 
 class NutAdvancedFilterRules():

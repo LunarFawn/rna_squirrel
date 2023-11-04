@@ -23,7 +23,7 @@ class Nut_Attributes(Enum):
 	Ensemble = "ensemble_db"
 
 
-class RNAStrand(Nut):
+class NupackStrand(Nut):
 
 	def __init__(self, working_folder:Path, var_name:str, use_db:bool = False) -> None:
 		super().__init__(enum_list=Nut_Attributes,
@@ -290,7 +290,7 @@ class Ensemble(CustomAttribute):
 		self._what_structure = value
 
 
-class RNAStruct(RNAStrand):
+class NupackStrand(RNAStrand):
 
 	def __init__(self, working_folder:str, var_name:str, use_db:bool = False) -> None:
 		super().__init__(use_db=use_db,

@@ -165,7 +165,9 @@ class ValuePacket(GenericAttribute):
     
     address_list:List[str]
     
-
+@dataclass
+class Empty():
+    value:Any = field(init=False)
 
 @dataclass
 class Integer:

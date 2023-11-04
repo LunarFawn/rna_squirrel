@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 import os
 
-from data_squirrel.config.nut_yaml_objects import String, Integer, FloatingPoint, Dictionary
+from data_squirrel.config.nut_yaml_objects import String, Integer, FloatingPoint, Dictionary, Empty
 
 def init_variable_folder(working_folder:Path, nut_name:str):
     nut_folder_path:Path = working_folder.joinpath(nut_name)
@@ -28,6 +28,7 @@ class YamlDataOperations():
         self._yaml.register_class(String)
         self._yaml.register_class(Integer)
         self._yaml.register_class(FloatingPoint)
+        # self._yaml.register_class(Empty)
         
     @property
     def yaml(self)->YAML:
@@ -50,5 +51,5 @@ class YamlDataOperations():
         try:
             return self.yaml.load(filename)
         except:
-            raise Exception('Failed to write data')
+            raise Exception('Failed to read data')
         

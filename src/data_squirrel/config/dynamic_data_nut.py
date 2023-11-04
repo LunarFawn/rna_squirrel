@@ -95,11 +95,21 @@ class CustomAttribute(GenericAttribute):
         if name_end == '_db' or name_end == '_DB':
             
             if isinstance(__value, CustomAttribute) != True:
+                #cant use hasattr becuase that will trigger get attribute and 
+                #need to work on packet routing better before that
+                if __name in list(self.__dict__.keys()):
+                   this_attr = self.__dict__[__name]
+                   if isinstance(this_attr, CustomAttribute) == True:
+                        raise ValueError("Unable to assign value to parent container backend")           
                 __value:ValuePacket = ValuePacket(name=__name,
                                         value=__value,
                                         parent=self,
                                         type=type(__value))
-                         
+            # else:
+            #     test_value:CustomAttribute = __value
+            #     if test_value.atr_class == AtrClass.PARENT:
+            #         
+
             __value = self.nut_filter.filter(flow_direction=ValueFlow.OUTBOUND,
                               value=__value,
                               parent=self,
