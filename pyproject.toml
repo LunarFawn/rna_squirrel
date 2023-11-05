@@ -15,6 +15,9 @@ classifiers = [
 ]
 requires-python = "<3.10"
 
+Documentation = "https://docs.google.com/document/d/1FRSHdIqurGtHC8vD-rI5Ryw-NAj9xbYtGOq5UFW55iU/edit"
+Repository = "https://github.com/LunarFawn/rna_squirrel.git"
+
 [project.scripts]
 make_shared_python_nut_container = "data_squirrel.make_single_api_file:script_run"
 
