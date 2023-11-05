@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "data_nut_squirrel"
-version = "0.1.0.1"
+version = "0.1.0.3"
 description = "Save data at time of generation and share via common Python API using architecture as code concept"
 readme = "README.md"
 authors = [{ name = "Jennifer Pearl", email = "jenpearl5@gmail.com" }]
@@ -14,6 +14,10 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 requires-python = "<3.10"
+
+[project.urls]
+Documentation = "https://docs.google.com/document/d/1FRSHdIqurGtHC8vD-rI5Ryw-NAj9xbYtGOq5UFW55iU/edit"
+Repository = "https://github.com/LunarFawn/rna_squirrel.git"
 
 [project.scripts]
 make_shared_python_nut_container = "data_squirrel.make_single_api_file:script_run"
