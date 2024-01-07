@@ -298,9 +298,18 @@ class RNAStruct(RNAStrand):
 			working_folder=Path(working_folder))
 
 
+
+
+		self.primary_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="strand_db",
+			atr_type=str))
+
 		self._primary_structure: PrimaryStructure = PrimaryStructure(save_value=True,
 			current=None,
 			parent=self.primary_structure_db)
+
+
+
 
 		self._ensemble: Ensemble = Ensemble(save_value=True,
 			current=None,
