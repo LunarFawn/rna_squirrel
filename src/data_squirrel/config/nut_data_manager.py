@@ -63,21 +63,17 @@ class YamlDataOperations():
         try:
             # self._dump_test = copy.deepcopy(self._yaml)
             self.yaml.dump(data=data,
-                       stream=filename)
-            
+                       stream=filename)            
             #now do the check
-            found_data = self._dump_yaml.load(filename)
-                 
+            found_data = self._dump_yaml.load(filename)                 
         except:
             raise Exception('Failed to write data')
-        
-        
+                
         if found_data == data:
             #its good
             self._dump_yaml = None
-            pass
         else:
-            raise Exception('Failed to write data')       
+            raise Exception('Data save check failed. Found data that differed than original in yaml')       
         
     def read_data(self, working_folder:Path, nut_name:str, filename:Path):
         nut_folder_path:Path = working_folder.joinpath(nut_name)

@@ -150,6 +150,11 @@ class ValuePacket(GenericAttribute):
         self._parent:str = parent
         self._value:Any = value
         self._address_list:List[str] = []  
+        # self._value_type: Any = None
+        
+    # @property
+    # def value_type(self)->Any:
+    #     return 
     
     @property
     def parent(self)->str:
@@ -157,8 +162,8 @@ class ValuePacket(GenericAttribute):
     
     @property 
     def value(self)->Any:
-        return self._value 
-    
+        return self._value
+        
     @property
     def address_list(self):
         return self._address_list 
@@ -185,7 +190,14 @@ class String:
         
 @dataclass
 class Dictionary:
-    value:Dict[Any,Any]
+    key_def: NutObjectType
+    value_def:NutObjectType
+    value:Dict[str,str]
+
+@dataclass
+class ListOfThings:
+    value_def:NutObjectType
+    value:List[str]
 
 
 

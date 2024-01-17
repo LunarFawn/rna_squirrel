@@ -15,7 +15,10 @@ from data_squirrel.config.nut_yaml_objects import (
     GenericAttribute, 
     String,
     Integer,
-    FloatingPoint
+    FloatingPoint,
+    NutObjectType,
+    Dictionary,
+    ListOfThings
 )
 from data_squirrel.config.nut_data_manager import YamlDataOperations
 
@@ -92,6 +95,87 @@ class NutFilterDefinitions():
             if type(packet.value) == float:
                 preped_data = FloatingPoint(value=packet.value)
                 is_valid = True
+            
+            """
+            new 1-16-24 work
+            check if python dict type and then test key and value pair to see what it is for proper routing
+            I either need to allow any type like python does or trongly type the dicts moving away from python a bit
+            but I think strongly typed python sounds not bad....
+            """
+            if type(packet.value) == dict:
+                #test the types of the key and value
+                #first check that it is a dict
+                raw_dict:Dict[Any,Any] = packet.value
+                
+                dict_keys:List[Any] = list(raw_dict.keys())
+                dict_values:List[Any] = list(raw_dict.values())
+                
+                #should really do a for keys and then build a string dict
+                #that can be easily sent to yaml as well as be 
+                #checked properly
+                golden_key = dict_keys[0]
+                keys_type:NutObjectType = NutObjectType.VALUE
+                if type(golden_key) == str:
+                    keys_type:NutObjectType = NutObjectType.STRING
+                    #now save it to the yaml at the file target
+                elif type(golden_key) == int:
+                    keys_type:NutObjectType = NutObjectType.INTEGER
+                elif type(golden_key) == float:
+                    keys_type:NutObjectType = NutObjectType.FLOATINGPOINT
+                else:
+                    found_type_key = type(golden_key)
+                    raise TypeError(f'{golden_key} is type:{found_type_key} and that is not supported yet')
+                
+                value_type:NutObjectType = NutObjectType.VALUE
+                if type(raw_dict[golden_key]) == str:
+                    value_type:NutObjectType = NutObjectType.STRING
+                    #now save it to the yaml at the file target
+                elif type(raw_dict[golden_key]) == int:
+                    value_type:NutObjectType = NutObjectType.INTEGER
+                elif type(raw_dict[golden_key]) == float:
+                    value_type:NutObjectType = NutObjectType.FLOATINGPOINT
+                else:
+                    found_type_value = type(raw_dict[golden_key])
+                    raise TypeError(f'{raw_dict[golden_key]} is type:{found_type_value} and that is not supported yet')
+                
+                temp_dict:Dict[str,str] = {}
+                for key, value in raw_dict.items():
+                    temp_dict[str(key)] = str(value)                
+                
+                yaml_dict:Dictionary = Dictionary(key_def=keys_type,
+                                                  value_def=value_type,
+                                                  value=temp_dict)
+                
+                is_valid = True
+                preped_data = yaml_dict
+            
+            if type(packet.value) == list:
+                raw_list:List[Any,Any] = packet.value
+                golden_item = raw_list[0]
+                item_type:NutObjectType = NutObjectType.VALUE
+                if type(golden_item) == str:
+                    item_type:NutObjectType = NutObjectType.STRING
+                    #now save it to the yaml at the file target
+                elif type(golden_item) == int:
+                    item_type:NutObjectType = NutObjectType.INTEGER
+                elif type(golden_item) == float:
+                    item_type:NutObjectType = NutObjectType.FLOATINGPOINT
+                else:
+                    found_type_item = type(golden_item)
+                    raise TypeError(f'{golden_item} is type:{found_type_item} and that is not supported yet')
+                
+                temp_list:List[str] = []
+                
+                for item in raw_list:
+                    temp_list.append(str(item))
+                
+                yaml_list:ListOfThings = ListOfThings(value_def=item_type,
+                                                      value=temp_list)  
+                
+                is_valid = True
+                preped_data = yaml_list
+            
+            #this is supper old...maybe get ride off
             # if packet.value == None:
             #     preped_data = Empty()
             #     is_valid = True
@@ -128,7 +212,58 @@ class NutFilterDefinitions():
             if isinstance(new_data, Integer) == True:
                     new_value = new_data.value
             if isinstance(new_data, FloatingPoint) == True:
-                    new_value = new_data.value        
+                    new_value = new_data.value     
+            if isinstance(new_data, Dictionary) == True:
+                    key_def:NutObjectType = new_data.key_def
+                    value_def:NutObjectType = new_data.value_def
+                    temp_value:Dict[str,str] = new_data.value
+                    
+                    temp_dict = {}
+                    for key, value in temp_value.items():
+                        recoverd_key = None
+                        recoverd_value = None
+                        if key_def == NutObjectType.STRING:
+                            recoverd_key = str(key)
+                        elif key_def == NutObjectType.INTEGER:
+                            recoverd_key = int(key)
+                        elif key_def == NutObjectType.FLOATINGPOINT:
+                            recoverd_key = float(key)
+                        else:
+                            raise TypeError(f'Dict key type for {key} not supported')
+                        
+                        if value_def == NutObjectType.STRING:
+                            recoverd_value = str(value)
+                        elif value_def == NutObjectType.INTEGER:
+                            recoverd_value = int(value)
+                        elif value_def == NutObjectType.FLOATINGPOINT:
+                            recoverd_value = float(value)
+                        else:
+                            raise TypeError(f'Dict value type for {value} not supported')
+                        
+                        temp_dict[recoverd_key] = recoverd_value
+                    
+                    new_value = temp_dict
+            
+            if isinstance(new_data, ListOfThings) == True:
+                # raw_list:List[Any,Any] = new_data.value
+                # golden_item = raw_list[0]
+                item_type:NutObjectType = new_data.value_def
+                item_list:List[str] = new_data.value
+                
+                temp_list = []
+                for item in item_list:
+                    recoverd_value = None
+                    if item_type == NutObjectType.STRING:
+                        recoverd_value = str(value)
+                    elif item_type == NutObjectType.INTEGER:
+                        recoverd_value = int(value)
+                    elif item_type == NutObjectType.FLOATINGPOINT:
+                        recoverd_value = float(value)
+                    else:
+                        raise TypeError(f'List value type for {value} not supported')
+                    temp_list.append(recoverd_value)
+                
+                new_value = temp_list
             # if isinstance(new_data, Empty) == True:
             #         new_value = None
         return new_value
