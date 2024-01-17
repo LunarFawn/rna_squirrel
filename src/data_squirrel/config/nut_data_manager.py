@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 import os
 import copy
+import time
 
 from data_squirrel.config.nut_yaml_objects import (
     String, 
@@ -41,7 +42,6 @@ class YamlDataOperations():
         self._yaml.register_class(Dictionary)
         self._yaml.register_class(ListOfThings)
         # self._yaml.register_class(Empty)
-        self._dump_test:YAML = None
         self._dump_yaml:YAML = YAML()
         self._dump_yaml.register_class(String)
         self._dump_yaml.register_class(Integer)
@@ -61,18 +61,20 @@ class YamlDataOperations():
             raise FileExistsError(f'Variable {nut_name} save path {nut_folder_path} does not exist. Maybe initialize it first?')
         found_data:Any = None
         try:
-            # self._dump_test = copy.deepcopy(self._yaml)
             self.yaml.dump(data=data,
-                       stream=filename)            
-            #now do the check
-            found_data = self._dump_yaml.load(filename)                 
+                       stream=filename)
+            time.sleep(1)
+            #now do the check             
         except:
             raise Exception('Failed to write data')
-                
-        if found_data == data:
-            #its good
-            self._dump_yaml = None
-        else:
+        
+        try:
+            found_data = self._dump_yaml.load(filename)  
+            print(found_data)  
+            if found_data == data:
+                #its good
+                self._dump_yaml = YAML()
+        except:
             raise Exception('Data save check failed. Found data that differed than original in yaml')       
         
     def read_data(self, working_folder:Path, nut_name:str, filename:Path):

@@ -208,41 +208,41 @@ class NutFilterDefinitions():
                         nut_name=address.address_list[-1],
                         filename=address.address_file_path)
             if isinstance(new_data, String) == True:
-                    new_value = new_data.value
+                new_value = new_data.value
             if isinstance(new_data, Integer) == True:
-                    new_value = new_data.value
+                new_value = new_data.value
             if isinstance(new_data, FloatingPoint) == True:
-                    new_value = new_data.value     
+                new_value = new_data.value     
             if isinstance(new_data, Dictionary) == True:
-                    key_def:NutObjectType = new_data.key_def
-                    value_def:NutObjectType = new_data.value_def
-                    temp_value:Dict[str,str] = new_data.value
+                key_def:NutObjectType = new_data.key_def
+                value_def:NutObjectType = new_data.value_def
+                temp_value:Dict[str,str] = new_data.value
+                
+                temp_dict = {}
+                for key, value in temp_value.items():
+                    recoverd_key = None
+                    recoverd_value = None
+                    if key_def == NutObjectType.STRING:
+                        recoverd_key = str(key)
+                    elif key_def == NutObjectType.INTEGER:
+                        recoverd_key = int(key)
+                    elif key_def == NutObjectType.FLOATINGPOINT:
+                        recoverd_key = float(key)
+                    else:
+                        raise TypeError(f'Dict key type for {key} not supported')
                     
-                    temp_dict = {}
-                    for key, value in temp_value.items():
-                        recoverd_key = None
-                        recoverd_value = None
-                        if key_def == NutObjectType.STRING:
-                            recoverd_key = str(key)
-                        elif key_def == NutObjectType.INTEGER:
-                            recoverd_key = int(key)
-                        elif key_def == NutObjectType.FLOATINGPOINT:
-                            recoverd_key = float(key)
-                        else:
-                            raise TypeError(f'Dict key type for {key} not supported')
-                        
-                        if value_def == NutObjectType.STRING:
-                            recoverd_value = str(value)
-                        elif value_def == NutObjectType.INTEGER:
-                            recoverd_value = int(value)
-                        elif value_def == NutObjectType.FLOATINGPOINT:
-                            recoverd_value = float(value)
-                        else:
-                            raise TypeError(f'Dict value type for {value} not supported')
-                        
-                        temp_dict[recoverd_key] = recoverd_value
+                    if value_def == NutObjectType.STRING:
+                        recoverd_value = str(value)
+                    elif value_def == NutObjectType.INTEGER:
+                        recoverd_value = int(value)
+                    elif value_def == NutObjectType.FLOATINGPOINT:
+                        recoverd_value = float(value)
+                    else:
+                        raise TypeError(f'Dict value type for {value} not supported')
                     
-                    new_value = temp_dict
+                    temp_dict[recoverd_key] = recoverd_value
+                
+                new_value = temp_dict
             
             if isinstance(new_data, ListOfThings) == True:
                 # raw_list:List[Any,Any] = new_data.value
