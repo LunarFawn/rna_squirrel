@@ -120,6 +120,12 @@ class SecondaryStructure(CustomAttribute):
 	def structure_list(self, value:list):
 		if isinstance(value, list) == False:
 			raise ValueError("Invalid value assignment")
+		if len(value) < 1:
+			raise Exception("Empty lists not allowed")
+
+		for item in value:
+			if isinstance(item, int) == False:
+				raise ValueError("Invalid value assignment")
 		self.parent.structure_list_db = value
 
 
@@ -180,6 +186,25 @@ class Ensemble(CustomAttribute):
 		if isinstance(value, Energy) == False:
 			raise ValueError("Invalid value assignment")
 		self._max_energy = value
+
+
+	@property
+	def energy_groups(self)->dict:
+		return self.parent.energy_groups_db
+
+	@energy_groups.setter
+	def energy_groups(self, value:dict):
+		if isinstance(value, dict) == False:
+			raise ValueError("Invalid value assignment")
+		if len(value) < 1:
+			raise Exception("Empty dicts not allowed")
+
+		for key,val in value.items():
+			if isinstance(key, float) == False:
+				raise ValueError("Invalid key assignment to dic")
+			if isinstance(val, str) == False:
+				raise ValueError("Invalid value assignment to dict")
+		self.parent.energy_groups_db = value
 
 
 	@property

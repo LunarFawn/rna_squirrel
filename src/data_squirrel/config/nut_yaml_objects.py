@@ -30,7 +30,8 @@ class NutObjectType(Enum):
     FLOATINGPOINT="float"
     STRING="str"
     BOOLEAN="bool"
-    DICTIONARY="Dict"
+    DICTIONARY="dict"
+    LIST='list'
     CONTAINER="CONTAINER"
     VALUE="VALUE"
     

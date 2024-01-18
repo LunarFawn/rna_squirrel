@@ -55,11 +55,11 @@ def test_new_thing(empty_default_strand:RNAStruct):
 
 def test_lists(empty_default_strand:RNAStruct):
     new_list = []
-    new_list.append('ONE') 
-    new_list.append('TWO') 
-    new_list.append('THREE') 
+    new_list.append(1) 
+    new_list.append(2) 
+    new_list.append(3) 
     empty_default_strand.ensemble.mfe_structure.structure_list = new_list
-    assert empty_default_strand.ensemble.mfe_structure.structure_list == ['ONE', 'TWO', 'THREE'] 
+    assert empty_default_strand.ensemble.mfe_structure.structure_list == [1, 2, 3] 
     
 
 def test_dicts(empty_default_strand:RNAStruct):
@@ -68,3 +68,10 @@ def test_dicts(empty_default_strand:RNAStruct):
     new_dict[2] = 3 
     empty_default_strand.ensemble.mfe_structure.structure_dict = new_dict
     assert empty_default_strand.ensemble.mfe_structure.structure_dict == {1:4, 2:3}
+    
+def test_complex_dicts(empty_default_strand:RNAStruct):
+    new_dict = {}
+    new_dict[1.3] = "one"
+    new_dict[1.5] = "two"
+    empty_default_strand.ensemble.energy_groups = new_dict
+    assert empty_default_strand.ensemble.energy_groups == {1.3:"one", 1.5:"two"}
