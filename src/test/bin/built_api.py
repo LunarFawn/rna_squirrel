@@ -123,6 +123,17 @@ class SecondaryStructure(CustomAttribute):
 		self.parent.structure_list_db = value
 
 
+	@property
+	def structure_dict(self)->dict:
+		return self.parent.structure_dict_db
+
+	@structure_dict.setter
+	def structure_dict(self, value:dict):
+		if isinstance(value, dict) == False:
+			raise ValueError("Invalid value assignment")
+		self.parent.structure_dict_db = value
+
+
 class Ensemble(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
 		self.parent = parent

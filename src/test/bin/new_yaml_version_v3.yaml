@@ -69,6 +69,11 @@ DEFINITIONS:
             name: structure_list
             object_type: !NutObjectType VALUE
             object_info: list
+          - !NutObject
+            name: structure_dict
+            object_type: !NutObjectType VALUE
+            object_info: dict
+
       - !NutContainer
         name: Ensemble
         object_list:

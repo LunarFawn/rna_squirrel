@@ -85,6 +85,10 @@ class NupackStrand(Nut):
 			attribute="structure_list_db",
 			atr_type=list))
 
+		self.ensemble_db.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_dict_db",
+			atr_type=dict))
+
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="mea_structure_db",
 			atr_type=None))
@@ -112,6 +116,10 @@ class NupackStrand(Nut):
 		self.ensemble_db.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="structure_list_db",
 			atr_type=list))
+
+		self.ensemble_db.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_dict_db",
+			atr_type=dict))
 
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="what_structure_db",
@@ -226,6 +234,17 @@ class SecondaryStructure(CustomAttribute):
 		if isinstance(value, list) == False:
 			raise ValueError("Invalid value assignment")
 		self.parent.structure_list_db = value
+
+
+	@property
+	def structure_dict(self)->dict:
+		return self.parent.structure_dict_db
+
+	@structure_dict.setter
+	def structure_dict(self, value:dict):
+		if isinstance(value, dict) == False:
+			raise ValueError("Invalid value assignment")
+		self.parent.structure_dict_db = value
 
 
 class Ensemble(CustomAttribute):

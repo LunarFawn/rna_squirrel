@@ -60,3 +60,11 @@ def test_lists(empty_default_strand:RNAStruct):
     new_list.append('THREE') 
     empty_default_strand.ensemble.mfe_structure.structure_list = new_list
     assert empty_default_strand.ensemble.mfe_structure.structure_list == ['ONE', 'TWO', 'THREE'] 
+    
+
+def test_dicts(empty_default_strand:RNAStruct):
+    new_dict = {}
+    new_dict[1] = 4
+    new_dict[2] = 3 
+    empty_default_strand.ensemble.mfe_structure.structure_dict = new_dict
+    assert empty_default_strand.ensemble.mfe_structure.structure_dict == {1:4, 2:3}
