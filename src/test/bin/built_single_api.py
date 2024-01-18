@@ -59,7 +59,7 @@ class NupackStrand(Nut):
 
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="energy_groups_db",
-			atr_type=['float', 'str']))
+			atr_type=['float', 'list']))
 
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="mfe_structure_db",
@@ -319,7 +319,7 @@ class Ensemble(CustomAttribute):
 		for key,val in value.items():
 			if isinstance(key, float) == False:
 				raise ValueError("Invalid key assignment to dic")
-			if isinstance(val, str) == False:
+			if isinstance(val, list) == False:
 				raise ValueError("Invalid value assignment to dict")
 		self.parent.energy_groups_db = value
 

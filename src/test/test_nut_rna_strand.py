@@ -71,7 +71,7 @@ def test_dicts(empty_default_strand:RNAStruct):
     
 def test_complex_dicts(empty_default_strand:RNAStruct):
     new_dict = {}
-    new_dict[1.3] = "one"
-    new_dict[1.5] = "two"
+    new_dict[1.3] = ["1",'2', '3']
+    new_dict[1.5] = ['4','5','6']
     empty_default_strand.ensemble.energy_groups = new_dict
-    assert empty_default_strand.ensemble.energy_groups == {1.3:"one", 1.5:"two"}
+    assert empty_default_strand.ensemble.energy_groups == {1.3:["1",'2', '3'], 1.5:['4','5','6']}

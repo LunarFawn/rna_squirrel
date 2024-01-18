@@ -88,7 +88,7 @@ DEFINITIONS:
           - !NutObject
             name: energy_groups 
             object_type: !NutObjectType DICTIONARY
-            object_info: [float,str]
+            object_info: [float,list]
           - !NutObject
             name: mfe_structure 
             object_type: !NutObjectType CONTAINER

@@ -202,7 +202,7 @@ class Ensemble(CustomAttribute):
 		for key,val in value.items():
 			if isinstance(key, float) == False:
 				raise ValueError("Invalid key assignment to dic")
-			if isinstance(val, str) == False:
+			if isinstance(val, list) == False:
 				raise ValueError("Invalid value assignment to dict")
 		self.parent.energy_groups_db = value
 

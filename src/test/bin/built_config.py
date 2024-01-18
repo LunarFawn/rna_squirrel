@@ -55,7 +55,7 @@ class NupackStrand(Nut):
 
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="energy_groups_db",
-			atr_type=['float', 'str']))
+			atr_type=['float', 'list']))
 
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="mfe_structure_db",

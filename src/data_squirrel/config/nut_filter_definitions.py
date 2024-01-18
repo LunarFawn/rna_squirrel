@@ -123,6 +123,8 @@ class NutFilterDefinitions():
                     keys_type:NutObjectType = NutObjectType.INTEGER
                 elif type(golden_key) == float:
                     keys_type:NutObjectType = NutObjectType.FLOATINGPOINT
+                elif type(golden_key) == list:
+                    keys_type:NutObjectType = NutObjectType.LIST
                 else:
                     found_type_key = type(golden_key)
                     raise TypeError(f'{golden_key} is type:{found_type_key} and that is not supported yet')
@@ -135,13 +137,16 @@ class NutFilterDefinitions():
                     value_type:NutObjectType = NutObjectType.INTEGER
                 elif type(raw_dict[golden_key]) == float:
                     value_type:NutObjectType = NutObjectType.FLOATINGPOINT
+                elif type(raw_dict[golden_key]) == list:
+                    value_type:NutObjectType = NutObjectType.LIST
                 else:
                     found_type_value = type(raw_dict[golden_key])
                     raise TypeError(f'{raw_dict[golden_key]} is type:{found_type_value} and that is not supported yet')
                 
                 temp_dict:Dict[str,str] = {}
                 for key, value in raw_dict.items():
-                    temp_dict[str(key)] = str(value)                
+                    # temp_dict[str(key)] = str(value)   
+                    temp_dict[key] = value              
                 
                 yaml_dict:Dictionary = Dictionary(key_def=keys_type,
                                                   value_def=value_type,
@@ -229,6 +234,8 @@ class NutFilterDefinitions():
                         recoverd_key = int(key)
                     elif key_def == NutObjectType.FLOATINGPOINT:
                         recoverd_key = float(key)
+                    elif key_def == NutObjectType.LIST:
+                        recoverd_key = list(key)
                     else:
                         raise TypeError(f'Dict key type for {key} not supported')
                     
@@ -238,6 +245,8 @@ class NutFilterDefinitions():
                         recoverd_value = int(value)
                     elif value_def == NutObjectType.FLOATINGPOINT:
                         recoverd_value = float(value)
+                    elif value_def == NutObjectType.LIST:
+                        recoverd_value = list(value)
                     else:
                         raise TypeError(f'Dict value type for {value} not supported')
                     
