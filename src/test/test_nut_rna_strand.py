@@ -52,3 +52,11 @@ def test_new_thing(empty_default_strand:RNAStruct):
     assert strand_two.primary_structure.strand == "AABAC"
     with pytest.raises(ValueError):     
         empty_default_strand.primary_structure = "break"
+
+def test_lists(empty_default_strand:RNAStruct):
+    new_list = []
+    new_list.append('ONE') 
+    new_list.append('TWO') 
+    new_list.append('THREE') 
+    empty_default_strand.ensemble.mfe_structure.structure_list = new_list
+    assert empty_default_strand.ensemble.mfe_structure.structure_list == ['ONE', 'TWO', 'THREE'] 

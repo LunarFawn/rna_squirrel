@@ -37,6 +37,11 @@ class NutObjectType(Enum):
     @classmethod
     def from_yaml(cls, loader, node):
         return NutObjectType[node.value]
+    
+    @classmethod
+    def to_yaml(cls, representer, node):
+        return representer.represent_scalar(f'!{cls.__name__}',
+                                            u'{.name}'.format(node))
 
         
 @dataclass
@@ -152,9 +157,9 @@ class ValuePacket(GenericAttribute):
         self._address_list:List[str] = []  
         # self._value_type: Any = None
         
-    # @property
-    # def value_type(self)->Any:
-    #     return 
+    @property
+    def value_type(self)->Any:
+        return self.atr_type
     
     @property
     def parent(self)->str:
@@ -197,7 +202,7 @@ class Dictionary:
 @dataclass
 class ListOfThings:
     value_def:NutObjectType
-    value:List[str]
+    value:list
 
 
 

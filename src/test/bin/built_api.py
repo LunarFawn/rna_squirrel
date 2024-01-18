@@ -112,6 +112,17 @@ class SecondaryStructure(CustomAttribute):
 		self._stack_energy = value
 
 
+	@property
+	def structure_list(self)->list:
+		return self.parent.structure_list_db
+
+	@structure_list.setter
+	def structure_list(self, value:list):
+		if isinstance(value, list) == False:
+			raise ValueError("Invalid value assignment")
+		self.parent.structure_list_db = value
+
+
 class Ensemble(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
 		self.parent = parent

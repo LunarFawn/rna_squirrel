@@ -26,6 +26,7 @@ NUT:
             name: ensemble
             object_type: !NutObjectType CONTAINER
             object_info: Ensemble
+          
 
 
 DEFINITIONS:
@@ -64,6 +65,10 @@ DEFINITIONS:
             name: stack_energy 
             object_type: !NutObjectType CONTAINER
             object_info: Energy
+          - !NutObject
+            name: structure_list
+            object_type: !NutObjectType VALUE
+            object_info: list
       - !NutContainer
         name: Ensemble
         object_list:

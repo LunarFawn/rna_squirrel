@@ -85,14 +85,14 @@ class NutFilterDefinitions():
             new_value = packet.value
             is_valid:bool = False
             preped_data: Any = None
-            if type(packet.value) == str:
+            if packet.value_type == str:
                 preped_data = String(value=packet.value)
                 is_valid = True
                 #now save it to the yaml at the file target
-            if type(packet.value) == int:
+            if packet.value_type == int:
                 preped_data = Integer(value=packet.value)
                 is_valid = True
-            if type(packet.value) == float:
+            if packet.value_type == float:
                 preped_data = FloatingPoint(value=packet.value)
                 is_valid = True
             
@@ -102,7 +102,7 @@ class NutFilterDefinitions():
             I either need to allow any type like python does or trongly type the dicts moving away from python a bit
             but I think strongly typed python sounds not bad....
             """
-            if type(packet.value) == dict:
+            if packet.value_type == dict:
                 #test the types of the key and value
                 #first check that it is a dict
                 raw_dict:Dict[Any,Any] = packet.value
@@ -149,8 +149,8 @@ class NutFilterDefinitions():
                 is_valid = True
                 preped_data = yaml_dict
             
-            if type(packet.value) == list:
-                raw_list:List[Any,Any] = packet.value
+            if packet.value_type == list:
+                raw_list:List[Any] = packet.value
                 golden_item = raw_list[0]
                 item_type:NutObjectType = NutObjectType.VALUE
                 if type(golden_item) == str:
@@ -170,7 +170,7 @@ class NutFilterDefinitions():
                     temp_list.append(str(item))
                 
                 yaml_list:ListOfThings = ListOfThings(value_def=item_type,
-                                                      value=temp_list)  
+                                                    value=temp_list)  
                 
                 is_valid = True
                 preped_data = yaml_list
@@ -254,11 +254,11 @@ class NutFilterDefinitions():
                 for item in item_list:
                     recoverd_value = None
                     if item_type == NutObjectType.STRING:
-                        recoverd_value = str(value)
+                        recoverd_value = str(item)
                     elif item_type == NutObjectType.INTEGER:
-                        recoverd_value = int(value)
+                        recoverd_value = int(item)
                     elif item_type == NutObjectType.FLOATINGPOINT:
-                        recoverd_value = float(value)
+                        recoverd_value = float(item)
                     else:
                         raise TypeError(f'List value type for {value} not supported')
                     temp_list.append(recoverd_value)

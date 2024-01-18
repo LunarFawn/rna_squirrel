@@ -1,0 +1,6 @@
+!ListOfThings
+value_def: !NutObjectType STRING
+value:
+- ONE
+- TWO
+- THREE

@@ -81,6 +81,10 @@ class RNAStrand(Nut):
 			attribute="kcal_db",
 			atr_type=float))
 
+		self.ensemble_db.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_list_db",
+			atr_type=list))
+
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="mea_structure_db",
 			atr_type=None))
@@ -104,6 +108,10 @@ class RNAStrand(Nut):
 		self.ensemble_db.mea_structure_db.stack_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="kcal_db",
 			atr_type=float))
+
+		self.ensemble_db.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_list_db",
+			atr_type=list))
 
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="what_structure_db",
@@ -207,6 +215,17 @@ class SecondaryStructure(CustomAttribute):
 		if isinstance(value, Energy) == False:
 			raise ValueError("Invalid value assignment")
 		self._stack_energy = value
+
+
+	@property
+	def structure_list(self)->list:
+		return self.parent.structure_list_db
+
+	@structure_list.setter
+	def structure_list(self, value:list):
+		if isinstance(value, list) == False:
+			raise ValueError("Invalid value assignment")
+		self.parent.structure_list_db = value
 
 
 class Ensemble(CustomAttribute):
