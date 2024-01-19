@@ -156,8 +156,6 @@ class Nut():
     working_folder:Path = field()
     atr_class:AtrClass = AtrClass.NUT
     nut_filter:NutFilterDefinitions = field(init=False)#NutFilterDefinitions(working_dir=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
-
-   
     
     def __attrs_post_init__(self):
         self.nut_filter = NutFilterDefinitions(working_dir=self.working_folder)

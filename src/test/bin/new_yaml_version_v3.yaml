@@ -26,6 +26,7 @@ NUT:
             name: ensemble
             object_type: !NutObjectType CONTAINER
             object_info: Ensemble
+          
 
 
 DEFINITIONS:
@@ -64,6 +65,15 @@ DEFINITIONS:
             name: stack_energy 
             object_type: !NutObjectType CONTAINER
             object_info: Energy
+          - !NutObject
+            name: structure_list
+            object_type: !NutObjectType LIST
+            object_info: int
+          - !NutObject
+            name: structure_dict
+            object_type: !NutObjectType VALUE
+            object_info: dict
+
       - !NutContainer
         name: Ensemble
         object_list:
@@ -75,10 +85,10 @@ DEFINITIONS:
             name: max_energy 
             object_type: !NutObjectType CONTAINER
             object_info: Energy
-          # - !NutObject
-          #   name: energy_groups 
-          #   object_type: !NutObjectType DICTIONARY
-          #   object_info: [Energy,EnergyGroup]
+          - !NutObject
+            name: energy_groups 
+            object_type: !NutObjectType DICTIONARY
+            object_info: [float,list]
           - !NutObject
             name: mfe_structure 
             object_type: !NutObjectType CONTAINER

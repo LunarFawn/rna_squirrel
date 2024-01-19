@@ -1,0 +1,6 @@
+!Dictionary
+key_def: &id001 !NutObjectType INTEGER
+value_def: *id001
+value:
+  1: 4
+  2: 3

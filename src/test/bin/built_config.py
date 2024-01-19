@@ -53,6 +53,10 @@ class NupackStrand(Nut):
 			attribute="kcal_db",
 			atr_type=float))
 
+		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="energy_groups_db",
+			atr_type=['float', 'list']))
+
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="mfe_structure_db",
 			atr_type=None))
@@ -77,6 +81,14 @@ class NupackStrand(Nut):
 			attribute="kcal_db",
 			atr_type=float))
 
+		self.ensemble_db.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_list_db",
+			atr_type=int))
+
+		self.ensemble_db.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_dict_db",
+			atr_type=dict))
+
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="mea_structure_db",
 			atr_type=None))
@@ -100,6 +112,14 @@ class NupackStrand(Nut):
 		self.ensemble_db.mea_structure_db.stack_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="kcal_db",
 			atr_type=float))
+
+		self.ensemble_db.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_list_db",
+			atr_type=int))
+
+		self.ensemble_db.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_dict_db",
+			atr_type=dict))
 
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="what_structure_db",

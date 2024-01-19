@@ -57,6 +57,10 @@ class RNAStrand(Nut):
 			attribute="kcal_db",
 			atr_type=float))
 
+		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="energy_groups_db",
+			atr_type=['float', 'list']))
+
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="mfe_structure_db",
 			atr_type=None))
@@ -81,6 +85,14 @@ class RNAStrand(Nut):
 			attribute="kcal_db",
 			atr_type=float))
 
+		self.ensemble_db.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_list_db",
+			atr_type=int))
+
+		self.ensemble_db.mfe_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_dict_db",
+			atr_type=dict))
+
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="mea_structure_db",
 			atr_type=None))
@@ -104,6 +116,14 @@ class RNAStrand(Nut):
 		self.ensemble_db.mea_structure_db.stack_energy_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="kcal_db",
 			atr_type=float))
+
+		self.ensemble_db.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_list_db",
+			atr_type=int))
+
+		self.ensemble_db.mea_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="structure_dict_db",
+			atr_type=dict))
 
 		self.ensemble_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="what_structure_db",
@@ -209,6 +229,34 @@ class SecondaryStructure(CustomAttribute):
 		self._stack_energy = value
 
 
+	@property
+	def structure_list(self)->List[int]:
+		return self.parent.structure_list_db
+
+	@structure_list.setter
+	def structure_list(self, value:List[int]):
+		if isinstance(value, list) == False:
+			raise ValueError("Invalid value assignment")
+		if len(value) < 1:
+			raise Exception("Empty lists not allowed")
+
+		for item in value:
+			if isinstance(item, int) == False:
+				raise ValueError("Invalid value assignment")
+		self.parent.structure_list_db = value
+
+
+	@property
+	def structure_dict(self)->dict:
+		return self.parent.structure_dict_db
+
+	@structure_dict.setter
+	def structure_dict(self, value:dict):
+		if isinstance(value, dict) == False:
+			raise ValueError("Invalid value assignment")
+		self.parent.structure_dict_db = value
+
+
 class Ensemble(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
 		self.parent = parent
@@ -255,6 +303,25 @@ class Ensemble(CustomAttribute):
 		if isinstance(value, Energy) == False:
 			raise ValueError("Invalid value assignment")
 		self._max_energy = value
+
+
+	@property
+	def energy_groups(self)->Dict[float,list]:
+		return self.parent.energy_groups_db
+
+	@energy_groups.setter
+	def energy_groups(self, value:Dict[float,list]):
+		if isinstance(value, dict) == False:
+			raise ValueError("Invalid value assignment")
+		if len(value) < 1:
+			raise Exception("Empty dicts not allowed")
+
+		for key,val in value.items():
+			if isinstance(key, float) == False:
+				raise ValueError("Invalid key assignment to dic")
+			if isinstance(val, list) == False:
+				raise ValueError("Invalid value assignment to dict")
+		self.parent.energy_groups_db = value
 
 
 	@property

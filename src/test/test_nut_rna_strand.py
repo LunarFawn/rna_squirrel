@@ -3,12 +3,19 @@ from pathlib import Path
 
 #from test.bin.built_api import Energy, PrimaryStructure, rna_strand, Ensemble
 from test.bin.built_single_api_2 import RNAStruct
+from will_this_work import WhatIsThis
 CONFIG_PATH = '/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
 
 @pytest.fixture
 def empty_default_strand():
     return RNAStruct(var_name="rna_strand_1",
                       working_folder=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
+
+@pytest.fixture
+def empty_what_strand():
+    return WhatIsThis(var_name="what_1",
+                      working_folder=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
+
 
 def test_get_empty_strand(empty_default_strand:RNAStruct):
     with pytest.raises(Exception):     
@@ -52,3 +59,33 @@ def test_new_thing(empty_default_strand:RNAStruct):
     assert strand_two.primary_structure.strand == "AABAC"
     with pytest.raises(ValueError):     
         empty_default_strand.primary_structure = "break"
+
+def test_lists(empty_default_strand:RNAStruct):
+    new_list = []
+    new_list.append(1) 
+    new_list.append(2) 
+    new_list.append(3) 
+    empty_default_strand.ensemble.mfe_structure.structure_list = new_list
+    assert empty_default_strand.ensemble.mfe_structure.structure_list == [1, 2, 3] 
+    
+
+def test_dicts(empty_default_strand:RNAStruct):
+    new_dict = {}
+    new_dict[1] = 4
+    new_dict[2] = 3 
+    empty_default_strand.ensemble.mfe_structure.structure_dict = new_dict
+    assert empty_default_strand.ensemble.mfe_structure.structure_dict == {1:4, 2:3}
+    
+def test_complex_dicts(empty_default_strand:RNAStruct):
+    new_dict = {}
+    new_dict[1.3] = ["1",'2', '3']
+    new_dict[1.5] = ['4','5','6']
+    empty_default_strand.ensemble.energy_groups = new_dict
+    assert empty_default_strand.ensemble.energy_groups == {1.3:["1",'2', '3'], 1.5:['4','5','6']}
+    
+def test_complex_what_dicts(empty_what_strand:WhatIsThis):
+    new_dict = {}
+    new_dict[1.3] = ["1",'2', '3']
+    new_dict[1.5] = ['4','5','6']
+    empty_what_strand.ensemble.energy_groups = new_dict
+    assert empty_what_strand.ensemble.energy_groups == {1.3:["1",'2', '3'], 1.5:['4','5','6']}
