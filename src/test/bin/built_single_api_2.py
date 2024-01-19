@@ -230,11 +230,11 @@ class SecondaryStructure(CustomAttribute):
 
 
 	@property
-	def structure_list(self)->list:
+	def structure_list(self)->List[int]:
 		return self.parent.structure_list_db
 
 	@structure_list.setter
-	def structure_list(self, value:list):
+	def structure_list(self, value:List[int]):
 		if isinstance(value, list) == False:
 			raise ValueError("Invalid value assignment")
 		if len(value) < 1:
@@ -306,11 +306,11 @@ class Ensemble(CustomAttribute):
 
 
 	@property
-	def energy_groups(self)->dict:
+	def energy_groups(self)->Dict[float,list]:
 		return self.parent.energy_groups_db
 
 	@energy_groups.setter
-	def energy_groups(self, value:dict):
+	def energy_groups(self, value:Dict[float,list]):
 		if isinstance(value, dict) == False:
 			raise ValueError("Invalid value assignment")
 		if len(value) < 1:

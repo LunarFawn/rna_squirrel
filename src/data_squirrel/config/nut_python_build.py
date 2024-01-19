@@ -209,9 +209,15 @@ class PythonBuild():
                 if attribute.object_type == NutObjectType.DICTIONARY:
                     # new_string:str = str(attribute.object_info).replace("'","")
                     # return_type = f'{NutObjectType.DICTIONARY.value}{new_string}'
-                    return_type = "dict"
+                    key_value_pair:List[str] = attribute.object_info
+                    if len(key_value_pair) != 2:
+                        raise Exception(f'Missing proper amount of arguments in dictionary creation')
+                    key_string = key_value_pair[0]
+                    value_string = key_value_pair[1]
+                    return_type = f'Dict[{key_string},{value_string}]'
                 elif attribute.object_type == NutObjectType.LIST:
-                    return_type = "list"
+                    
+                    return_type = f'List[{attribute.object_info}]'
                 else:
                     return_type = f'{attribute.object_info}'
 
@@ -226,11 +232,14 @@ class PythonBuild():
             struct_lines.append('\n')
             
             #now the setter
-            struct_lines.append(f'\t@{atr_name}.setter\n')
-            struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):\n')
-            struct_lines.append(f'\t\tif isinstance(value, {return_type}) == False:\n')
-            struct_lines.append(f'\t\t\traise ValueError("Invalid value assignment")\n')
+           
             if attribute.object_type == NutObjectType.LIST:
+                return_type = f'List[{attribute.object_info}]'
+                struct_lines.append(f'\t@{atr_name}.setter\n')
+                struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):\n')
+                struct_lines.append(f'\t\tif isinstance(value, list) == False:\n')
+                struct_lines.append(f'\t\t\traise ValueError("Invalid value assignment")\n')
+                
                 struct_lines.append(f'\t\tif len(value) < 1:\n')
                 struct_lines.append(f'\t\t\traise Exception("Empty lists not allowed")\n\n')
                 struct_lines.append(f'\t\tfor item in value:\n')
@@ -242,6 +251,13 @@ class PythonBuild():
                     raise Exception(f'Missing proper amount of arguments in dictionary creation')
                 key_string = key_value_pair[0]
                 value_string = key_value_pair[1]
+                return_type = f'Dict[{key_string},{value_string}]'
+                struct_lines.append(f'\t@{atr_name}.setter\n')
+                struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):\n')
+                
+                struct_lines.append(f'\t\tif isinstance(value, dict) == False:\n')
+                struct_lines.append(f'\t\t\traise ValueError("Invalid value assignment")\n')
+                
                 struct_lines.append(f'\t\tif len(value) < 1:\n')
                 struct_lines.append(f'\t\t\traise Exception("Empty dicts not allowed")\n\n')
                 struct_lines.append(f'\t\tfor key,val in value.items():\n')
@@ -249,6 +265,11 @@ class PythonBuild():
                 struct_lines.append(f'\t\t\t\traise ValueError("Invalid key assignment to dic")\n')
                 struct_lines.append(f'\t\t\tif isinstance(val, {value_string}) == False:\n')
                 struct_lines.append(f'\t\t\t\traise ValueError("Invalid value assignment to dict")\n')
+            else:
+                struct_lines.append(f'\t@{atr_name}.setter\n')
+                struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):\n')
+                struct_lines.append(f'\t\tif isinstance(value, {return_type}) == False:\n')
+                struct_lines.append(f'\t\t\traise ValueError("Invalid value assignment")\n')
                 
             if attribute.object_type == NutObjectType.CONTAINER:
                 struct_lines.append(f'\t\tself._{atr_name} = value\n')
