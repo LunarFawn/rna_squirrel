@@ -19,7 +19,7 @@ NUT:
       - !NutDeclaration
         name: Ensemble
       - !NutDeclaration
-        name: PrimaryStructureLists
+        name: Sara2secStructLists
     nut_main_struct:
       !NutContainer
         name: RNAStrand
@@ -35,7 +35,7 @@ NUT:
           - !NutObject
             name: primary_structure_lists
             object_type: !NutObjectType CONTAINER
-            object_info: PrimaryStructureLists
+            object_info: Sara2secStructLists
           
 
 
@@ -111,12 +111,12 @@ DEFINITIONS:
             object_type: !NutObjectType CONTAINER
             object_info: PrimaryStructure
       - !NutContainer
-        name: PrimaryStructureLists
+        name: Sara2secStructLists
         object_list:
           - !NutObject
-            name: primary_list
+            name: sara2_struct_list
             object_type: !NutObjectType LIST
-            object_info: [PrimaryStructure, CLASS]
+            object_info: [Sara2SecondaryStructure, CLASS]
 
 
 

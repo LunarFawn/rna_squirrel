@@ -20,7 +20,8 @@ from data_squirrel.config.nut_yaml_objects import (
     NutDatabaseInfo,
     NutStructure,
     NutObjectType,
-    NutContainerDefinitions
+    NutContainerDefinitions,
+    ExternalAttribute
 )
 
 @dataclass
@@ -40,6 +41,7 @@ class YAMLOperations():
         self._yaml.register_class(NutStructure)
         self._yaml.register_class(NutObjectType)
         self._yaml.register_class(NutContainerDefinitions)
+        self._yaml.register_class(ExternalAttribute)
         self._yaml_data:Any = None
         self._struct_dict:Dict[str, NutContainer] = {}
         

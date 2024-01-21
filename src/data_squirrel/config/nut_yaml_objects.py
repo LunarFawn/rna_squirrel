@@ -115,6 +115,11 @@ class NutContainerDefinitions:
 @dataclass
 class NutDatabaseInfo:
     db_name:str
+    
+@dataclass
+class ExternalAttribute:
+    module:str
+    attribute:str
      
 @dataclass
 class NutStructure:
@@ -125,6 +130,7 @@ class NutStructure:
     #db_name:str = field(init=False)
     nut_container_declarations:List[NutDeclaration]
     nut_containers:List[str] = field(init=False)
+    external_imports:List[ExternalAttribute]
     
     nut_main_struct:NutContainer    
     #nut_containers_list:List[NutContainer]

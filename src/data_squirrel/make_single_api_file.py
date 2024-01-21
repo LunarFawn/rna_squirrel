@@ -29,11 +29,12 @@ def build_shared_python_nut(nut_struct_name:str, yaml_config_path:Path, dst_save
     yaml_ops.open_yml_config(file_path=yaml_config_path)
     full_list:List[str] = []
     header_list:List[str] = python_build.generate_one_file_api_header()
+    external_links_list:List[str] = python_build.generate_external_imports(external_attrs=yaml_ops.nut.external_imports)
     enum_lines: List[str] = python_build.generate_nut_enums(nut_structure=yaml_ops.nut)
     basecode_lines:List[str] = python_build.generate_config_baseclass(class_name=yaml_ops.nut.nut_main_struct.name,
                                                     container_definitions=yaml_ops.definitions,
                                                     nut_structure=yaml_ops.nut)
-    full_list:List[str] = header_list + enum_lines + basecode_lines
+    full_list:List[str] = header_list + external_links_list + enum_lines + basecode_lines
     found_structs_list:List[str] = []
     yaml_ops.reset_priority_queue
     while len(yaml_ops.priority_queue) > 0:
