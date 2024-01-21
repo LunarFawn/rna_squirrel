@@ -1,8 +1,9 @@
 import pytest
 from pathlib import Path
+from typing import List
 
 #from test.bin.built_api import Energy, PrimaryStructure, rna_strand, Ensemble
-from test.bin.built_single_api_2 import RNAStruct
+from test.bin.built_single_api_2 import RNAStruct, PrimaryStructure
 
 CONFIG_PATH = '/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
 
@@ -83,9 +84,26 @@ def test_complex_dicts(empty_default_strand:RNAStruct):
     empty_default_strand.ensemble.energy_groups = new_dict
     assert empty_default_strand.ensemble.energy_groups == {1.3:["1",'2', '3'], 1.5:['4','5','6']}
     
-# def test_complex_what_dicts(empty_what_strand:WhatIsThis):
-#     new_dict = {}
-#     new_dict[1.3] = ["1",'2', '3']
-#     new_dict[1.5] = ['4','5','6']
-#     empty_what_strand.ensemble.energy_groups = new_dict
-#     assert empty_what_strand.ensemble.energy_groups == {1.3:["1",'2', '3'], 1.5:['4','5','6']}
+
+def test_complex_lists(empty_default_strand:RNAStruct):
+    #first create the value you want
+    empty_default_strand.primary_structure.strand = "BECU"
+    empty_default_strand.primary_structure.jumping = "I like to jump"
+    
+    new_list = []
+    new_list.append(empty_default_strand.primary_structure)
+    
+    empty_default_strand.primary_structure_lists.primary_list = new_list
+    empty_default_strand.primary_structure.strand = "AACCGGUU1"
+    empty_default_strand.primary_structure.jumping = "I like to jump1"
+    # this = dict(empty_default_strand.primary_structure)
+    # assert this == {}
+    returned_list:List[PrimaryStructure] = empty_default_strand.primary_structure_lists.primary_list
+    for item in returned_list:
+        assert isinstance(item, PrimaryStructure) == True
+        assert item.strand == "AACCGGUU"
+        assert item.jumping == "I like to jump"        
+        assert item.strand != empty_default_strand.primary_structure.strand
+        assert item.jumping != empty_default_strand.primary_structure.jumping
+    
+    

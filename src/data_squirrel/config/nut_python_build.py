@@ -199,6 +199,9 @@ class PythonBuild():
             atr_db_name:str = attribute.db_name
             struct_db_name:str = struct_object.db_name
             
+            list_item_class:str = ''
+            list_item_name:str = ''
+            
             return_type:Any = None
             if attribute.object_type == NutObjectType.CONTAINER:
                 #its a structure or class whatever im calling it
@@ -216,8 +219,17 @@ class PythonBuild():
                     value_string = key_value_pair[1]
                     return_type = f'Dict[{key_string},{value_string}]'
                 elif attribute.object_type == NutObjectType.LIST:
-                    
-                    return_type = f'List[{attribute.object_info}]'
+                    if isinstance(attribute.object_info, list) == True:
+                        list_item_name = attribute.object_info[0]
+                        # if type(list_item_name) != str:
+                        #     raise Exception(f'{list_item_name} is not a string')
+                        list_item_class = attribute.object_info[1]
+                        # if isinstance(list_item_class, NutObjectType) == False:
+                        #     raise Exception(f'not a valid NutObjType')
+                        if list_item_class == NutObjectType.CLASS.value:
+                            return_type = f'List[{list_item_name}]'
+                    else:
+                        return_type = f'List[{attribute.object_info}]'
                 else:
                     return_type = f'{attribute.object_info}'
 
@@ -227,6 +239,34 @@ class PythonBuild():
             struct_lines.append(f'\tdef {atr_name}(self)->{return_type}:\n')
             if attribute.object_type == NutObjectType.CONTAINER:
                 struct_lines.append(f'\t\treturn self._{atr_name}\n')
+            elif attribute.object_type == NutObjectType.LIST:
+                if list_item_class == NutObjectType.CLASS.value:
+                    struct_lines.append(f'\t\tnew_list:List[PrimaryStructure] = []\n')
+                    struct_lines.append(f'\n')
+                    struct_lines.append(f'\t\ttemp_list = self.parent.{atr_db_name}\n')
+                    struct_lines.append(f'\n')
+                    struct_lines.append(f'\t\tfor index, item in enumerate(temp_list):\n')
+                    struct_lines.append("\t\t\ttemp_parent:str = f'entry{index}'\n")
+                    struct_lines.append(f'\t\t\tnew_parent:CustomAttribute = self.parent.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,\n')
+                    struct_lines.append(f'\t\t\t\tattribute=temp_parent,\n')
+                    struct_lines.append(f'\t\t\t\tatr_type=None))\n')
+                    struct_lines.append(f'\n')
+                    struct_lines.append(f'\t\t\ttemp_attr2 = getattr(new_parent, temp_parent)\n')
+                    struct_lines.append("\t\t\ttemp_name:str = 'temp'\n")
+                    struct_lines.append(f'\t\t\tsetattr(self, temp_name, PrimaryStructure(parent=temp_attr2,\n')
+                    struct_lines.append(f'\t\t\t\tcurrent=None,\n')
+                    struct_lines.append(f'\t\t\t\tsave_value=True))\n')
+                    struct_lines.append(f'\n')
+                    struct_lines.append(f'\t\t\tfor key, value in item.items():\n')
+                    struct_lines.append(f'\t\t\t\tsetattr(temp_attr2, key, value)\n')
+                    struct_lines.append(f'\t\t\tnew_primary_struct:PrimaryStructure = getattr(self, temp_name)\n')
+                    struct_lines.append(f'\t\t\tnew_list.append(new_primary_struct)\n')
+                    struct_lines.append(f'\n')
+                    struct_lines.append(f'\t\treturn new_list\n')
+                    struct_lines.append(f'')
+                    struct_lines.append(f'')
+                else:                
+                    struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')
             else:                
                 struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')
             struct_lines.append('\n')
@@ -234,7 +274,11 @@ class PythonBuild():
             #now the setter
            
             if attribute.object_type == NutObjectType.LIST:
-                return_type = f'List[{attribute.object_info}]'
+              
+                if list_item_class == NutObjectType.CLASS.value:
+                        return_type = f'List[{list_item_name}]'
+                else:
+                    return_type = f'List[{attribute.object_info}]'
                 struct_lines.append(f'\t@{atr_name}.setter\n')
                 struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):\n')
                 struct_lines.append(f'\t\tif isinstance(value, list) == False:\n')
@@ -243,7 +287,10 @@ class PythonBuild():
                 struct_lines.append(f'\t\tif len(value) < 1:\n')
                 struct_lines.append(f'\t\t\traise Exception("Empty lists not allowed")\n\n')
                 struct_lines.append(f'\t\tfor item in value:\n')
-                struct_lines.append(f'\t\t\tif isinstance(item, {attribute.object_info}) == False:\n')
+                if list_item_class == NutObjectType.CLASS.value:
+                    struct_lines.append(f'\t\t\tif isinstance(item, {list_item_name}) == False:\n')
+                else:
+                    struct_lines.append(f'\t\t\tif isinstance(item, {attribute.object_info}) == False:\n')
                 struct_lines.append(f'\t\t\t\traise ValueError("Invalid value assignment")\n')
             elif attribute.object_type == NutObjectType.DICTIONARY:
                 key_value_pair:List[str] = attribute.object_info

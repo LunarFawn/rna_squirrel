@@ -14,6 +14,8 @@ NUT:
         name: SecondaryStructure
       - !NutDeclaration
         name: Ensemble
+      - !NutDeclaration
+        name: PrimaryStructureLists
     nut_main_struct:
       !NutContainer
         name: RNAStrand
@@ -26,6 +28,10 @@ NUT:
             name: ensemble
             object_type: !NutObjectType CONTAINER
             object_info: Ensemble
+          - !NutObject
+            name: primary_structure_lists
+            object_type: !NutObjectType CONTAINER
+            object_info: PrimaryStructureLists
           
 
 
@@ -73,7 +79,6 @@ DEFINITIONS:
             name: structure_dict
             object_type: !NutObjectType VALUE
             object_info: dict
-
       - !NutContainer
         name: Ensemble
         object_list:
@@ -101,6 +106,13 @@ DEFINITIONS:
             name: what_structure
             object_type: !NutObjectType CONTAINER
             object_info: PrimaryStructure
+      - !NutContainer
+        name: PrimaryStructureLists
+        object_list:
+          - !NutObject
+            name: primary_list
+            object_type: !NutObjectType LIST
+            object_info: [PrimaryStructure, CLASS]
 
 
 

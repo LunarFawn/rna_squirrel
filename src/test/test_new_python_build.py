@@ -105,7 +105,7 @@ def test_generate_api_main_call(python_build:PythonBuild, yaml_ops:YAMLOperation
     main_call:List[str] = python_build.generate_api_main_call(config_class_name=config_class,
                                                               nut_container=yaml_ops.nut.nut_main_struct)
     assert main_call[2] == '\tdef __init__(self, working_folder:str, var_name:str, use_db:bool = False) -> None:\n'
-    assert main_call[24] == '\t\tself._primary_structure = struct\n'
+    assert main_call[28] == '\t\tself._primary_structure = struct\n'
 
 def test_build_api_file(python_build:PythonBuild, yaml_ops:YAMLOperations):
     full_list:List[str] = []

@@ -17,6 +17,7 @@ from data_squirrel.config.dynamic_data_nut import (
 class Nut_Attributes(Enum):
 	PrimaryStructure = "primary_structure_db"
 	Ensemble = "ensemble_db"
+	PrimaryStructureLists = "primary_structure_lists_db"
 
 
 class NupackStrand(Nut):
@@ -132,4 +133,8 @@ class NupackStrand(Nut):
 		self.ensemble_db.what_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="jumping_db",
 			atr_type=str))
+
+		self.primary_structure_lists_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="primary_list_db",
+			atr_type=['PrimaryStructure', 'CLASS']))
 
