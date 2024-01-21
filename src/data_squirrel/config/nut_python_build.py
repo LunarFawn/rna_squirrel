@@ -15,7 +15,8 @@ from data_squirrel.config.nut_yaml_objects import (
     NutDeclaration,
     NutContainer,
     NutObject,
-    NutObjectType
+    NutObjectType,
+    ExternalAttribute
 )
 
 class PythonBuild():
@@ -65,6 +66,14 @@ class PythonBuild():
         enum_lines.append('\n')
         
         return enum_lines
+    
+    def generate_external_imports(self, external_attrs:List[ExternalAttribute]):
+        external_imports:List[str] = []
+        for attribute in external_attrs:
+            attribute_line:str = f'from {attribute.module} import {attribute.attribute}\n'
+            external_imports.append(attribute_line)
+        external_imports.append('\n')
+        return external_imports
 
     def generate_object_enum(self, container:NutContainer):
         """
@@ -234,37 +243,40 @@ class PythonBuild():
                     return_type = f'{attribute.object_info}'
 
             struct_lines.append('\n')
-            #firest teh getter    
+            
+            #first teh getter    
             struct_lines.append('\t@property\n')
             struct_lines.append(f'\tdef {atr_name}(self)->{return_type}:\n')
             if attribute.object_type == NutObjectType.CONTAINER:
                 struct_lines.append(f'\t\treturn self._{atr_name}\n')
             elif attribute.object_type == NutObjectType.LIST:
                 if list_item_class == NutObjectType.CLASS.value:
-                    struct_lines.append(f'\t\tnew_list:List[{list_item_name}] = []\n')
-                    struct_lines.append(f'\n')
-                    struct_lines.append(f'\t\ttemp_list = self.parent.{atr_db_name}\n')
-                    struct_lines.append(f'\n')
-                    struct_lines.append(f'\t\tfor index, item in enumerate(temp_list):\n')
-                    struct_lines.append("\t\t\ttemp_parent:str = f'entry{index}'\n")
-                    struct_lines.append(f'\t\t\tnew_parent:CustomAttribute = self.parent.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,\n')
-                    struct_lines.append(f'\t\t\t\tattribute=temp_parent,\n')
-                    struct_lines.append(f'\t\t\t\tatr_type=None))\n')
-                    struct_lines.append(f'\n')
-                    struct_lines.append(f'\t\t\ttemp_attr2 = getattr(new_parent, temp_parent)\n')
-                    struct_lines.append("\t\t\ttemp_name:str = 'temp'\n")
-                    struct_lines.append(f'\t\t\tsetattr(self, temp_name, {list_item_name}(parent=temp_attr2,\n')
-                    struct_lines.append(f'\t\t\t\tcurrent=None,\n')
-                    struct_lines.append(f'\t\t\t\tsave_value=True))\n')
-                    struct_lines.append(f'\n')
-                    struct_lines.append(f'\t\t\tfor key, value in item.items():\n')
-                    struct_lines.append(f'\t\t\t\tsetattr(temp_attr2, key, value)\n')
-                    struct_lines.append(f'\t\t\tnew_primary_struct:{list_item_name} = getattr(self, temp_name)\n')
-                    struct_lines.append(f'\t\t\tnew_list.append(new_primary_struct)\n')
-                    struct_lines.append(f'\n')
-                    struct_lines.append(f'\t\treturn new_list\n')
-                    struct_lines.append(f'')
-                    struct_lines.append(f'')
+                    struct_lines.append(f'\t\tself.parent.nut_filter.yaml_operations.yaml.register_class({list_item_name})\n')
+                    struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')
+                    # struct_lines.append(f'\t\tnew_list:List[{list_item_name}] = []\n')
+                    # struct_lines.append(f'\n')
+                    # struct_lines.append(f'\t\ttemp_list = self.parent.{atr_db_name}\n')
+                    # struct_lines.append(f'\n')
+                    # struct_lines.append(f'\t\tfor index, item in enumerate(temp_list):\n')
+                    # struct_lines.append("\t\t\ttemp_parent:str = f'entry{index}'\n")
+                    # struct_lines.append(f'\t\t\tnew_parent:CustomAttribute = self.parent.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,\n')
+                    # struct_lines.append(f'\t\t\t\tattribute=temp_parent,\n')
+                    # struct_lines.append(f'\t\t\t\tatr_type=None))\n')
+                    # struct_lines.append(f'\n')
+                    # struct_lines.append(f'\t\t\ttemp_attr2 = getattr(new_parent, temp_parent)\n')
+                    # struct_lines.append("\t\t\ttemp_name:str = 'temp'\n")
+                    # struct_lines.append(f'\t\t\tsetattr(self, temp_name, {list_item_name}(parent=temp_attr2,\n')
+                    # struct_lines.append(f'\t\t\t\tcurrent=None,\n')
+                    # struct_lines.append(f'\t\t\t\tsave_value=True))\n')
+                    # struct_lines.append(f'\n')
+                    # struct_lines.append(f'\t\t\tfor key, value in item.items():\n')
+                    # struct_lines.append(f'\t\t\t\tsetattr(temp_attr2, key, value)\n')
+                    # struct_lines.append(f'\t\t\tnew_primary_struct:{list_item_name} = getattr(self, temp_name)\n')
+                    # struct_lines.append(f'\t\t\tnew_list.append(new_primary_struct)\n')
+                    # struct_lines.append(f'\n')
+                    # struct_lines.append(f'\t\treturn new_list\n')
+                    # struct_lines.append(f'')
+                    # struct_lines.append(f'')
                 else:                
                     struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')
             else:                
@@ -287,11 +299,18 @@ class PythonBuild():
                 struct_lines.append(f'\t\tif len(value) < 1:\n')
                 struct_lines.append(f'\t\t\traise Exception("Empty lists not allowed")\n\n')
                 struct_lines.append(f'\t\tfor item in value:\n')
+                
                 if list_item_class == NutObjectType.CLASS.value:
                     struct_lines.append(f'\t\t\tif isinstance(item, {list_item_name}) == False:\n')
                 else:
                     struct_lines.append(f'\t\t\tif isinstance(item, {attribute.object_info}) == False:\n')
                 struct_lines.append(f'\t\t\t\traise ValueError("Invalid value assignment")\n')
+
+                if list_item_class == NutObjectType.CLASS.value:
+                    struct_lines.append(f'\t\tself.parent.nut_filter.yaml_operations.yaml.register_class({list_item_name})\n')
+                
+                
+            
             elif attribute.object_type == NutObjectType.DICTIONARY:
                 key_value_pair:List[str] = attribute.object_info
                 if len(key_value_pair) != 2:

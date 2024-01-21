@@ -18,10 +18,12 @@ from data_squirrel.config.dynamic_data_nut import (
 )
 
 
+from serena.utilities.ensemble_structures import Sara2SecondaryStructure
+
 class Nut_Attributes(Enum):
 	PrimaryStructure = "primary_structure_db"
 	Ensemble = "ensemble_db"
-	PrimaryStructureLists = "primary_structure_lists_db"
+	Sara2secStructLists = "primary_structure_lists_db"
 
 
 class NupackStrand(Nut):
@@ -139,8 +141,8 @@ class NupackStrand(Nut):
 			atr_type=str))
 
 		self.primary_structure_lists_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
-			attribute="primary_list_db",
-			atr_type=['PrimaryStructure', 'CLASS']))
+			attribute="sara2_struct_list_db",
+			atr_type=['Sara2SecondaryStructure', 'CLASS']))
 
 class Energy(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
@@ -362,48 +364,29 @@ class Ensemble(CustomAttribute):
 		self._what_structure = value
 
 
-class PrimaryStructureLists(CustomAttribute):
+class Sara2secStructLists(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
 		self.parent = parent
 		self.current = current
 		self.do_save = save_value
 
 	@property
-	def primary_list(self)->List[PrimaryStructure]:
-		new_list:List[PrimaryStructure] = []
+	def sara2_struct_list(self)->List[Sara2SecondaryStructure]:
+		self.parent.nut_filter.yaml_operations.yaml.register_class(Sara2SecondaryStructure)
+		return self.parent.sara2_struct_list_db
 
-		temp_list = self.parent.primary_list_db
-
-		for index, item in enumerate(temp_list):
-			temp_parent:str = f'entry{index}'
-			new_parent:CustomAttribute = self.parent.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
-				attribute=temp_parent,
-				atr_type=None))
-
-			temp_attr2 = getattr(new_parent, temp_parent)
-			temp_name:str = 'temp'
-			setattr(self, temp_name, PrimaryStructure(parent=temp_attr2,
-				current=None,
-				save_value=True))
-
-			for key, value in item.items():
-				setattr(temp_attr2, key, value)
-			new_primary_struct:PrimaryStructure = getattr(self, temp_name)
-			new_list.append(new_primary_struct)
-
-		return new_list
-
-	@primary_list.setter
-	def primary_list(self, value:List[PrimaryStructure]):
+	@sara2_struct_list.setter
+	def sara2_struct_list(self, value:List[Sara2SecondaryStructure]):
 		if isinstance(value, list) == False:
 			raise ValueError("Invalid value assignment")
 		if len(value) < 1:
 			raise Exception("Empty lists not allowed")
 
 		for item in value:
-			if isinstance(item, PrimaryStructure) == False:
+			if isinstance(item, Sara2SecondaryStructure) == False:
 				raise ValueError("Invalid value assignment")
-		self.parent.primary_list_db = value
+		self.parent.nut_filter.yaml_operations.yaml.register_class(Sara2SecondaryStructure)
+		self.parent.sara2_struct_list_db = value
 
 
 class NupackStrand(RNAStrand):
@@ -422,7 +405,7 @@ class NupackStrand(RNAStrand):
 			current=None,
 			parent=self.ensemble_db)
 
-		self._primary_structure_lists: PrimaryStructureLists = PrimaryStructureLists(save_value=True,
+		self._primary_structure_lists: Sara2secStructLists = Sara2secStructLists(save_value=True,
 			current=None,
 			parent=self.primary_structure_lists_db)
 
@@ -449,12 +432,12 @@ class NupackStrand(RNAStrand):
 
 
 	@property
-	def primary_structure_lists(self)->PrimaryStructureLists:
+	def primary_structure_lists(self)->Sara2secStructLists:
 		return self._primary_structure_lists
 
 	@primary_structure_lists.setter
-	def primary_structure_lists(self, struct:PrimaryStructureLists):
-		if isinstance(struct, PrimaryStructureLists) == False:
+	def primary_structure_lists(self, struct:Sara2secStructLists):
+		if isinstance(struct, Sara2secStructLists) == False:
 			raise ValueError("Invalid value assignment")
 		self._primary_structure_lists = struct
 

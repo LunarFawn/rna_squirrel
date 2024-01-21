@@ -54,7 +54,7 @@ def test_open_yaml(yaml_ops:YAMLOperations):
 def test_load_yaml_nut_class(yaml_nut:NutStructure):
     assert isinstance(yaml_nut, NutStructure) == True
     attributes:List[str] = list(vars(yaml_nut).keys())
-    assert len(attributes) == 4
+    assert len(attributes) == 5
     assert ('db_info' in attributes) == True
     assert ('nut_container_declarations' in attributes) == True
     assert ('nut_main_struct' in attributes) == True
@@ -178,7 +178,7 @@ def test_build_struct_queue(yaml_ops:YAMLOperations):
     for _ in range(len(yaml_ops.priority_queue)):
       poped = yaml_ops.pop_priority_queue
       poped_order.append(poped)
-    assert poped_order == [(-2, 'Energy'), (-2, 'PrimaryStructure'), (-2, 'SecondaryStructure'), (-1, 'Ensemble'), (-1, 'PrimaryStructure'), (-1, 'PrimaryStructureLists')]
+    assert poped_order == [(-2, 'Energy'), (-2, 'PrimaryStructure'), (-2, 'SecondaryStructure'), (-1, 'Ensemble'), (-1, 'PrimaryStructure'), (-1, 'Sara2secStructLists')]
 
 def test_copy_priority_queue(yaml_ops:YAMLOperations):
     new_queue: List[tuple] = yaml_ops.get_original_priorty_queue_copy
