@@ -87,7 +87,7 @@ def test_complex_dicts(empty_default_strand:RNAStruct):
 
 def test_complex_lists(empty_default_strand:RNAStruct):
     #first create the value you want
-    empty_default_strand.primary_structure.strand = "BECU"
+    empty_default_strand.primary_structure.strand = "AACCGGUU"
     empty_default_strand.primary_structure.jumping = "I like to jump"
     
     new_list = []
