@@ -1,5 +1,5 @@
 # data_squirrel
-First implementation of the Shared Python Framework
+First implementation of the Remote Data Type Shared Python Framework
 
 ## Read this doc:
 
