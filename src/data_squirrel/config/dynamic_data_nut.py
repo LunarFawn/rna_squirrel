@@ -61,7 +61,11 @@ class CustomAttribute(GenericAttribute):
         self._attrib_dict:Dict[str,Any] = {}
         self._parent:Any = parent
         self.source_name: str = source_name
-        self.nut_filter:NutFilterDefinitions = nut_filter
+        self._nut_filter:NutFilterDefinitions = nut_filter
+    
+    @property
+    def nut_filter(self)->NutFilterDefinitions:
+        return self._nut_filter
     
     @property
     def child_list(self):

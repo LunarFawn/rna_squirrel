@@ -5,6 +5,10 @@ NUT:
     db_info:
       !NutDatabaseInfo
         db_name: test_db
+    external_imports:
+      - !ExternalAttribute
+        module: serena.utilities.ensemble_structures
+        attribute: Sara2SecondaryStructure
     nut_container_declarations: 
       - !NutDeclaration
         name: PrimaryStructure

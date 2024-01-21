@@ -18,6 +18,9 @@ from data_squirrel.config.dynamic_data_nut import (
 )
 
 
+import serena.utilities.ensemble_structures 
+
+
 class Nut_Attributes(Enum):
 	PrimaryStructure = "primary_structure_db"
 	Ensemble = "ensemble_db"
@@ -369,40 +372,44 @@ class PrimaryStructureLists(CustomAttribute):
 		self.do_save = save_value
 
 	@property
-	def primary_list(self)->List[PrimaryStructure]:
-		new_list:List[PrimaryStructure] = []
+	def primary_list(self)->List[serena.utilities.ensemble_structures.Sara2SecondaryStructure]:
+		self.parent.nut_filter.yaml_operations.yaml.register_class(serena.utilities.ensemble_structures.Sara2SecondaryStructure)
+		return self.parent.primary_list_db
+  		# new_list:List[SecondaryStructure] = []
 
-		temp_list = self.parent.primary_list_db
+		# temp_list = self.parent.primary_list_db
 
-		for index, item in enumerate(temp_list):
-			temp_parent:str = f'entry{index}'
-			new_parent:CustomAttribute = self.parent.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
-				attribute=temp_parent,
-				atr_type=None))
+		# for index, item in enumerate(temp_list):
+		# 	temp_parent:str = f'entry{index}'
+		# 	new_parent:CustomAttribute = self.parent.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
+		# 		attribute=temp_parent,
+		# 		atr_type=None))
 
-			temp_attr2 = getattr(new_parent, temp_parent)
-			temp_name:str = 'temp'
-			setattr(self, temp_name, PrimaryStructure(parent=temp_attr2,
-				current=None,
-				save_value=True))
+		# 	temp_attr2 = getattr(new_parent, temp_parent)
+		# 	temp_name:str = 'temp'
+		# 	setattr(self, temp_name, PrimaryStructure(parent=temp_attr2,
+		# 		current=None,
+		# 		save_value=True))
 
-			for key, value in item.items():
-				setattr(temp_attr2, key, value)
-			new_primary_struct:PrimaryStructure = getattr(self, temp_name)
-			new_list.append(new_primary_struct)
+		# 	for key, value in item.items():
+		# 		setattr(temp_attr2, key, value)
+		# 	new_primary_struct:PrimaryStructure = getattr(self, temp_name)
+		# 	new_list.append(new_primary_struct)
 
-		return new_list
+		# return new_list
 
 	@primary_list.setter
-	def primary_list(self, value:List[PrimaryStructure]):
+	def primary_list(self, value:List[serena.utilities.ensemble_structures.Sara2SecondaryStructure]):
 		if isinstance(value, list) == False:
 			raise ValueError("Invalid value assignment")
 		if len(value) < 1:
 			raise Exception("Empty lists not allowed")
 
 		for item in value:
-			if isinstance(item, PrimaryStructure) == False:
+			if isinstance(item, serena.utilities.ensemble_structures.Sara2SecondaryStructure) == False:
 				raise ValueError("Invalid value assignment")
+		self.parent.nut_filter.yaml_operations.yaml.register_class(serena.utilities.ensemble_structures.Sara2SecondaryStructure)
+
 		self.parent.primary_list_db = value
 
 

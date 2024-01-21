@@ -5,6 +5,8 @@ from typing import List
 #from test.bin.built_api import Energy, PrimaryStructure, rna_strand, Ensemble
 from test.bin.built_single_api_2 import RNAStruct, PrimaryStructure
 
+import serena.utilities.ensemble_structures
+
 CONFIG_PATH = '/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
 
 @pytest.fixture
@@ -87,23 +89,21 @@ def test_complex_dicts(empty_default_strand:RNAStruct):
 
 def test_complex_lists(empty_default_strand:RNAStruct):
     #first create the value you want
-    empty_default_strand.primary_structure.strand = "AACCGGUU"
-    empty_default_strand.primary_structure.jumping = "I like to jump"
+    test_struct:serena.utilities.ensemble_structures.Sara2SecondaryStructure = serena.utilities.ensemble_structures.Sara2SecondaryStructure(sequence='AACCUUGG',
+                                                                                                                                            structure='...()...',
+                                                                                                                                            free_energy=-10,
+                                                                                                                                            stack_energy=-20)
     
-    new_list = []
-    new_list.append(empty_default_strand.primary_structure)
+    empty_default_strand.primary_structure_lists.primary_list = [test_struct]
     
-    empty_default_strand.primary_structure_lists.primary_list = new_list
-    empty_default_strand.primary_structure.strand = "AACCGGUU1"
-    empty_default_strand.primary_structure.jumping = "I like to jump1"
     # this = dict(empty_default_strand.primary_structure)
     # assert this == {}
-    returned_list:List[PrimaryStructure] = empty_default_strand.primary_structure_lists.primary_list
+    returned_list:List[serena.utilities.ensemble_structures.Sara2SecondaryStructure] = empty_default_strand.primary_structure_lists.primary_list
     for item in returned_list:
-        assert isinstance(item, PrimaryStructure) == True
-        assert item.strand == "AACCGGUU"
-        assert item.jumping == "I like to jump"        
-        assert item.strand != empty_default_strand.primary_structure.strand
-        assert item.jumping != empty_default_strand.primary_structure.jumping
+        assert isinstance(item, serena.utilities.ensemble_structures.Sara2SecondaryStructure) == True
+        assert item.sequence == "AACCUUGG"
+        assert item.structure == '...()...'        
+        assert item.free_energy == -10
+        assert item.stack_energy == -20
     
     
