@@ -143,7 +143,7 @@ class NutFilterDefinitions():
                     found_type_value = type(raw_dict[golden_key])
                     raise TypeError(f'{raw_dict[golden_key]} is type:{found_type_value} and that is not supported yet')
                 
-                temp_dict:Dict[str,str] = {}
+                temp_dict = {}
                 for key, value in raw_dict.items():
                     # temp_dict[str(key)] = str(value)   
                     temp_dict[key] = value              
@@ -157,23 +157,64 @@ class NutFilterDefinitions():
             
             if packet.value_type == list:
                 raw_list:List[Any] = packet.value
+                
+                
                 golden_item = raw_list[0]
+                
+                
                 item_type:NutObjectType = NutObjectType.VALUE
                 if type(golden_item) == str:
-                    item_type:NutObjectType = NutObjectType.STRING
+                    item_type = NutObjectType.STRING
                     #now save it to the yaml at the file target
                 elif type(golden_item) == int:
-                    item_type:NutObjectType = NutObjectType.INTEGER
+                    item_type = NutObjectType.INTEGER
                 elif type(golden_item) == float:
-                    item_type:NutObjectType = NutObjectType.FLOATINGPOINT
+                    item_type = NutObjectType.FLOATINGPOINT
+                elif type(golden_item) == list:
+                    item_type = NutObjectType.LIST
                 else:
-                    found_type_item = type(golden_item)
-                    raise TypeError(f'{golden_item} is type:{found_type_item} and that is not supported yet')
+                    if hasattr(golden_item,"parent") is True:
+                        item_type = NutObjectType.CLASS
+                        # new_dict:Dict[str,Any] = {}
+                        # children:List[str] = golden_item.parent._child_list
+                        # routing:NutAdressing = NutAdressing()
+                        # for item in children:
+                        #     jump_list: List[str] = routing.get_attr_address(parent_attr=golden_item.parent,
+                        #                             name=children[0])
+                        #     address_info:AddressInfo = AddressInfo(address_list=jump_list,
+                        #                                         working_folder=self.working_dir,
+                        #                                         name=children[0])
+                        #     item_value = self.filter_in_flow(value=None,
+                        #                                      address=address_info,
+                        #                                      ops=ops)
+                        #     new_dict[item] = item_value
+                        #     raw_list                
+                    else:
+                        found_type_item = type(golden_item)
+                        raise TypeError(f'{golden_item} is type:{found_type_item} and that is not supported yet')
                 
-                temp_list:List[str] = []
+                temp_list = []
                 
                 for item in raw_list:
-                    temp_list.append(str(item))
+                    if item_type == NutObjectType.CLASS:
+                        new_dict:Dict[str,Any] = {}
+                        children:List[str] = item.parent._child_list
+                        routing:NutAdressing = NutAdressing()
+                        for child in children:
+                            jump_list: List[str] = routing.get_attr_address(parent_attr=item.parent,
+                                                    name=child)
+                            address_info:AddressInfo = AddressInfo(address_list=jump_list,
+                                                                working_folder=self.working_dir,
+                                                                name=child)
+                            temp_value:ValuePacket = ValuePacket(name=None, value=None, parent=None, type=None)
+                            item_value = self.filter_in_flow(value=temp_value,
+                                                             address=address_info,
+                                                             ops=ops)
+                            new_dict[child] = item_value
+                        temp_list.append(new_dict)
+                            
+                    else:
+                        temp_list.append(item)
                 
                 yaml_list:ListOfThings = ListOfThings(value_def=item_type,
                                                     value=temp_list)  
@@ -269,6 +310,10 @@ class NutFilterDefinitions():
                         recoverd_value = int(item)
                     elif item_type == NutObjectType.FLOATINGPOINT:
                         recoverd_value = float(item)
+                    elif item_type == NutObjectType.LIST:
+                        recoverd_value = list(item)
+                    elif item_type == NutObjectType.CLASS:
+                        recoverd_value = dict(item)
                     else:
                         raise TypeError(f'List value type for {value} not supported')
                     temp_list.append(recoverd_value)

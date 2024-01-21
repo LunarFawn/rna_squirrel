@@ -34,6 +34,7 @@ class NutObjectType(Enum):
     LIST='list'
     CONTAINER="CONTAINER"
     VALUE="VALUE"
+    CLASS="CLASS"
     
     @classmethod
     def from_yaml(cls, loader, node):

@@ -1,0 +1,5 @@
+!ListOfThings
+value_def: !NutObjectType CLASS
+value:
+- strand_db: BECU
+  jumping_db: I like to jump

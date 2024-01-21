@@ -21,6 +21,7 @@ from data_squirrel.config.dynamic_data_nut import (
 class Nut_Attributes(Enum):
 	PrimaryStructure = "primary_structure_db"
 	Ensemble = "ensemble_db"
+	PrimaryStructureLists = "primary_structure_lists_db"
 
 
 class NupackStrand(Nut):
@@ -136,6 +137,10 @@ class NupackStrand(Nut):
 		self.ensemble_db.what_structure_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="jumping_db",
 			atr_type=str))
+
+		self.primary_structure_lists_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="primary_list_db",
+			atr_type=['PrimaryStructure', 'CLASS']))
 
 class Energy(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
@@ -357,6 +362,50 @@ class Ensemble(CustomAttribute):
 		self._what_structure = value
 
 
+class PrimaryStructureLists(CustomAttribute):
+	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
+		self.parent = parent
+		self.current = current
+		self.do_save = save_value
+
+	@property
+	def primary_list(self)->List[PrimaryStructure]:
+		new_list:List[PrimaryStructure] = []
+
+		temp_list = self.parent.primary_list_db
+
+		for index, item in enumerate(temp_list):
+			temp_parent:str = f'entry{index}'
+			new_parent:CustomAttribute = self.parent.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
+				attribute=temp_parent,
+				atr_type=None))
+
+			temp_attr2 = getattr(new_parent, temp_parent)
+			temp_name:str = 'temp'
+			setattr(self, temp_name, PrimaryStructure(parent=temp_attr2,
+				current=None,
+				save_value=True))
+
+			for key, value in item.items():
+				setattr(temp_attr2, key, value)
+			new_primary_struct:PrimaryStructure = getattr(self, temp_name)
+			new_list.append(new_primary_struct)
+
+		return new_list
+
+	@primary_list.setter
+	def primary_list(self, value:List[PrimaryStructure]):
+		if isinstance(value, list) == False:
+			raise ValueError("Invalid value assignment")
+		if len(value) < 1:
+			raise Exception("Empty lists not allowed")
+
+		for item in value:
+			if isinstance(item, PrimaryStructure) == False:
+				raise ValueError("Invalid value assignment")
+		self.parent.primary_list_db = value
+
+
 class NupackStrand(RNAStrand):
 
 	def __init__(self, working_folder:str, var_name:str, use_db:bool = False) -> None:
@@ -372,6 +421,10 @@ class NupackStrand(RNAStrand):
 		self._ensemble: Ensemble = Ensemble(save_value=True,
 			current=None,
 			parent=self.ensemble_db)
+
+		self._primary_structure_lists: PrimaryStructureLists = PrimaryStructureLists(save_value=True,
+			current=None,
+			parent=self.primary_structure_lists_db)
 
 	@property
 	def primary_structure(self)->PrimaryStructure:
@@ -393,5 +446,16 @@ class NupackStrand(RNAStrand):
 		if isinstance(struct, Ensemble) == False:
 			raise ValueError("Invalid value assignment")
 		self._ensemble = struct
+
+
+	@property
+	def primary_structure_lists(self)->PrimaryStructureLists:
+		return self._primary_structure_lists
+
+	@primary_structure_lists.setter
+	def primary_structure_lists(self, struct:PrimaryStructureLists):
+		if isinstance(struct, PrimaryStructureLists) == False:
+			raise ValueError("Invalid value assignment")
+		self._primary_structure_lists = struct
 
 
