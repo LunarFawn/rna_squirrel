@@ -1,5 +1,8 @@
 # data_squirrel
-First implementation of the Remote Data Type Shared Python Framework
+What can finally be called a Production Remote Data Type Shared Python Framework
+its basically pythonic pointers
+
+It has the ability now to import classes as external imports
 
 ## Read this doc:
 
