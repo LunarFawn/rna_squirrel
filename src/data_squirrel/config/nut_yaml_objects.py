@@ -9,6 +9,8 @@ from queue import PriorityQueue
 import heapq
 import attrs
 
+import inspect
+
 import sys
 import ruamel.yaml
 
@@ -162,7 +164,8 @@ class ValuePacket(GenericAttribute):
                          attribute=name)
         self._parent:str = parent
         self._value:Any = value
-        self._address_list:List[str] = []  
+        self._address_list:List[str] = []
+        self._is_class:bool =  inspect.isclass(value) 
         # self._value_type: Any = None
         
     @property
@@ -179,7 +182,11 @@ class ValuePacket(GenericAttribute):
         
     @property
     def address_list(self):
-        return self._address_list 
+        return self._address_list
+    
+    @property
+    def is_class(self):
+        return self._is_class
     
     address_list:List[str]
     
@@ -211,6 +218,10 @@ class Dictionary:
 class ListOfThings:
     value_def:NutObjectType
     value:list
+
+@dataclass
+class Class:
+    value: Any 
 
 
 

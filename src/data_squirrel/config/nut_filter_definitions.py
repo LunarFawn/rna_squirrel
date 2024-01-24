@@ -9,6 +9,7 @@ from enum import Enum
 import heapq
 from pathlib import Path
 from dataclasses import dataclass, field
+import inspect
 
 from data_squirrel.config.nut_yaml_objects import (
     AtrClass,
@@ -19,7 +20,8 @@ from data_squirrel.config.nut_yaml_objects import (
     FloatingPoint,
     NutObjectType,
     Dictionary,
-    ListOfThings
+    ListOfThings,
+    Class
 )
 from data_squirrel.config.nut_data_manager import YamlDataOperations
 
@@ -90,20 +92,18 @@ class NutFilterDefinitions():
                 preped_data = String(value=packet.value)
                 is_valid = True
                 #now save it to the yaml at the file target
-            if packet.value_type == int:
+            elif packet.value_type == int:
                 preped_data = Integer(value=packet.value)
                 is_valid = True
-            if packet.value_type == float:
+            elif packet.value_type == float:
                 preped_data = FloatingPoint(value=packet.value)
                 is_valid = True
-            
-            """
-            new 1-16-24 work
-            check if python dict type and then test key and value pair to see what it is for proper routing
-            I either need to allow any type like python does or trongly type the dicts moving away from python a bit
-            but I think strongly typed python sounds not bad....
-            """
-            if packet.value_type == dict:
+            #new 1-16-24 work
+            #check if python dict type and then test key and value pair to see what it is for proper routing
+            #I either need to allow any type like python does or trongly type the dicts moving away from python a bit
+            #but I think strongly typed python sounds not bad....
+                
+            elif packet.value_type == dict:
                 #test the types of the key and value
                 #first check that it is a dict
                 raw_dict:Dict[Any,Any] = packet.value
@@ -155,7 +155,7 @@ class NutFilterDefinitions():
                 is_valid = True
                 preped_data = yaml_dict
             
-            if packet.value_type == list:
+            elif packet.value_type == list:
                 raw_list:List[Any] = packet.value
                 
                 
@@ -221,7 +221,14 @@ class NutFilterDefinitions():
                 
                 is_valid = True
                 preped_data = yaml_list
-            
+            else:
+                if packet.is_class == True:
+                    preped_data = Class(value=packet.value)
+                    is_valid = True
+                    # just need to pass through as it is a registed class if it made it this far
+                    
+                    
+                    
             #this is supper old...maybe get ride off
             # if packet.value == None:
             #     preped_data = Empty()
@@ -256,11 +263,11 @@ class NutFilterDefinitions():
                         filename=address.address_file_path)
             if isinstance(new_data, String) == True:
                 new_value = new_data.value
-            if isinstance(new_data, Integer) == True:
+            elif isinstance(new_data, Integer) == True:
                 new_value = new_data.value
-            if isinstance(new_data, FloatingPoint) == True:
+            elif isinstance(new_data, FloatingPoint) == True:
                 new_value = new_data.value     
-            if isinstance(new_data, Dictionary) == True:
+            elif isinstance(new_data, Dictionary) == True:
                 key_def:NutObjectType = new_data.key_def
                 value_def:NutObjectType = new_data.value_def
                 temp_value:Dict[str,str] = new_data.value
@@ -293,9 +300,8 @@ class NutFilterDefinitions():
                     
                     temp_dict[recoverd_key] = recoverd_value
                 
-                new_value = temp_dict
-            
-            if isinstance(new_data, ListOfThings) == True:
+                new_value = temp_dict            
+            elif isinstance(new_data, ListOfThings) == True:
                 # raw_list:List[Any,Any] = new_data.value
                 # golden_item = raw_list[0]
                 item_type:NutObjectType = new_data.value_def
@@ -319,6 +325,8 @@ class NutFilterDefinitions():
                     temp_list.append(recoverd_value)
                 
                 new_value = temp_list
+            elif isinstance (new_data, Class):
+                new_value = new_data.value
             # if isinstance(new_data, Empty) == True:
             #         new_value = None
         return new_value
