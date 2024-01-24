@@ -158,14 +158,16 @@ class GenericAttribute():
 
 class ValuePacket(GenericAttribute):
       
-    def __init__(self, name:str, value:Any, parent:str, type:Any) -> None:
+    def __init__(self, name:str, value:Any, parent:str, this_type:Any) -> None:
         super().__init__(atr_class=AtrClass.CHILD,
-                         atr_type=type,
+                         atr_type=this_type,
                          attribute=name)
         self._parent:str = parent
         self._value:Any = value
         self._address_list:List[str] = []
-        self._is_class:bool =  inspect.isclass(value) 
+        its_a_class = hasattr(value, '__dict__')
+        self._is_class:bool = its_a_class
+         
         # self._value_type: Any = None
         
     @property

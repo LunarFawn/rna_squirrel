@@ -145,7 +145,7 @@ class CustomAttribute(GenericAttribute):
                 __value:ValuePacket = ValuePacket(name=__name,
                                         value=__value,
                                         parent=self,
-                                        type=type(__value))
+                                        this_type=type(__value))
             # else:
             #     test_value:CustomAttribute = __value
             #     if test_value.atr_class == AtrClass.PARENT:
@@ -171,7 +171,7 @@ class CustomAttribute(GenericAttribute):
                 value:ValuePacket = ValuePacket(name=None,
                                         value=None,
                                         parent=None,
-                                        type=None)
+                                        this_type=None)
             # if type(value) == str:
             #     value = f'{value}_returned'
             #     return value

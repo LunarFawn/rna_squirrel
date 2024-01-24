@@ -1,0 +1,22 @@
+!Class
+value: !DesignPerformanceData
+  _design_info: !DesignInformation
+    Sequence: AACCGGUU
+    Sequence_Length: 0
+    DesignID: 0
+    Design: ''
+    Player: ''
+    Puzzle_Name: ''
+  _wetlab_results: !WetlabData
+    Sequence: ''
+    Eterna_Score: 99
+    Baseline_Subscore: -1
+    Folding_Subscore: -1
+    Switch_Subscore: -1
+    NumberOfClusters1: -1
+    FoldChange: -1
+    FoldChange_err_factor: -1
+    KDOFF: -1
+    KDON: -1
+    ddG: -1
+    ddG_err: -1

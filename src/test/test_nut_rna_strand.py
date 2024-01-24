@@ -7,6 +7,9 @@ from test.bin.built_single_api_2 import RNAStruct, PrimaryStructure
 
 import serena.utilities.ensemble_structures
 
+from serena.utilities.ensemble_structures import Sara2SecondaryStructure
+from serena.interfaces.Sara2_API_Python3 import DesignPerformanceData, DesignInformation, WetlabData
+
 CONFIG_PATH = '/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
 
 @pytest.fixture
@@ -105,5 +108,32 @@ def test_complex_lists(empty_default_strand:RNAStruct):
         assert item.structure == '...()...'        
         assert item.free_energy == -10
         assert item.stack_energy == -20
+    
+def test_class_as_value(empty_default_strand:RNAStruct):
+    test_struct:serena.utilities.ensemble_structures.Sara2SecondaryStructure = serena.utilities.ensemble_structures.Sara2SecondaryStructure(sequence='AACCUUGG',
+                                                                                                                                            structure='...()...',
+                                                                                                                                            free_energy=-10,
+                                                                                                                                            stack_energy=-20)
+    empty_default_strand.secondary_structure_stuff.secondary_structure = test_struct
+    
+    assert isinstance(empty_default_strand.secondary_structure_stuff.secondary_structure, serena.utilities.ensemble_structures.Sara2SecondaryStructure) == True
+    assert empty_default_strand.secondary_structure_stuff.secondary_structure.sequence == "AACCUUGG"
+    assert empty_default_strand.secondary_structure_stuff.secondary_structure.structure == '...()...'        
+    assert empty_default_strand.secondary_structure_stuff.secondary_structure.free_energy == -10
+    assert empty_default_strand.secondary_structure_stuff.secondary_structure.stack_energy == -20
+
+def test_class_as_value_complex(empty_default_strand:RNAStruct):
+    test_info:DesignInformation = DesignInformation(Sequence='AACCGGUU')
+    test_wet:WetlabData = WetlabData(Eterna_Score=99)
+    performance:DesignPerformanceData = DesignPerformanceData(DesignInfo=test_info,
+                                                              wetlabResults=test_wet)
+                                                                                                                                            
+    empty_default_strand.secondary_structure_stuff.performance_info = performance
+    
+    assert isinstance(empty_default_strand.secondary_structure_stuff.performance_info, DesignPerformanceData) == True
+    assert isinstance(empty_default_strand.secondary_structure_stuff.performance_info.design_info, DesignInformation) == True
+    assert empty_default_strand.secondary_structure_stuff.performance_info.design_info.Sequence == 'AACCGGUU'
+    assert isinstance(empty_default_strand.secondary_structure_stuff.performance_info.wetlab_results, WetlabData) == True
+    assert empty_default_strand.secondary_structure_stuff.performance_info.wetlab_results.Eterna_Score == 99
     
     

@@ -239,6 +239,11 @@ class PythonBuild():
                             return_type = f'List[{list_item_name}]'
                     else:
                         return_type = f'List[{attribute.object_info}]'
+                elif attribute.object_type == NutObjectType.CLASS:
+                    class_references:List[str] = attribute.object_info
+                    if len(class_references) < 1:
+                        raise Exception(f'Missing proper amount of arguments in class creation')
+                    return_type = f'{class_references[0]}'
                 else:
                     return_type = f'{attribute.object_info}'
 
@@ -279,6 +284,11 @@ class PythonBuild():
                     # struct_lines.append(f'')
                 else:                
                     struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')
+            elif attribute.object_type == NutObjectType.CLASS:
+                class_references:List[str] = attribute.object_info
+                for class_name in class_references:                    
+                    struct_lines.append(f'\t\tself.parent.nut_filter.yaml_operations.yaml.register_class({class_name})\n')
+                struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')            
             else:                
                 struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')
             struct_lines.append('\n')
@@ -308,8 +318,15 @@ class PythonBuild():
 
                 if list_item_class == NutObjectType.CLASS.value:
                     struct_lines.append(f'\t\tself.parent.nut_filter.yaml_operations.yaml.register_class({list_item_name})\n')
-                
-                
+            elif attribute.object_type == NutObjectType.CLASS:
+                struct_lines.append(f'\t@{atr_name}.setter\n')
+                struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):\n')
+                struct_lines.append(f'\t\tif isinstance(value, {return_type}) == False:\n')
+                struct_lines.append(f'\t\t\traise ValueError("Invalid value assignment")\n')  
+                class_references:List[str] = attribute.object_info
+                for class_name in class_references:                    
+                    struct_lines.append(f'\t\tself.parent.nut_filter.yaml_operations.yaml.register_class({class_name})\n')              
+                # struct_lines.append(f'\t\tself.parent.nut_filter.yaml_operations.yaml.register_class({return_type})\n')
             
             elif attribute.object_type == NutObjectType.DICTIONARY:
                 key_value_pair:List[str] = attribute.object_info

@@ -9,6 +9,15 @@ NUT:
       - !ExternalAttribute
         module: serena.utilities.ensemble_structures
         attribute: Sara2SecondaryStructure
+      - !ExternalAttribute
+        module: serena.interfaces.Sara2_API_Python3
+        attribute: DesignPerformanceData
+      - !ExternalAttribute
+        module: serena.interfaces.Sara2_API_Python3
+        attribute: DesignInformation
+      - !ExternalAttribute
+        module: serena.interfaces.Sara2_API_Python3
+        attribute: WetlabData
     nut_container_declarations: 
       - !NutDeclaration
         name: PrimaryStructure
@@ -20,6 +29,8 @@ NUT:
         name: Ensemble
       - !NutDeclaration
         name: Sara2secStructLists
+      - !NutDeclaration
+        name: SecondStuff
     nut_main_struct:
       !NutContainer
         name: RNAStrand
@@ -36,6 +47,10 @@ NUT:
             name: primary_structure_lists
             object_type: !NutObjectType CONTAINER
             object_info: Sara2secStructLists
+          - !NutObject
+            name: secondary_structure_stuff
+            object_type: !NutObjectType CONTAINER
+            object_info: SecondStuff
           
 
 
@@ -117,6 +132,17 @@ DEFINITIONS:
             name: sara2_struct_list
             object_type: !NutObjectType LIST
             object_info: [Sara2SecondaryStructure, CLASS]
+      - !NutContainer
+        name: SecondStuff
+        object_list:
+          - !NutObject
+            name: secondary_structure
+            object_type: !NutObjectType CLASS
+            object_info: [Sara2SecondaryStructure]
+          - !NutObject
+            name: performance_info
+            object_type: !NutObjectType CLASS
+            object_info: [DesignPerformanceData, DesignInformation, WetlabData]
 
 
 

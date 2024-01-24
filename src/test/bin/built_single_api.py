@@ -19,11 +19,15 @@ from data_squirrel.config.dynamic_data_nut import (
 
 
 from serena.utilities.ensemble_structures import Sara2SecondaryStructure
+from serena.interfaces.Sara2_API_Python3 import DesignPerformanceData
+from serena.interfaces.Sara2_API_Python3 import DesignInformation
+from serena.interfaces.Sara2_API_Python3 import WetlabData
 
 class Nut_Attributes(Enum):
 	PrimaryStructure = "primary_structure_db"
 	Ensemble = "ensemble_db"
 	Sara2secStructLists = "primary_structure_lists_db"
+	SecondStuff = "secondary_structure_stuff_db"
 
 
 class NupackStrand(Nut):
@@ -143,6 +147,14 @@ class NupackStrand(Nut):
 		self.primary_structure_lists_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="sara2_struct_list_db",
 			atr_type=['Sara2SecondaryStructure', 'CLASS']))
+
+		self.secondary_structure_stuff_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="secondary_structure_db",
+			atr_type=['Sara2SecondaryStructure']))
+
+		self.secondary_structure_stuff_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="performance_info_db",
+			atr_type=['DesignPerformanceData', 'DesignInformation', 'WetlabData']))
 
 class Energy(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
@@ -389,6 +401,42 @@ class Sara2secStructLists(CustomAttribute):
 		self.parent.sara2_struct_list_db = value
 
 
+class SecondStuff(CustomAttribute):
+	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
+		self.parent = parent
+		self.current = current
+		self.do_save = save_value
+
+	@property
+	def secondary_structure(self)->Sara2SecondaryStructure:
+		self.parent.nut_filter.yaml_operations.yaml.register_class(Sara2SecondaryStructure)
+		return self.parent.secondary_structure_db
+
+	@secondary_structure.setter
+	def secondary_structure(self, value:Sara2SecondaryStructure):
+		if isinstance(value, Sara2SecondaryStructure) == False:
+			raise ValueError("Invalid value assignment")
+		self.parent.nut_filter.yaml_operations.yaml.register_class(Sara2SecondaryStructure)
+		self.parent.secondary_structure_db = value
+
+
+	@property
+	def performance_info(self)->DesignPerformanceData:
+		self.parent.nut_filter.yaml_operations.yaml.register_class(DesignPerformanceData)
+		self.parent.nut_filter.yaml_operations.yaml.register_class(DesignInformation)
+		self.parent.nut_filter.yaml_operations.yaml.register_class(WetlabData)
+		return self.parent.performance_info_db
+
+	@performance_info.setter
+	def performance_info(self, value:DesignPerformanceData):
+		if isinstance(value, DesignPerformanceData) == False:
+			raise ValueError("Invalid value assignment")
+		self.parent.nut_filter.yaml_operations.yaml.register_class(DesignPerformanceData)
+		self.parent.nut_filter.yaml_operations.yaml.register_class(DesignInformation)
+		self.parent.nut_filter.yaml_operations.yaml.register_class(WetlabData)
+		self.parent.performance_info_db = value
+
+
 class NupackStrand(RNAStrand):
 
 	def __init__(self, working_folder:str, var_name:str, use_db:bool = False) -> None:
@@ -408,6 +456,10 @@ class NupackStrand(RNAStrand):
 		self._primary_structure_lists: Sara2secStructLists = Sara2secStructLists(save_value=True,
 			current=None,
 			parent=self.primary_structure_lists_db)
+
+		self._secondary_structure_stuff: SecondStuff = SecondStuff(save_value=True,
+			current=None,
+			parent=self.secondary_structure_stuff_db)
 
 	@property
 	def primary_structure(self)->PrimaryStructure:
@@ -440,5 +492,16 @@ class NupackStrand(RNAStrand):
 		if isinstance(struct, Sara2secStructLists) == False:
 			raise ValueError("Invalid value assignment")
 		self._primary_structure_lists = struct
+
+
+	@property
+	def secondary_structure_stuff(self)->SecondStuff:
+		return self._secondary_structure_stuff
+
+	@secondary_structure_stuff.setter
+	def secondary_structure_stuff(self, struct:SecondStuff):
+		if isinstance(struct, SecondStuff) == False:
+			raise ValueError("Invalid value assignment")
+		self._secondary_structure_stuff = struct
 
 

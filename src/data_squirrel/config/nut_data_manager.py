@@ -16,7 +16,8 @@ from data_squirrel.config.nut_yaml_objects import (
     Dictionary, 
     Empty, 
     NutObjectType,
-    ListOfThings
+    ListOfThings,
+    Class
 )
 
 def init_variable_folder(working_folder:Path, nut_name:str):
@@ -41,6 +42,7 @@ class YamlDataOperations():
         self._yaml.register_class(NutObjectType)
         self._yaml.register_class(Dictionary)
         self._yaml.register_class(ListOfThings)
+        self._yaml.register_class(Class)
         # self._yaml.register_class(Empty)
         self._dump_yaml:YAML = YAML()
         self._dump_yaml.register_class(String)
@@ -49,6 +51,7 @@ class YamlDataOperations():
         self._dump_yaml.register_class(NutObjectType)
         self._dump_yaml.register_class(Dictionary)
         self._dump_yaml.register_class(ListOfThings)
+        self._dump_yaml.register_class(Class)
         
         
     @property

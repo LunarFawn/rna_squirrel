@@ -18,6 +18,7 @@ class Nut_Attributes(Enum):
 	PrimaryStructure = "primary_structure_db"
 	Ensemble = "ensemble_db"
 	Sara2secStructLists = "primary_structure_lists_db"
+	SecondStuff = "secondary_structure_stuff_db"
 
 
 class NupackStrand(Nut):
@@ -137,4 +138,12 @@ class NupackStrand(Nut):
 		self.primary_structure_lists_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="sara2_struct_list_db",
 			atr_type=['Sara2SecondaryStructure', 'CLASS']))
+
+		self.secondary_structure_stuff_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="secondary_structure_db",
+			atr_type=['Sara2SecondaryStructure']))
+
+		self.secondary_structure_stuff_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="performance_info_db",
+			atr_type=['DesignPerformanceData', 'DesignInformation', 'WetlabData']))
 
