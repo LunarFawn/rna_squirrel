@@ -137,7 +137,7 @@ class NupackStrand(Nut):
 
 		self.primary_structure_lists_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="sara2_struct_list_db",
-			atr_type=['Sara2SecondaryStructure', 'CLASS']))
+			atr_type=['Sara2SecondaryStructure', 'DesignPerformanceData', 'CLASS']))
 
 		self.secondary_structure_stuff_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="secondary_structure_db",

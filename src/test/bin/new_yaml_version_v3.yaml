@@ -132,7 +132,7 @@ DEFINITIONS:
           - !NutObject
             name: sara2_struct_list
             object_type: !NutObjectType LIST
-            object_info: [Sara2SecondaryStructure, CLASS]
+            object_info: [Sara2SecondaryStructure, DesignPerformanceData, CLASS]
       - !NutContainer
         name: SecondStuff
         object_list:

@@ -210,6 +210,7 @@ class PythonBuild():
             
             list_item_class:str = ''
             list_item_name:str = ''
+            list_item_names:List[str] = []
             
             return_type:Any = None
             if attribute.object_type == NutObjectType.CONTAINER:
@@ -229,14 +230,20 @@ class PythonBuild():
                     return_type = f'Dict[{key_string},{value_string}]'
                 elif attribute.object_type == NutObjectType.LIST:
                     if isinstance(attribute.object_info, list) == True:
-                        list_item_name = attribute.object_info[0]
+                        for index in range(len(attribute.object_info)):
+                            if index == len(attribute.object_info)-1:
+                                #this is the class info
+                                break
+                            list_item_names.append(attribute.object_info[index])
+                            
+                        # list_item_name = attribute.object_info[0]
                         # if type(list_item_name) != str:
                         #     raise Exception(f'{list_item_name} is not a string')
-                        list_item_class = attribute.object_info[1]
+                        list_item_class = attribute.object_info[-1]
                         # if isinstance(list_item_class, NutObjectType) == False:
                         #     raise Exception(f'not a valid NutObjType')
                         if list_item_class == NutObjectType.CLASS.value:
-                            return_type = f'List[{list_item_name}]'
+                            return_type = f'List[{list_item_names[0]}]'
                     else:
                         return_type = f'List[{attribute.object_info}]'
                 elif attribute.object_type == NutObjectType.CLASS:
@@ -256,7 +263,8 @@ class PythonBuild():
                 struct_lines.append(f'\t\treturn self._{atr_name}\n')
             elif attribute.object_type == NutObjectType.LIST:
                 if list_item_class == NutObjectType.CLASS.value:
-                    struct_lines.append(f'\t\tself.parent.nut_filter.yaml_operations.yaml.register_class({list_item_name})\n')
+                    for name in list_item_names:
+                        struct_lines.append(f'\t\tself.parent.nut_filter.yaml_operations.yaml.register_class({name})\n')
                     struct_lines.append(f'\t\treturn self.parent.{atr_db_name}\n')
                     # struct_lines.append(f'\t\tnew_list:List[{list_item_name}] = []\n')
                     # struct_lines.append(f'\n')
@@ -298,7 +306,7 @@ class PythonBuild():
             if attribute.object_type == NutObjectType.LIST:
               
                 if list_item_class == NutObjectType.CLASS.value:
-                        return_type = f'List[{list_item_name}]'
+                        return_type = f'List[{list_item_names[0]}]'
                 else:
                     return_type = f'List[{attribute.object_info}]'
                 struct_lines.append(f'\t@{atr_name}.setter\n')
@@ -311,13 +319,14 @@ class PythonBuild():
                 struct_lines.append(f'\t\tfor item in value:\n')
                 
                 if list_item_class == NutObjectType.CLASS.value:
-                    struct_lines.append(f'\t\t\tif isinstance(item, {list_item_name}) == False:\n')
+                    struct_lines.append(f'\t\t\tif isinstance(item, {list_item_names[0]}) == False:\n')
                 else:
                     struct_lines.append(f'\t\t\tif isinstance(item, {attribute.object_info}) == False:\n')
                 struct_lines.append(f'\t\t\t\traise ValueError("Invalid value assignment")\n')
 
                 if list_item_class == NutObjectType.CLASS.value:
-                    struct_lines.append(f'\t\tself.parent.nut_filter.yaml_operations.yaml.register_class({list_item_name})\n')
+                    for name in list_item_names:
+                        struct_lines.append(f'\t\tself.parent.nut_filter.yaml_operations.yaml.register_class({name})\n')
             elif attribute.object_type == NutObjectType.CLASS:
                 struct_lines.append(f'\t@{atr_name}.setter\n')
                 struct_lines.append(f'\tdef {atr_name}(self, value:{return_type}):\n')

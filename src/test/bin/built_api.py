@@ -249,6 +249,7 @@ class Sara2secStructLists(CustomAttribute):
 	@property
 	def sara2_struct_list(self)->List[Sara2SecondaryStructure]:
 		self.parent.nut_filter.yaml_operations.yaml.register_class(Sara2SecondaryStructure)
+		self.parent.nut_filter.yaml_operations.yaml.register_class(DesignPerformanceData)
 		return self.parent.sara2_struct_list_db
 
 	@sara2_struct_list.setter
@@ -262,6 +263,7 @@ class Sara2secStructLists(CustomAttribute):
 			if isinstance(item, Sara2SecondaryStructure) == False:
 				raise ValueError("Invalid value assignment")
 		self.parent.nut_filter.yaml_operations.yaml.register_class(Sara2SecondaryStructure)
+		self.parent.nut_filter.yaml_operations.yaml.register_class(DesignPerformanceData)
 		self.parent.sara2_struct_list_db = value
 
 
