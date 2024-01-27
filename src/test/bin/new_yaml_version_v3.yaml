@@ -1,10 +1,11 @@
-  
+
   
 NUT:  
   !NutStructure
     db_info:
       !NutDatabaseInfo
         db_name: test_db
+        # rsa_token_path: /home/
     external_imports:
       - !ExternalAttribute
         module: serena.utilities.ensemble_structures

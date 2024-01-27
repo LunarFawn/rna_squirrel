@@ -117,6 +117,7 @@ class NutContainerDefinitions:
 @dataclass
 class NutDatabaseInfo:
     db_name:str
+    rsa_token_path:str
     
 @dataclass
 class ExternalAttribute:
