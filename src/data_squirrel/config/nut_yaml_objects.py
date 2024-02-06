@@ -192,6 +192,10 @@ class ValuePacket(GenericAttribute):
         return self._is_class
     
     address_list:List[str]
+
+@dataclass
+class Integrity():
+    md5:str
     
 @dataclass
 class Empty():
@@ -199,31 +203,37 @@ class Empty():
 
 @dataclass
 class Integer:
+    # hash:str
     value:int
     
         
 @dataclass
 class FloatingPoint:
+    # hash:str
     value:float
         
 @dataclass
 class String:
+    # hash:str
     value:str
 
         
 @dataclass
 class Dictionary:
+    # hash:str
     key_def: NutObjectType
     value_def:NutObjectType
     value:Dict[str,str]
 
 @dataclass
 class ListOfThings:
+    # hash:str
     value_def:NutObjectType
     value:list
 
 @dataclass
 class Class:
+    # hash:str
     value: Any 
 
 

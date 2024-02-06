@@ -10,6 +10,8 @@ import heapq
 from pathlib import Path
 from dataclasses import dataclass, field
 import inspect
+import hashlib
+import json
 
 from data_squirrel.config.nut_yaml_objects import (
     AtrClass,
@@ -21,7 +23,8 @@ from data_squirrel.config.nut_yaml_objects import (
     NutObjectType,
     Dictionary,
     ListOfThings,
-    Class
+    Class,
+    Integrity
 )
 from data_squirrel.config.nut_data_manager import YamlDataOperations
 
@@ -37,11 +40,12 @@ class AddressInfo():
     working_folder:Path 
     address_string:str = field(init=False)
     address_file_path: Path = field(init=False)
+    integrity_path:Path = field(init=False)
     
     def __post_init__(self) -> None:
         self.address_string = f'{"_".join(self.address_list)}.yaml'
         self.address_file_path = self.working_folder.joinpath(self.address_list[-1],self.address_string)
-        
+        self.integrity_path = self.working_folder.joinpath(self.address_list[-1], f'{"_".join(self.address_list)}_igy.yaml')    
         
 class NutFilterDefinitions():
 
@@ -89,13 +93,16 @@ class NutFilterDefinitions():
             is_valid:bool = False
             preped_data: Any = None
             if packet.value_type == str:
+                # prepped_hash:str = hashlib.sha256(bytes(packet.value,encoding='utf-8')).hexdigest()
                 preped_data = String(value=packet.value)
                 is_valid = True
                 #now save it to the yaml at the file target
             elif packet.value_type == int:
+                # prepped_hash:str = hashlib.sha256(bytes(str(packet.value),encoding='utf-8')).hexdigest()
                 preped_data = Integer(value=packet.value)
                 is_valid = True
             elif packet.value_type == float:
+                # prepped_hash:str = hashlib.sha256(bytes(str(packet.value),encoding='utf-8')).hexdigest()
                 preped_data = FloatingPoint(value=packet.value)
                 is_valid = True
             #new 1-16-24 work
@@ -107,6 +114,12 @@ class NutFilterDefinitions():
                 #test the types of the key and value
                 #first check that it is a dict
                 raw_dict:Dict[Any,Any] = packet.value
+                
+                # dhash = hashlib.md5()
+                # encoded = json.dumps(raw_dict, sort_keys=True).encode()
+                # dhash.update(encoded)
+                # prepped_hash = dhash.hexdigest()
+                
                 
                 dict_keys:List[Any] = list(raw_dict.keys())
                 dict_values:List[Any] = list(raw_dict.values())
@@ -239,11 +252,20 @@ class NutFilterDefinitions():
                                 working_folder=address.working_folder,
                                 nut_name=address.address_list[-1],
                                 filename=address.address_file_path)
+
+                recorded_md5:str = ops.get_md5_file(data_address=address.address_file_path)
+                ops.save_md5_to_igy(md5=recorded_md5,
+                                    working_folder=address.working_folder,
+                                    nut_name=address.address_list[-1],
+                                    filename=address.integrity_path)
             else:
                 if packet.value != None:
                     raise ValueError("Unsupported value type. Please update and try again maybe?")
-            #new_value = f'{new_value}_from_db'
-            # new_value = None
+                
+            # #now make md5 hash of file and write out md5 hash file
+                    
+            
+            
         else:
             #it is a parent struct
             pass     
@@ -258,11 +280,31 @@ class NutFilterDefinitions():
         
         if isinstance(value, ValuePacket) == True:
             # if value.value != None:
+            
+            #first do integrity check
+            data_md5:str = ops.get_md5_file(data_address=address.address_file_path)
+            
+            igy_md5:str = ops.get_md5_from_igy(working_folder=address.working_folder,
+                                                    nut_name=address.address_list[-1],
+                                                    filename=address.integrity_path)
+            
+            if data_md5 != igy_md5:
+                raise Exception(f'You data is bad! You have bad data! Data integrity checks failed, md5 does not match. Data: {data_md5} !=  Integrity: {igy_md5}')
+            
             new_data = ops.read_data(working_folder=address.working_folder,
                         nut_name=address.address_list[-1],
                         filename=address.address_file_path)
+            
+            
+            
             if isinstance(new_data, String) == True:
                 new_value = new_data.value
+                # returned_hash = new_data.hash
+                
+                # tested_hash:str = hashlib.sha256(bytes(new_value,encoding='utf-8')).hexdigest()
+                # if tested_hash != returned_hash:
+                #     raise Exception('')
+                
             elif isinstance(new_data, Integer) == True:
                 new_value = new_data.value
             elif isinstance(new_data, FloatingPoint) == True:
