@@ -10,6 +10,7 @@ import copy
 import time
 from datetime import datetime
 import hashlib
+from dataclasses import dataclass
 
 from data_squirrel.config.nut_yaml_objects import (
     String, 
@@ -40,6 +41,23 @@ def init_variable_folder(working_folder:Path, nut_name:str):
                 
         except Exception as error:
             raise Exception(f'Unable to create folder {nut_folder_path} Error:{error}')
+
+
+class DataPathDetails():
+    
+    def __init__(self, file_data_path:Path) -> None:
+        self._file_data_path:Path = file_data_path
+    
+    
+
+class BasicDataOperations():
+    
+    def __init__(self) -> None:
+        pass
+    
+    def generate_data_save_path(working_folder:Path, nut_name:str, filename:Path):
+        return working_folder.joinpath(nut_name).joinpath(filename)
+
 
 class YamlDataOperations():
     """
