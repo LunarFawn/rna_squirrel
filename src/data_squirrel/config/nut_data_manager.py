@@ -3,7 +3,7 @@ File for managing how data is saved and accessed
 """
 
 from ruamel.yaml import YAML
-from pathlib import Path
+from pathlib import Path, PurePath
 from typing import Any, List
 import os
 import copy
@@ -47,9 +47,23 @@ class DataPathDetails():
     
     def __init__(self, file_data_path:Path) -> None:
         self._file_data_path:Path = file_data_path
+        self._pure_file_data_path:PurePath = PurePath(file_data_path)
     
+    @property
+    def target_path(self)->Path:
+        return self._file_data_path
     
-
+    @property
+    def subdirectory_structure(self)->tuple[str,...]:
+        return self._pure_file_data_path.parts
+    
+    def get_subdirectory(self, depth_from_folder:int):
+        """
+        0 equals same folder, 1 would be the first subfolder back and so on
+        """
+        subdirectories:tuple[str, ...] = self.subdirectory_structure
+        return subdirectories[depth_from_folder]
+ 
 class BasicDataOperations():
     
     def __init__(self) -> None:
