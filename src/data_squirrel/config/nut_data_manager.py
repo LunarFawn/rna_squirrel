@@ -54,6 +54,10 @@ class DataPathDetails():
         return self._file_data_path
     
     @property
+    def working_folder(self)->Path:
+        return self._pure_file_data_path.parent
+    
+    @property
     def subdirectory_structure(self)->tuple[str,...]:
         return self._pure_file_data_path.parts
     
@@ -62,15 +66,15 @@ class DataPathDetails():
         0 equals same folder, 1 would be the first subfolder back and so on
         """
         subdirectories:tuple[str, ...] = self.subdirectory_structure
-        return subdirectories[depth_from_folder]
+        return subdirectories[:-depth_from_folder]
  
 class BasicDataOperations():
     
     def __init__(self) -> None:
         pass
     
-    def generate_data_save_path(working_folder:Path, nut_name:str, filename:Path):
-        return working_folder.joinpath(nut_name).joinpath(filename)
+    def generate_data_path_details(self, working_folder:Path, nut_name:str, filename:Path):
+        return DataPathDetails(file_data_path=working_folder.joinpath(nut_name).joinpath(filename))
 
 
 class YamlDataOperations():
