@@ -73,8 +73,11 @@ class BasicDataOperations():
     def __init__(self) -> None:
         pass
     
-    def generate_data_path_details(self, working_folder:Path, nut_name:str, filename:Path):
-        return DataPathDetails(file_data_path=working_folder.joinpath(nut_name).joinpath(filename))
+    def generate_data_path_details(self, working_folder:Path, nut_name:str, filename:Path, verify_working_folder:bool):
+        temp_path_details:DataPathDetails = DataPathDetails(file_data_path=working_folder.joinpath(nut_name).joinpath(filename))
+        if verify_working_folder == True and temp_path_details.working_folder.is_dir() is False: 
+             raise FileExistsError(f'Variable {nut_name} working folder {temp_path_details.working_folder} does not exist. Maybe initialize it first?')
+        return temp_path_details
 
 
 class YamlDataOperations():

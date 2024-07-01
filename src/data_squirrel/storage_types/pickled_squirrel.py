@@ -26,10 +26,9 @@ class PickelDataOperations(BasicDataOperations):
     def save_data(self, data:Any, working_folder:Path, nut_name:str, filename:Path):
         data_path:DataPathDetails = self.generate_data_path_details(working_folder=working_folder,
                                                                     nut_name=nut_name,
-                                                                    filename=filename)
-
-        if os.path.isdir(data_path.working_folder) == False:
-            raise FileExistsError(f'Variable {nut_name} save path {data_path.working_folder} does not exist. Maybe initialize it first?')
+                                                                    filename=filename,
+                                                                    verify_working_folder=True)
+        
         found_data:Any = None
         # pickle_filename:Path = nut_folder_path.joinpath(filename)
         try:
