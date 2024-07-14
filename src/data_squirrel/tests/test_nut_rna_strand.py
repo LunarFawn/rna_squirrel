@@ -3,7 +3,9 @@ from pathlib import Path
 from typing import List
 
 #from test.bin.built_api import Energy, PrimaryStructure, rna_strand, Ensemble
-from test.bin.built_single_api_2 import RNAStruct, PrimaryStructure
+# from .bin.built_single_api_2 import RNAStruct, PrimaryStructure
+
+from data_squirrel.tests.bin.built_single_api_2 import RNAStruct, PrimaryStructure
 
 import serena.utilities.ensemble_structures
 
