@@ -7,7 +7,7 @@ from attrs import define, field
 from collections import namedtuple
 from typing import List, Dict, Any
 
-from test.bin.built_config import (
+from old_best.bin.built_config import (
 	NupackStrand,
 )
 
