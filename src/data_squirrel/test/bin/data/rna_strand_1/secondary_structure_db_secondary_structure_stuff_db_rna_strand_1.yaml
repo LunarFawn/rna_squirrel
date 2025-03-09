@@ -1,6 +1,0 @@
-!Class
-value: !Sara2SecondaryStructure
-  _sequence: AACCUUGG
-  _structure: '...()...'
-  _free_energy: -10
-  _stack_energy: -20

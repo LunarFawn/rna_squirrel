@@ -1,0 +1,110 @@
+NUT:  
+  !NutStructure
+    db_info:
+      !NutDatabaseInfo
+        db_name: test_db
+    nut_container_declarations:
+      - !NutDeclaration
+        name: Top
+      - !NutDeclaration
+        name: MidSection
+      - !NutDeclaration
+        name: Engine
+      - !NutDeclaration
+        name: Flames
+      - !NutDeclaration
+        name: Hatch
+      - !NutDeclaration
+        name: Fines
+    nut_main_struct:
+      !NutContainer
+        name: SpaceshipHelix
+        object_list:
+          - !NutObject
+            name: top
+            object_type: !NutObjectType CONTAINER
+            object_info: Top
+          - !NutObject
+            name: midsection
+            object_type: !NutObjectType CONTAINER
+            object_info: MidSection
+          - !NutObject
+            name: engine
+            object_type: !NutObjectType CONTAINER
+            object_info: Engine
+
+
+DEFINITIONS:
+  !NutContainerDefinitions
+    nut_containers_definitions:
+      - !NutContainer
+        name: Top
+        object_list:
+          - !NutObject
+            name: color
+            object_type: !NutObjectType VALUE
+            object_info: str
+      - !NutContainer
+        name: MidSection
+        object_list:
+          - !NutObject
+            name: hatch
+            object_type: !NutObjectType CONTAINER
+            object_info: Hatch
+          - !NutObject
+            name: fines
+            object_type: !NutObjectType CONTAINER
+            object_info: Fines
+          - !NutObject
+            name: color
+            object_type: !NutObjectType VALUE
+            object_info: str
+      - !NutContainer
+        name: Engine
+        object_list:
+          - !NutObject
+            name: flames
+            object_type: !NutObjectType CONTAINER
+            object_info: Flames
+          - !NutObject
+            name: color
+            object_type: !NutObjectType VALUE
+            object_info: str
+      - !NutContainer
+        name: Flames
+        object_list:
+          - !NutObject
+            name: size
+            object_type: !NutObjectType VALUE
+            object_info: int
+          - !NutObject
+            name: luemens
+            object_type: !NutObjectType VALUE
+            object_info: float
+      - !NutContainer
+        name: Hatch
+        object_list:
+          - !NutObject
+            name: shape
+            object_type: !NutObjectType VALUE
+            object_info: str
+          - !NutObject
+            name: window_type
+            object_type: !NutObjectType VALUE
+            object_info: str
+      - !NutContainer
+        name: Fines
+        object_list:
+          - !NutObject
+            name: size
+            object_type: !NutObjectType VALUE
+            object_info: int
+          - !NutObject
+            name: shape
+            object_type: !NutObjectType VALUE
+            object_info: str
+          - !NutObject
+            name: color
+            object_type: !NutObjectType VALUE
+            object_info: str
+        
