@@ -82,17 +82,21 @@ def test_load_nut_container_declarations_class(yaml_nut:NutStructure):
 
 def test_populate_nut_container_declarations(yaml_nut:NutStructure):
     nut_declarations:List[NutDeclaration] = yaml_nut.nut_container_declarations 
-    assert nut_declarations[0].name == "PrimaryStructure"
-    assert nut_declarations[1].name == "Energy"
-    assert nut_declarations[2].name == "SecondaryStructure"
-    assert nut_declarations[3].name == "Ensemble"
+    assert nut_declarations[0].name == "Top"
+    assert nut_declarations[1].name == "MidSection"
+    assert nut_declarations[2].name == "Engine"
+    assert nut_declarations[3].name == "Flames"
+    assert nut_declarations[4].name == "Hatch"
+    assert nut_declarations[5].name == "Fines"
     
 def test_load_nut_main_struct_class(yaml_nut:NutStructure):
     main_struct: NutContainer = yaml_nut.nut_main_struct
     assert isinstance(main_struct, NutContainer) == True
     attributes:List[str] = list(vars(main_struct).keys())
     assert len(attributes) == 3
+    # name is the name that the user will see
     assert ('name' in attributes) == True
+    # db name is the name that the backend uses for the real data
     assert ('db_name' in attributes) == True
     assert ('object_list' in attributes) == True  
     
@@ -109,16 +113,20 @@ def test_load_nut_main_struct_class(yaml_nut:NutStructure):
  
 def test_populate_main_nut_struct(yaml_nut:NutStructure):
     main_struct: NutContainer = yaml_nut.nut_main_struct
-    assert main_struct.name == "RNAStrand"
-    assert main_struct.db_name == "RNAStrand_db"    
-    assert main_struct.object_list[0].name == "primary_structure"
-    assert main_struct.object_list[0].db_name == "primary_structure_db"
+    assert main_struct.name == "SpaceshipHelix"
+    assert main_struct.db_name == "SpaceshipHelix_db"    
+    assert main_struct.object_list[0].name == "top"
+    assert main_struct.object_list[0].db_name == "top_db"
     assert main_struct.object_list[0].object_type == NutObjectType.CONTAINER
-    assert main_struct.object_list[0].object_info == 'PrimaryStructure'
-    assert main_struct.object_list[1].name == "ensemble"
-    assert main_struct.object_list[1].db_name == "ensemble_db"
+    assert main_struct.object_list[0].object_info == 'Top'
+    assert main_struct.object_list[1].name == "midsection"
+    assert main_struct.object_list[1].db_name == "midsection_db"
     assert main_struct.object_list[1].object_type == NutObjectType.CONTAINER
-    assert main_struct.object_list[1].object_info == 'Ensemble'
+    assert main_struct.object_list[1].object_info == 'MidSection'
+    assert main_struct.object_list[1].name == "engine"
+    assert main_struct.object_list[1].db_name == "engine_db"
+    assert main_struct.object_list[1].object_type == NutObjectType.CONTAINER
+    assert main_struct.object_list[1].object_info == 'Engine'
 
 
 def test_load_yaml_definitions_class(yaml_def:NutContainerDefinitions):
