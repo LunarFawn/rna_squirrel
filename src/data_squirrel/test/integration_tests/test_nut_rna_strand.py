@@ -23,6 +23,7 @@ def empty_default_strand():
 #     return WhatIsThis(var_name="what_1",
 #                       working_folder=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
 
+#test
 
 def test_get_empty_strand(empty_default_strand:RNAStruct):
     with pytest.raises(Exception):     
