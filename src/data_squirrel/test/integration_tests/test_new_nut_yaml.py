@@ -157,10 +157,10 @@ def test_load_yaml_definitions_class(yaml_def:NutContainerDefinitions):
 def test_populate_yaml_definitions(yaml_def:NutContainerDefinitions):
     
     definitions: List[NutContainer] = yaml_def.nut_containers_definitions
-    assert definitions[0].name == "PrimaryStructure"
+    assert definitions[0].name == "Top"
     assert definitions[0].db_name == f'{definitions[0].name}_db'
     assert len(definitions[0].object_list) == 2
-    assert definitions[0].object_list[0].name == "strand"
+    assert definitions[0].object_list[0].name == "color"
     assert definitions[0].object_list[0].db_name == f'{definitions[0].object_list[0].name}_db'
     assert definitions[0].object_list[0].object_type == NutObjectType.VALUE
     assert definitions[0].object_list[0].object_info == "str"
@@ -169,8 +169,8 @@ def test_walk_objects_list(yaml_ops:YAMLOperations):
         
     walk_object:WalkObjectReturn = yaml_ops.walk_objects_list(object_structs=yaml_ops.nut.nut_containers,
                                                             level=1)
-    assert walk_object.structure_found_list == ['Energy', 'SecondaryStructure', 'PrimaryStructure']
-    assert walk_object.struct_priority_queue == [(-1, 'Energy'), (-1, 'SecondaryStructure'), (-1, 'PrimaryStructure')]
+    assert walk_object.structure_found_list == ['Fines', 'Flames', 'Hatch']
+    assert walk_object.struct_priority_queue == [(-1, 'Fines'), (-1, 'Flames'), (-1, 'Hatch')]
 
 def test_build_structure_dict(yaml_ops:YAMLOperations):   
     #yaml_ops.build_struct_dict()
@@ -185,11 +185,11 @@ def test_build_struct_queue(yaml_ops:YAMLOperations):
     for _ in range(len(yaml_ops.priority_queue)):
       poped = yaml_ops.pop_priority_queue
       poped_order.append(poped)
-    assert poped_order == [(-2, 'Energy'), (-2, 'PrimaryStructure'), (-2, 'SecondaryStructure'), (-1, 'Ensemble'), (-1, 'PrimaryStructure'), (-1, 'Sara2secStructLists')]
+    assert poped_order == [(-2, 'Fines'), (-2, 'Flames'), (-2, 'Hatch'), (-1, 'Engine'), (-1, 'MidSection'), (-1, 'Top')]
 
 def test_copy_priority_queue(yaml_ops:YAMLOperations):
     new_queue: List[tuple] = yaml_ops.get_original_priorty_queue_copy
     assert new_queue == yaml_ops.priority_queue
     yaml_ops.pop_priority_queue
     assert len(new_queue) == 6
-    assert len(yaml_ops.priority_queue) == 5
+    assert len(yaml_ops.priority_queue) == 6
