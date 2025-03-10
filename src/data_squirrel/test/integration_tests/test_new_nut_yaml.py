@@ -40,9 +40,8 @@ def yaml_nut(yaml_ops:YAMLOperations):
 def yaml_def(yaml_ops:YAMLOperations):
     return yaml_ops.definitions
 
-
-LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/new_yaml_version_v3.yaml')
-WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\new_yaml_version_v3.yaml")
+LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/data/spaceship_helix_config_no_external_imports.yaml')
+WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\data\spaceship_helix_config_no_external_imports.yaml")
 CONFIG_PATH = LINUX_PATH
 
 def test_open_yaml(yaml_ops:YAMLOperations):
