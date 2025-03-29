@@ -40,8 +40,8 @@ def yaml_nut(yaml_ops:YAMLOperations):
 def yaml_def(yaml_ops:YAMLOperations):
     return yaml_ops.definitions
 
-LINUX_PATH = Path(f'/home/rnauser/repo/rna_squirrel/src/test/bin/data/spaceship_helix_config_no_external_imports.yaml')
-WINDOWS_PATH = Path(r"C:\Users\pearljen\Documents\me\repo\rna_squirrel\src\test\bin\data\spaceship_helix_config_no_external_imports.yaml")
+LINUX_PATH = Path(f'/Users/grizzlyengineer/repo/rna_squirrel/src/data_squirrel/test/bin/data/spaceship_helix_config_with_imports.yaml')
+WINDOWS_PATH = Path(r"C:\\Users\\pearljen\\Documents\\me\\repo\\rna_squirrel\\src\\test\\bin\\data\\spaceship_helix_config_with_imports.yaml")
 CONFIG_PATH = LINUX_PATH
 
 def test_open_yaml(yaml_ops:YAMLOperations):
@@ -123,10 +123,10 @@ def test_populate_main_nut_struct(yaml_nut:NutStructure):
     assert main_struct.object_list[1].db_name == "midsection_db"
     assert main_struct.object_list[1].object_type == NutObjectType.CONTAINER
     assert main_struct.object_list[1].object_info == 'MidSection'
-    assert main_struct.object_list[1].name == "engine"
-    assert main_struct.object_list[1].db_name == "engine_db"
-    assert main_struct.object_list[1].object_type == NutObjectType.CONTAINER
-    assert main_struct.object_list[1].object_info == 'Engine'
+    assert main_struct.object_list[2].name == "engine"
+    assert main_struct.object_list[2].db_name == "engine_db"
+    assert main_struct.object_list[2].object_type == NutObjectType.CONTAINER
+    assert main_struct.object_list[2].object_info == 'Engine'
 
 
 def test_load_yaml_definitions_class(yaml_def:NutContainerDefinitions):
@@ -159,18 +159,34 @@ def test_populate_yaml_definitions(yaml_def:NutContainerDefinitions):
     definitions: List[NutContainer] = yaml_def.nut_containers_definitions
     assert definitions[0].name == "Top"
     assert definitions[0].db_name == f'{definitions[0].name}_db'
-    assert len(definitions[0].object_list) == 2
+    assert len(definitions[0].object_list) == 1
     assert definitions[0].object_list[0].name == "color"
     assert definitions[0].object_list[0].db_name == f'{definitions[0].object_list[0].name}_db'
     assert definitions[0].object_list[0].object_type == NutObjectType.VALUE
     assert definitions[0].object_list[0].object_info == "str"
+    # definitions: List[NutContainer] = yaml_def.nut_containers_definitions
+    assert definitions[1].name == "MidSection"
+    assert definitions[1].db_name == f'{definitions[1].name}_db'
+    assert len(definitions[1].object_list) == 3
+    assert definitions[1].object_list[0].name == "hatch"
+    assert definitions[1].object_list[0].db_name == f'{definitions[1].object_list[0].name}_db'
+    assert definitions[1].object_list[0].object_type == NutObjectType.CONTAINER
+    assert definitions[1].object_list[0].object_info == "Hatch"
+    assert definitions[1].object_list[1].name == "fines"
+    assert definitions[1].object_list[1].db_name == f'{definitions[1].object_list[1].name}_db'
+    assert definitions[1].object_list[1].object_type == NutObjectType.CONTAINER
+    assert definitions[1].object_list[1].object_info == "Fines"
+    assert definitions[1].object_list[2].name == "color"
+    assert definitions[1].object_list[2].db_name == f'{definitions[1].object_list[2].name}_db'
+    assert definitions[1].object_list[2].object_type == NutObjectType.VALUE
+    assert definitions[1].object_list[2].object_info == "str"
 
 def test_walk_objects_list(yaml_ops:YAMLOperations):
         
     walk_object:WalkObjectReturn = yaml_ops.walk_objects_list(object_structs=yaml_ops.nut.nut_containers,
                                                             level=1)
-    assert walk_object.structure_found_list == ['Fines', 'Flames', 'Hatch']
-    assert walk_object.struct_priority_queue == [(-1, 'Fines'), (-1, 'Flames'), (-1, 'Hatch')]
+    assert walk_object.structure_found_list == ['Hatch', 'Fines', 'Flames']
+    assert walk_object.struct_priority_queue == [(-1, 'Fines'), (-1, 'Hatch'), (-1, 'Flames')]
 
 def test_build_structure_dict(yaml_ops:YAMLOperations):   
     #yaml_ops.build_struct_dict()
@@ -192,4 +208,4 @@ def test_copy_priority_queue(yaml_ops:YAMLOperations):
     assert new_queue == yaml_ops.priority_queue
     yaml_ops.pop_priority_queue
     assert len(new_queue) == 6
-    assert len(yaml_ops.priority_queue) == 6
+    assert len(yaml_ops.priority_queue) == 5
