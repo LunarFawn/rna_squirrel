@@ -8,7 +8,7 @@ import sys
 import importlib
 #from test.bin.built_api import Energy, PrimaryStructure, rna_strand, Ensemble
 
-from  data_squirrel.test.bin.built_single_api_2 import (
+from data_squirrel.test.bin.built_single_api_2 import (
     Spaceship,
     SpaceshipHelix,
     MidSection,

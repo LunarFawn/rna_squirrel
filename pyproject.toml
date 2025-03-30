@@ -13,11 +13,18 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
 ]
+dependencies = [
+    "ruamel.yaml",
+    "attrs",
+    "pytest"
+]
 requires-python = ">3.0"
 
 [project.urls]
 Documentation = "https://docs.google.com/document/d/1FRSHdIqurGtHC8vD-rI5Ryw-NAj9xbYtGOq5UFW55iU/edit"
 Repository = "https://github.com/LunarFawn/rna_squirrel.git"
+
+
 
 [project.scripts]
 make_data_squirrel_api = "data_squirrel.make_single_api_file:script_run"
