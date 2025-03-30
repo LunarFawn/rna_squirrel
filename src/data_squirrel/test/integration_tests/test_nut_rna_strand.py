@@ -1,7 +1,11 @@
+import importlib.resources
 import pytest
 from pathlib import Path
 from typing import List
-
+import pkgutil
+import os
+import sys
+import importlib
 #from test.bin.built_api import Energy, PrimaryStructure, rna_strand, Ensemble
 
 from  data_squirrel.test.bin.built_single_api_2 import (
@@ -17,12 +21,18 @@ from  data_squirrel.test.bin.built_single_api_2 import (
 from data_squirrel.test.bin.data.demo_external_class import (ExternalClassDemo,
                                                              ComponentsDemo)
 
-CONFIG_PATH = '/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
+
+# parent_path = importlib.resources.files("data_squirrel.test.bin")
+# CONFIG_PATH =  parent_path.joinpath('test_class.yaml') # /home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
+DATA_PATH = importlib.resources.files("data_squirrel.test.bin.data")
 
 @pytest.fixture
 def empty_default_ship():
+    
+    # my_path = pkgutil.extend_path(sys.path,"hu")
+    # CONFIG_PATH = my_path
     return Spaceship(var_name="spaceship_001",
-                      working_folder=Path('/Users/grizzlyengineer/repo/rna_squirrel/src/data_squirrel/test/bin/data'))
+                      working_folder=DATA_PATH)
 
 # @pytest.fixture
 # def empty_what_strand():
