@@ -14,6 +14,9 @@ from  data_squirrel.test.bin.built_single_api_2 import (
     Flames
 )
 
+from data_squirrel.test.bin.data.demo_external_class import (ExternalClassDemo,
+                                                             ComponentsDemo)
+
 CONFIG_PATH = '/home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
 
 @pytest.fixture
@@ -57,91 +60,89 @@ def test_set_ship_attribute(empty_default_ship:Spaceship):
 #     assert new_strand.ensemble.mfe_structure.dot_parens == None
 
 def test_single_ship_attribute(empty_default_ship:Spaceship):
-    empty_default_ship.ensemble.mea_structure.dot_parens = 'AUGC'
-    assert empty_default_ship.ensemble.mea_structure.dot_parens == 'AUGC'
+    empty_default_ship.midsection.hatch.shape = 'AUGC'
+    assert empty_default_ship.midsection.hatch.shape == 'AUGC'
 
-def test_new_thing(empty_default_ship:Spaceship):
-    empty_default_ship.primary_structure.jumping = "yo"# = new_struct
-    assert empty_default_ship.primary_structure.jumping == "yo"
-    assert empty_default_ship.primary_structure.jumping == "yo"
-    empty_default_ship.primary_structure.strand = "first time"
-    assert empty_default_ship.primary_structure.strand == "first time"
+# def test_new_thing(empty_default_ship:Spaceship):
+#     empty_default_ship.primary_structure.jumping = "yo"# = new_struct
+#     assert empty_default_ship.primary_structure.jumping == "yo"
+#     assert empty_default_ship.primary_structure.jumping == "yo"
+#     empty_default_ship.primary_structure.strand = "first time"
+#     assert empty_default_ship.primary_structure.strand == "first time"
     
-    strand_two:Spaceship = Spaceship(var_name="its_fun",
-                          working_folder='/home/rnauser/repo/rna_squirrel/src/test/bin/data')
-    strand_two.primary_structure.strand = "AABAC"
-    assert strand_two.primary_structure.strand == "AABAC"
-    with pytest.raises(ValueError):     
-        empty_default_ship.primary_structure = "break"
+#     strand_two:Spaceship = Spaceship(var_name="its_fun",
+#                           working_folder='/home/rnauser/repo/rna_squirrel/src/test/bin/data')
+#     strand_two.primary_structure.strand = "AABAC"
+#     assert strand_two.primary_structure.strand == "AABAC"
+#     with pytest.raises(ValueError):     
+#         empty_default_ship.primary_structure = "break"
 
 def test_lists(empty_default_ship:Spaceship):
     new_list = []
     new_list.append(1) 
     new_list.append(2) 
     new_list.append(3) 
-    empty_default_ship.ensemble.mfe_structure.structure_list = new_list
-    assert empty_default_ship.ensemble.mfe_structure.structure_list == [1, 2, 3] 
+    empty_default_ship.midsection.fines.sizes = new_list
+    assert empty_default_ship.midsection.fines.sizes == [1, 2, 3] 
     
 
 def test_dicts(empty_default_ship:Spaceship):
     new_dict = {}
-    new_dict[1] = 4
-    new_dict[2] = 3 
-    empty_default_ship.ensemble.mfe_structure.structure_dict = new_dict
-    assert empty_default_ship.ensemble.mfe_structure.structure_dict == {1:4, 2:3}
+    new_dict[1] = "four"
+    new_dict[2] = "three"
+    empty_default_ship.midsection.hatch.window_size_versions = new_dict
+    assert empty_default_ship.midsection.hatch.window_size_versions == {1:"four", 2:"three"}
     
 def test_complex_dicts(empty_default_ship:Spaceship):
     new_dict = {}
     new_dict[1.3] = ["1",'2', '3']
     new_dict[1.5] = ['4','5','6']
-    empty_default_ship.ensemble.energy_groups = new_dict
-    assert empty_default_ship.ensemble.energy_groups == {1.3:["1",'2', '3'], 1.5:['4','5','6']}
+    empty_default_ship.midsection.fines.color_lists = new_dict
+    assert empty_default_ship.midsection.fines.color_lists == {1.3:["1",'2', '3'], 1.5:['4','5','6']}
     
 
 def test_complex_lists(empty_default_ship:Spaceship):
     #first create the value you want
-    test_struct:serena.utilities.ensemble_structures.Sara2SecondaryStructure = serena.utilities.ensemble_structures.Sara2SecondaryStructure(sequence='AACCUUGG',
-                                                                                                                                            structure='...()...',
-                                                                                                                                            free_energy=-10,
-                                                                                                                                            stack_energy=-20)
+    test_struct:ExternalClassDemo = ExternalClassDemo(what_is_it="stuff",
+                                                      how_many_are_there=2,
+                                                      is_it_true=True)
     
-    empty_default_ship.primary_structure_lists.primary_list = [test_struct]
+    empty_default_ship.midsection.hatch.external_simple_list = [test_struct]
     
     # this = dict(empty_default_ship.primary_structure)
     # assert this == {}
-    returned_list:List[serena.utilities.ensemble_structures.Sara2SecondaryStructure] = empty_default_ship.primary_structure_lists.primary_list
+    returned_list:List[ExternalClassDemo] = empty_default_ship.midsection.hatch.external_simple_list
     for item in returned_list:
-        assert isinstance(item, serena.utilities.ensemble_structures.Sara2SecondaryStructure) == True
-        assert item.sequence == "AACCUUGG"
-        assert item.structure == '...()...'        
-        assert item.free_energy == -10
-        assert item.stack_energy == -20
+        assert isinstance(item, ExternalClassDemo) == True
+        assert item.what_is_it == "stuff"
+        assert item.how_many_are_there == 2        
+        assert item.is_it_true == True
     
 def test_class_as_value(empty_default_ship:Spaceship):
-    test_struct:serena.utilities.ensemble_structures.Sara2SecondaryStructure = serena.utilities.ensemble_structures.Sara2SecondaryStructure(sequence='AACCUUGG',
-                                                                                                                                            structure='...()...',
-                                                                                                                                            free_energy=-10,
-                                                                                                                                            stack_energy=-20)
-    empty_default_ship.secondary_structure_stuff.secondary_structure = test_struct
+    test_struct:ExternalClassDemo = ExternalClassDemo(what_is_it="stuff2",
+                                                      how_many_are_there=5,
+                                                      is_it_true=True)
     
-    assert isinstance(empty_default_ship.secondary_structure_stuff.secondary_structure, serena.utilities.ensemble_structures.Sara2SecondaryStructure) == True
-    assert empty_default_ship.secondary_structure_stuff.secondary_structure.sequence == "AACCUUGG"
-    assert empty_default_ship.secondary_structure_stuff.secondary_structure.structure == '...()...'        
-    assert empty_default_ship.secondary_structure_stuff.secondary_structure.free_energy == -10
-    assert empty_default_ship.secondary_structure_stuff.secondary_structure.stack_energy == -20
+    empty_default_ship.midsection.hatch.external_simple_value = test_struct
+    
+    assert isinstance(empty_default_ship.midsection.hatch.external_simple_value, ExternalClassDemo) == True
+    assert empty_default_ship.midsection.hatch.external_simple_value.what_is_it == "stuff2"
+    assert empty_default_ship.midsection.hatch.external_simple_value.how_many_are_there == 5        
+    assert empty_default_ship.midsection.hatch.external_simple_value.is_it_true == True
 
 def test_class_as_value_complex(empty_default_ship:Spaceship):
-    test_info:DesignInformation = DesignInformation(Sequence='AACCGGUU')
-    test_wet:WetlabData = WetlabData(Eterna_Score=99)
-    performance:DesignPerformanceData = DesignPerformanceData(DesignInfo=test_info,
-                                                              wetlabResults=test_wet)
+    test_struct:ExternalClassDemo = ExternalClassDemo(what_is_it="stuf3",
+                                                      how_many_are_there=3,
+                                                      is_it_true=False)
+    test_complex:ComponentsDemo = ComponentsDemo(demo_thing=test_struct)
                                                                                                                                             
-    empty_default_ship.secondary_structure_stuff.performance_info = performance
+    empty_default_ship.midsection.hatch.external_complex_value = test_complex
     
-    assert isinstance(empty_default_ship.secondary_structure_stuff.performance_info, DesignPerformanceData) == True
-    assert isinstance(empty_default_ship.secondary_structure_stuff.performance_info.design_info, DesignInformation) == True
-    assert empty_default_ship.secondary_structure_stuff.performance_info.design_info.Sequence == 'AACCGGUU'
-    assert isinstance(empty_default_ship.secondary_structure_stuff.performance_info.wetlab_results, WetlabData) == True
-    assert empty_default_ship.secondary_structure_stuff.performance_info.wetlab_results.Eterna_Score == 99
+    assert isinstance(empty_default_ship.midsection.hatch.external_complex_value, ComponentsDemo) == True
+    assert isinstance(empty_default_ship.midsection.hatch.external_complex_value.demo_thing, ExternalClassDemo) == True
+    assert empty_default_ship.midsection.hatch.external_complex_value.demo_thing.what_is_it == 'stuf3'
+    assert empty_default_ship.midsection.hatch.external_complex_value.demo_thing.how_many_are_there == 3
+    assert empty_default_ship.midsection.hatch.external_complex_value.demo_thing.is_it_true == False
+
     
     

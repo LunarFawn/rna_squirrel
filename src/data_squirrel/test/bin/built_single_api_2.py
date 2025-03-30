@@ -19,6 +19,7 @@ from data_squirrel.config.dynamic_data_nut import (
 
 
 from data_squirrel.test.bin.data.demo_external_class import ExternalClassDemo
+from data_squirrel.test.bin.data.demo_external_class import ComponentsDemo
 
 class Nut_Attributes(Enum):
 	Top = "top_db"
@@ -54,7 +55,19 @@ class SpaceshipHelix(Nut):
 
 		self.midsection_db.hatch_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="window_size_versions_db",
-			atr_type=['int', 'list']))
+			atr_type=['int', 'str']))
+
+		self.midsection_db.hatch_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="external_simple_list_db",
+			atr_type=['ExternalClassDemo', 'CLASS']))
+
+		self.midsection_db.hatch_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="external_complex_value_db",
+			atr_type=['ComponentsDemo', 'ExternalClassDemo']))
+
+		self.midsection_db.hatch_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="external_simple_value_db",
+			atr_type=['ExternalClassDemo']))
 
 		self.midsection_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="fines_db",
@@ -71,6 +84,10 @@ class SpaceshipHelix(Nut):
 		self.midsection_db.fines_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="color_db",
 			atr_type=str))
+
+		self.midsection_db.fines_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="color_lists_db",
+			atr_type=['float', 'list']))
 
 		self.midsection_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="color_db",
@@ -137,6 +154,25 @@ class Fines(CustomAttribute):
 		self.parent.color_db = value
 
 
+	@property
+	def color_lists(self)->Dict[float,list]:
+		return self.parent.color_lists_db
+
+	@color_lists.setter
+	def color_lists(self, value:Dict[float,list]):
+		if isinstance(value, dict) == False:
+			raise ValueError("Invalid value assignment")
+		if len(value) < 1:
+			raise Exception("Empty dicts not allowed")
+
+		for key,val in value.items():
+			if isinstance(key, float) == False:
+				raise ValueError("Invalid key assignment to dic")
+			if isinstance(val, list) == False:
+				raise ValueError("Invalid value assignment to dict")
+		self.parent.color_lists_db = value
+
+
 class Flames(CustomAttribute):
 	def __init__(self, parent: Any, current:Any, save_value:bool) -> None:
 		self.parent = parent
@@ -194,11 +230,11 @@ class Hatch(CustomAttribute):
 
 
 	@property
-	def window_size_versions(self)->Dict[int,list]:
+	def window_size_versions(self)->Dict[int,str]:
 		return self.parent.window_size_versions_db
 
 	@window_size_versions.setter
-	def window_size_versions(self, value:Dict[int,list]):
+	def window_size_versions(self, value:Dict[int,str]):
 		if isinstance(value, dict) == False:
 			raise ValueError("Invalid value assignment")
 		if len(value) < 1:
@@ -207,9 +243,56 @@ class Hatch(CustomAttribute):
 		for key,val in value.items():
 			if isinstance(key, int) == False:
 				raise ValueError("Invalid key assignment to dic")
-			if isinstance(val, list) == False:
+			if isinstance(val, str) == False:
 				raise ValueError("Invalid value assignment to dict")
 		self.parent.window_size_versions_db = value
+
+
+	@property
+	def external_simple_list(self)->List[ExternalClassDemo]:
+		self.parent.nut_filter.yaml_operations.yaml.register_class(ExternalClassDemo)
+		return self.parent.external_simple_list_db
+
+	@external_simple_list.setter
+	def external_simple_list(self, value:List[ExternalClassDemo]):
+		if isinstance(value, list) == False:
+			raise ValueError("Invalid value assignment")
+		if len(value) < 1:
+			raise Exception("Empty lists not allowed")
+
+		for item in value:
+			if isinstance(item, ExternalClassDemo) == False:
+				raise ValueError("Invalid value assignment")
+		self.parent.nut_filter.yaml_operations.yaml.register_class(ExternalClassDemo)
+		self.parent.external_simple_list_db = value
+
+
+	@property
+	def external_complex_value(self)->ComponentsDemo:
+		self.parent.nut_filter.yaml_operations.yaml.register_class(ComponentsDemo)
+		self.parent.nut_filter.yaml_operations.yaml.register_class(ExternalClassDemo)
+		return self.parent.external_complex_value_db
+
+	@external_complex_value.setter
+	def external_complex_value(self, value:ComponentsDemo):
+		if isinstance(value, ComponentsDemo) == False:
+			raise ValueError("Invalid value assignment")
+		self.parent.nut_filter.yaml_operations.yaml.register_class(ComponentsDemo)
+		self.parent.nut_filter.yaml_operations.yaml.register_class(ExternalClassDemo)
+		self.parent.external_complex_value_db = value
+
+
+	@property
+	def external_simple_value(self)->ExternalClassDemo:
+		self.parent.nut_filter.yaml_operations.yaml.register_class(ExternalClassDemo)
+		return self.parent.external_simple_value_db
+
+	@external_simple_value.setter
+	def external_simple_value(self, value:ExternalClassDemo):
+		if isinstance(value, ExternalClassDemo) == False:
+			raise ValueError("Invalid value assignment")
+		self.parent.nut_filter.yaml_operations.yaml.register_class(ExternalClassDemo)
+		self.parent.external_simple_value_db = value
 
 
 class Engine(CustomAttribute):

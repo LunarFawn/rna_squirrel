@@ -48,7 +48,19 @@ class Spaceship(Nut):
 
 		self.midsection_db.hatch_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="window_size_versions_db",
-			atr_type=['int', 'list']))
+			atr_type=['int', 'str']))
+
+		self.midsection_db.hatch_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="external_simple_list_db",
+			atr_type=['ExternalClassDemo', 'CLASS']))
+
+		self.midsection_db.hatch_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="external_complex_value_db",
+			atr_type=['ComponentsDemo', 'ExternalClassDemo']))
+
+		self.midsection_db.hatch_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="external_simple_value_db",
+			atr_type=['ExternalClassDemo']))
 
 		self.midsection_db.new_attr(GenericAttribute(atr_class=AtrClass.PARENT,
 			attribute="fines_db",
@@ -65,6 +77,10 @@ class Spaceship(Nut):
 		self.midsection_db.fines_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="color_db",
 			atr_type=str))
+
+		self.midsection_db.fines_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
+			attribute="color_lists_db",
+			atr_type=['float', 'list']))
 
 		self.midsection_db.new_attr(GenericAttribute(atr_class=AtrClass.CHILD,
 			attribute="color_db",

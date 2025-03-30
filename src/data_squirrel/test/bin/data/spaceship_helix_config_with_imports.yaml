@@ -7,6 +7,9 @@ NUT:
       - !ExternalAttribute
         module: data_squirrel.test.bin.data.demo_external_class
         attribute: ExternalClassDemo
+      - !ExternalAttribute
+        module: data_squirrel.test.bin.data.demo_external_class
+        attribute: ComponentsDemo
     nut_container_declarations:
       - !NutDeclaration
         name: Top
@@ -99,7 +102,19 @@ DEFINITIONS:
           - !NutObject
             name: window_size_versions
             object_type: !NutObjectType DICTIONARY
-            object_info: [int,list]
+            object_info: [int,str]
+          - !NutObject
+            name: external_simple_list
+            object_type: !NutObjectType LIST
+            object_info: [ExternalClassDemo, CLASS]
+          - !NutObject
+            name: external_complex_value
+            object_type: !NutObjectType CLASS
+            object_info: [ComponentsDemo, ExternalClassDemo]
+          - !NutObject
+            name: external_simple_value
+            object_type: !NutObjectType CLASS
+            object_info: [ExternalClassDemo]
       - !NutContainer
         name: Fines
         object_list:
@@ -115,4 +130,8 @@ DEFINITIONS:
             name: color
             object_type: !NutObjectType VALUE
             object_info: str
+          - !NutObject
+            name: color_lists
+            object_type: !NutObjectType DICTIONARY
+            object_info: [float,list]
         
