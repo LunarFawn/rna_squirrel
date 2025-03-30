@@ -1,6 +1,0 @@
-!Class
-value: !ComponentsDemo
-  demo_thing: !ExternalClassDemo
-    what_is_it: stuf3
-    how_many_are_there: 3
-    is_it_true: false
