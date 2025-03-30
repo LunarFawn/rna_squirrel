@@ -1,0 +1,7 @@
+!ListOfThings
+value_def: !NutObjectType CLASS
+value:
+- !ExternalClassDemo
+  what_is_it: stuff
+  how_many_are_there: 2
+  is_it_true: true

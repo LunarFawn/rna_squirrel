@@ -11,7 +11,7 @@ import time
 from datetime import datetime
 import hashlib
 
-from data_squirrel.config.nut_yaml_objects import (
+from data_nut_squirrel.config.nut_yaml_objects import (
     String, 
     Integer, 
     FloatingPoint, 

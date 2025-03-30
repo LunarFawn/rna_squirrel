@@ -9,13 +9,13 @@ import os
 from string import ascii_letters
 from pathvalidate import sanitize_filepath
 
-from data_squirrel.config.nut_yaml_operations import (
+from data_nut_squirrel.config.nut_yaml_operations import (
     YAMLOperations
 )
 
-from data_squirrel.config.nut_python_build import PythonBuild
+from data_nut_squirrel.config.nut_python_build import PythonBuild
 
-from data_squirrel.config.nut_yaml_objects import (
+from data_nut_squirrel.config.nut_yaml_objects import (
     NutContainer
 )
 

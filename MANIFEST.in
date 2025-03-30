@@ -1,0 +1,2 @@
+include src/data_squirrel/test/bin/data/*.yaml
+include src/data_squirrel/test/bin/*.yaml

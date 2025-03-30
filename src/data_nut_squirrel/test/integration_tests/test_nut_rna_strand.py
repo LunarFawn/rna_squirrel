@@ -8,7 +8,7 @@ import sys
 import importlib
 #from test.bin.built_api import Energy, PrimaryStructure, rna_strand, Ensemble
 
-from data_squirrel.test.bin.built_single_api_2 import (
+from data_nut_squirrel.test.bin.built_single_api_2 import (
     Spaceship,
     SpaceshipHelix,
     MidSection,
@@ -18,13 +18,13 @@ from data_squirrel.test.bin.built_single_api_2 import (
     Flames
 )
 
-from data_squirrel.test.bin.data.demo_external_class import (ExternalClassDemo,
+from data_nut_squirrel.test.bin.data.demo_external_class import (ExternalClassDemo,
                                                              ComponentsDemo)
 
 
 # parent_path = importlib.resources.files("data_squirrel.test.bin")
 # CONFIG_PATH =  parent_path.joinpath('test_class.yaml') # /home/rnauser/repo/rna_squirrel/src/test/bin/test_class.yaml'
-DATA_PATH = importlib.resources.files("data_squirrel.test.bin.data")
+DATA_PATH = importlib.resources.files("data_nut_squirrel.test.bin.data")
 
 @pytest.fixture
 def empty_default_ship():

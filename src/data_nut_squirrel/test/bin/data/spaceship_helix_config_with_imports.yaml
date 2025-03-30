@@ -5,10 +5,10 @@ NUT:
         db_name: test_db
     external_imports:
       - !ExternalAttribute
-        module: data_squirrel.test.bin.data.demo_external_class
+        module: data_nut_squirrel.test.bin.data.demo_external_class
         attribute: ExternalClassDemo
       - !ExternalAttribute
-        module: data_squirrel.test.bin.data.demo_external_class
+        module: data_nut_squirrel.test.bin.data.demo_external_class
         attribute: ComponentsDemo
     nut_container_declarations:
       - !NutDeclaration

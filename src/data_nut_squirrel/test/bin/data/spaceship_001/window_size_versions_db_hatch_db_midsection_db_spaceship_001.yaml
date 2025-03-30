@@ -1,0 +1,6 @@
+!Dictionary
+key_def: !NutObjectType INTEGER
+value_def: !NutObjectType STRING
+value:
+  1: four
+  2: three

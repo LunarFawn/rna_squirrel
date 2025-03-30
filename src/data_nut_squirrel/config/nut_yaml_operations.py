@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from queue import PriorityQueue
 import heapq
 
-from data_squirrel.config.nut_yaml_objects import (
+from data_nut_squirrel.config.nut_yaml_objects import (
     NutDeclaration,
     NutObject,
     NutContainer,

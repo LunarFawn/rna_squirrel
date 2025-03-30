@@ -3,13 +3,13 @@ import pytest
 import inspect
 import heapq
 
-from data_squirrel.config.nut_yaml_operations import (
+from data_nut_squirrel.config.nut_yaml_operations import (
     YAMLOperations,
     WalkObjectReturn
 )
 
 
-from data_squirrel.config.nut_yaml_objects import (
+from data_nut_squirrel.config.nut_yaml_objects import (
     NutStructure,
     NutDatabaseInfo,
     NutContainerDefinitions,
@@ -41,7 +41,7 @@ def yaml_nut(yaml_ops:YAMLOperations):
 def yaml_def(yaml_ops:YAMLOperations):
     return yaml_ops.definitions
 
-CONFIG_PATH = importlib.resources.files("data_squirrel.test.bin.data").joinpath('spaceship_helix_config_with_imports.yaml')
+CONFIG_PATH = importlib.resources.files("data_nut_squirrel.test.bin.data").joinpath('spaceship_helix_config_with_imports.yaml')
 
 # LINUX_PATH = Path(f'/Users/grizzlyengineer/repo/rna_squirrel/src/data_squirrel/test/bin/data/spaceship_helix_config_with_imports.yaml')
 # WINDOWS_PATH = Path(r"C:\\Users\\pearljen\\Documents\\me\\repo\\rna_squirrel\\src\\test\\bin\\data\\spaceship_helix_config_with_imports.yaml")

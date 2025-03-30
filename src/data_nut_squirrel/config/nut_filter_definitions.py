@@ -13,7 +13,7 @@ import inspect
 import hashlib
 import json
 
-from data_squirrel.config.nut_yaml_objects import (
+from data_nut_squirrel.config.nut_yaml_objects import (
     AtrClass,
     ValuePacket,
     GenericAttribute, 
@@ -26,7 +26,7 @@ from data_squirrel.config.nut_yaml_objects import (
     Class,
     Integrity
 )
-from data_squirrel.config.nut_data_manager import YamlDataOperations
+from data_nut_squirrel.config.nut_data_manager import YamlDataOperations
 
 class ValueFlow(Enum):
     OUTBOUND="OUTBOUND"
