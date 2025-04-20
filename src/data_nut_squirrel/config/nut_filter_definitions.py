@@ -253,8 +253,8 @@ class NutFilterDefinitions():
                                 nut_name=address.address_list[-1],
                                 filename=address.address_file_path)
 
-                recorded_md5:str = ops.get_md5_file(data_address=address.address_file_path)
-                ops.save_md5_to_igy(md5=recorded_md5,
+                recorded_sha256:str = ops.get_sha256_file(data_address=address.address_file_path)
+                ops.save_sha256_to_igy(sha256=recorded_sha256,
                                     working_folder=address.working_folder,
                                     nut_name=address.address_list[-1],
                                     filename=address.integrity_path)
@@ -282,14 +282,14 @@ class NutFilterDefinitions():
             # if value.value != None:
             
             #first do integrity check
-            data_md5:str = ops.get_md5_file(data_address=address.address_file_path)
+            data_sha256:str = ops.get_sha256_file(data_address=address.address_file_path)
             
-            igy_md5:str = ops.get_md5_from_igy(working_folder=address.working_folder,
+            igy_sha256:str = ops.get_sha256_from_igy(working_folder=address.working_folder,
                                                     nut_name=address.address_list[-1],
                                                     filename=address.integrity_path)
             
-            if data_md5 != igy_md5:
-                raise Exception(f'You data is bad! You have bad data! Data integrity checks failed, md5 does not match. Data: {data_md5} !=  Integrity: {igy_md5}')
+            if data_sha256 != igy_sha256:
+                raise Exception(f'You data is bad! You have bad data! Data integrity checks failed, md5 does not match. Data: {data_sha256} !=  Integrity: {igy_sha256}')
             
             new_data = ops.read_data(working_folder=address.working_folder,
                         nut_name=address.address_list[-1],

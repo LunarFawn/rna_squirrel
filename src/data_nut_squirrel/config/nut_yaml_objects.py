@@ -196,7 +196,12 @@ class ValuePacket(GenericAttribute):
 @dataclass
 class Integrity():
     md5:str
-    
+    sha256:str
+
+@dataclass
+class Security():
+    encrypted_aes_key:str
+
 @dataclass
 class Empty():
     value:Any = field(init=False)

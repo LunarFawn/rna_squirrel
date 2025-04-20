@@ -20,7 +20,14 @@ from data_nut_squirrel.config.nut_yaml_objects import (
     NutObjectType,
     ListOfThings,
     Class,
-    Integrity
+    Integrity,
+    Security
+)
+
+import data_nut_squirrel.config.nut_data_crypto_manager as nut_crypto
+
+from data_nut_squirrel.config.nut_data_crypto_manager import (
+    HashTypes
 )
 
 HASH_INTEGRITY_FILENAME:str = 'data_integrity_hash_list.squirrel'
@@ -57,6 +64,7 @@ class YamlDataOperations():
         self._yaml.register_class(ListOfThings)
         self._yaml.register_class(Class)
         self._yaml.register_class(Integrity)
+        self._yaml.register_class(Security)
         # self._yaml.register_class(Empty)
         self._dump_yaml:YAML = YAML()
         self._dump_yaml.register_class(String)
@@ -67,6 +75,7 @@ class YamlDataOperations():
         self._dump_yaml.register_class(ListOfThings)
         self._dump_yaml.register_class(Class)
         self._dump_yaml.register_class(Integrity)
+        self._dump_yaml.register_class(Security)
         
         
     @property
@@ -137,7 +146,48 @@ class YamlDataOperations():
         return new_data.md5
     
     def save_md5_to_igy(self, md5:str, working_folder:Path, nut_name:str, filename:Path):
-        new_integrity:Integrity = Integrity(md5=md5)
+        new_integrity:Integrity = Integrity(md5=md5,
+                                            sha256='n/a')
+        self.save_data(data=new_integrity,
+                        working_folder=working_folder,
+                        nut_name=nut_name,
+                        filename=filename)
+    
+    """
+    This is sha256 now
+    """
+
+    def get_sha256_file(self, data_address:Path) -> str:
+        BUF_SIZE = 65536  # lets read stuff in 64kb chunks!
+
+        try:            
+            with open(data_address, 'rb') as file:
+                while True:
+                    data = file.read(BUF_SIZE)
+                    if not data:
+                        break
+        except:
+            raise FileExistsError(f'Unable to retrience md5 from {data_address}')
+
+        hash = nut_crypto.get_hash(message=data, hash_type=HashTypes.SHA256)
+        hash_str = str(hash)
+        return hash_str
+
+
+    def get_sha256_from_igy(self, working_folder:Path, nut_name:str, filename:Path):
+        new_data:Integrity = self.read_data(working_folder=working_folder,
+                        nut_name=nut_name,
+                        filename=filename)
+        
+        if isinstance(new_data, Integrity) == False:
+            raise Exception(f'{filename} is not a igy type')
+        
+        
+        return new_data.sha256
+    
+    def save_sha256_to_igy(self, sha256:str, working_folder:Path, nut_name:str, filename:Path):
+        new_integrity:Integrity = Integrity(sha256=sha256,
+                                            md5='n/a')
         self.save_data(data=new_integrity,
                         working_folder=working_folder,
                         nut_name=nut_name,
