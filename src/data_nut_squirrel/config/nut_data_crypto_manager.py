@@ -32,14 +32,38 @@ class KeyType(Enum):
     PRIVATE="PRIVATE"
     SHARED="SHARED"
 
+def write_bytes_to_file(filepath:Path, value:bytes):
+    try:
+        with open(filepath, "wb") as f:
+                f.write(value)
+    except FileNotFoundError as error:
+        raise FileNotFoundError(f'file not found. error={error}')
+    except IOError as error:
+        raise IOError(f'Could not write to file. error={error}')
+    except Exception as error:
+        raise Exception(f'Something went wrong! Error={error}')
+
+def read_string_from_file(filepath:Path)->Union[str,RSA._RSAobj]:
+    try:
+        with open(filepath, "r") as private_file:
+            found_value = private_file.read()
+    except FileNotFoundError as error:
+        raise FileNotFoundError(f'file not found. error={error}')
+    except IOError as error:
+        raise IOError(f'Could not read from file. error={error}')
+    except Exception as error:
+        raise Exception(f'Something went wrong! Error={error}')
+
+    return found_value
+
 @dataclass(frozen=True)
 class RSAKeys():
     # key filepaths
     private_filepath:Path
-    private: bytes
+    private: RSA._RSAobj
 
     public_filepath:Path
-    public: bytes
+    public: RSA._RSAobj
 
     @classmethod
     def generate_and_save_new_keys(cls, save_folder:Path, key_name:str):
@@ -47,16 +71,15 @@ class RSAKeys():
         public_path:Path = save_folder.joinpath(f'{key_name}_public.pem')
         
         random_generator = Random.new().read
-        key = RSA.generate(2048, random_generator)
-        generated_private_key = key.exportKey()
-        generated_public_key = key.publickey().exportKey()
+        generated_private_key = RSA.generate(2048, random_generator)
+        generated_public_key = generated_private_key.publickey()
 
         # now write the keys to file
-        with open(private_path, "wb") as f:
-            f.write(generated_private_key)
+        write_bytes_to_file(filepath=private_path, 
+                            value=generated_private_key.exportKey())
 
-        with open(public_path, "wb") as f:
-            f.write(generated_public_key)
+        write_bytes_to_file(filepath=public_path,
+                            value=generated_public_key.exportKey())
 
         return cls(private_path, generated_private_key, public_path, generated_public_key)
 
@@ -66,16 +89,17 @@ class RSAKeys():
         public_path:Path = save_folder.joinpath(f'{key_name}_public.pem')
 
         # now read the keys to file
-        found_private_key:bytes = bytes()
-        found_public_key: bytes = bytes()
+        found_private_keyfile_value = read_string_from_file(filepath=private_path)
         try:
-            with open(private_path, "wb") as private_file:
-                found_private_key = private_file.read()
+            found_private_key = RSA.importKey(found_private_keyfile_value)
+        except ValueError as error:
+            raise ValueError(f'Error: Invalid key data. Error={error}')
 
-            with open(public_path, "wb") as public_file:
-                found_public_key = public_file.read()   
-        except Exception as error:
-            raise Exception(f'Failed to read from key(s). Error={error}')
+        found_public_keyfile_value = read_string_from_file(filepath=public_path)
+        try:
+            found_public_key = RSA.importKey(found_public_keyfile_value)
+        except ValueError as error:
+            raise ValueError(f'Error: Invalid key data. Error={error}')
         
         return cls(private_path, found_private_key, public_path, found_public_key)
         
