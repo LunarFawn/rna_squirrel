@@ -56,6 +56,7 @@ def read_string_from_file(filepath:Path)->Union[str,RSA._RSAobj]:
 
     return found_value
 
+# RSA keys class that is able to generate keys and load keys from file
 @dataclass(frozen=True)
 class RSAKeys():
     # key filepaths
@@ -102,18 +103,14 @@ class RSAKeys():
             raise ValueError(f'Error: Invalid key data. Error={error}')
         
         return cls(private_path, found_private_key, public_path, found_public_key)
-        
-def generate_rsa_key_file(save_path:Path):
-    """
-    Function responsible for generating the RSA key that is used to encrypt the AES key
-    """
-    pass
 
-def load_rsa_keys(private_rsa_key_filepath:Path, public_rsa_filepath:Path):
-    """
-    Function for loading the RSA key. Enum is passed to determine if the private or public key is retreived
-    """
-    pass
+@dataclass
+class AESKeys():
+    clear_aes:bytes
+
+    @classmethod
+    def generate_new_clear_aes(cls):
+        pass
 
 def generate_aes_key(rsa_key_path:Path):
     """
