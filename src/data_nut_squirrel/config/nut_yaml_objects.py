@@ -197,6 +197,11 @@ class ValuePacket(GenericAttribute):
 class Integrity():
     md5:str
     sha256:str
+    # salt is the salt for AES encryption
+    salt:bytes
+
+    # iv is the initialization vector for AES-GCM encryption
+    iv:bytes
 
 @dataclass
 class Security():

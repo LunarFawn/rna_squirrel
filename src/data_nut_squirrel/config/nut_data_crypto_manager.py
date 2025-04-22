@@ -13,13 +13,21 @@ and the client key being the key that users will use to access.
 
 """
 
+from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+import base64
+import os
+
 
 from enum import Enum
 from pathlib import Path
-from Crypto.Cipher import AES
-from Crypto.PublicKey import RSA
-from Crypto.Hash import SHA256, MD5
-from Crypto import Random
+# from Crypto.Cipher import AES
+# from Crypto.PublicKey import RSA
+# from Crypto.Hash import SHA256, MD5
+# from Crypto import Random
 from typing import Any, List, Dict, ByteString, Union, Optional
 from dataclasses import dataclass, field
 
@@ -61,26 +69,37 @@ def read_string_from_file(filepath:Path)->Union[str,RSA._RSAobj]:
 class RSAKeys():
     # key filepaths
     private_filepath:Path
-    private: RSA._RSAobj
+    private: rsa.RSAPrivateKey
 
     public_filepath:Path
-    public: RSA._RSAobj
+    public: rsa.RSAPublicKey
 
     @classmethod
     def generate_and_save_new_keys(cls, save_folder:Path, key_name:str):
         private_path:Path = save_folder.joinpath(f'{key_name}_private.pem')
         public_path:Path = save_folder.joinpath(f'{key_name}_public.pem')
         
-        random_generator = Random.new().read
-        generated_private_key = RSA.generate(2048, random_generator)
-        generated_public_key = generated_private_key.publickey()
+        # random_generator = Random.new().read
+        generated_private_key = rsa.generate_private_key(public_exponent=65537,
+                                                         key_size=2048,
+                                                         )
+        
+        private_pem = generated_private_key.private_bytes(encoding=serialization.Encoding.PEM,
+                                                            format=serialization.PrivateFormat.TraditionalOpenSSL,
+                                                            encryption_algorithm=serialization.NoEncryption())
+
+        generated_public_key = generated_private_key.public_key()
+
+        public_pem = generated_public_key.public_bytes(encoding=serialization.Encoding.PEM,
+                                                            format=serialization.PrivateFormat.TraditionalOpenSSL,
+                                                            encryption_algorithm=serialization.NoEncryption())
 
         # now write the keys to file
         write_bytes_to_file(filepath=private_path, 
-                            value=generated_private_key.exportKey())
+                            value=private_pem)
 
         write_bytes_to_file(filepath=public_path,
-                            value=generated_public_key.exportKey())
+                            value=public_pem)
 
         return cls(private_path, generated_private_key, public_path, generated_public_key)
 
