@@ -51,7 +51,7 @@ def write_bytes_to_file(filepath:Path, value:bytes):
     except Exception as error:
         raise Exception(f'Something went wrong! Error={error}')
 
-def read_string_from_file(filepath:Path)->Union[str,RSA._RSAobj]:
+def read_string_from_file(filepath:Path)->str:
     try:
         with open(filepath, "r") as private_file:
             found_value = private_file.read()
@@ -157,18 +157,18 @@ def decrypt_file():
     """
     pass
 
-def get_hash(message:Union[bytes, str], hash_type: HashTypes ):
+def get_hash_bytes(message:bytes, hash_type: HashTypes ):
     """
     Function to managed getting the SHA256 hash
     """
-    hash:Union[SHA256.SHA256Hash, MD5.MD5Hash] # = None
+    hash:hashes.Hash # = None
     
     if hash_type is HashTypes.MD5:
-        hash = MD5.new()
+        hash = hashes.Hash(hashes.MD5())
     elif hash_type is HashTypes.SHA256:
-        hash = SHA256.new()
+        hash = hashes.Hash(hashes.SHA256())
     else:
         raise Exception(f'{str(hash_type)} is not an allowed hash security type')
     
     hash.update(message)
-    return hash.hexdigest()
+    return hash.finalize()
