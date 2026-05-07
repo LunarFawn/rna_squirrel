@@ -22,6 +22,8 @@ from data_squirrel.config.nut_yaml_objects import (
     ListOfThings
 )
 from data_squirrel.config.nut_data_manager import YamlDataOperations
+from data_squirrel.config.backend_types import BackendType
+from data_squirrel.config.nut_sqlite_operations import SQLiteDataOperations
 
 class ValueFlow(Enum):
     OUTBOUND="OUTBOUND"
@@ -43,9 +45,16 @@ class AddressInfo():
         
 class NutFilterDefinitions():
 
-    def __init__(self, working_dir:Path) -> None:
+    def __init__(self, working_dir:Path, backend_type: BackendType = BackendType.SQLITE) -> None:
         self.working_dir:Path = working_dir
-        self.yaml_operations:YamlDataOperations = YamlDataOperations()
+        self.backend_type:BackendType = backend_type
+
+        if backend_type == BackendType.YAML:
+            self.operations = YamlDataOperations()
+        elif backend_type == BackendType.SQLITE:
+            self.operations = SQLiteDataOperations(working_folder=working_dir)
+        else:
+            raise ValueError(f"Unsupported backend type: {backend_type}")
     
     def filter(self, parent:Any, attr_name:str, value:Any, flow_direction:ValueFlow):
         new_value:Any = value
@@ -61,11 +70,11 @@ class NutFilterDefinitions():
         if flow_direction == ValueFlow.OUTBOUND:
             new_value = self.filter_out_flow(value=new_value,
                                              address=address_info,
-                                             ops=self.yaml_operations)
+                                             ops=self.operations)
         elif flow_direction == ValueFlow.INBOUND:
             new_value = self.filter_in_flow(value=new_value,
                                             address=address_info,
-                                            ops=self.yaml_operations)
+                                            ops=self.operations)
         
         
         return new_value
@@ -74,7 +83,7 @@ class NutFilterDefinitions():
         new_value:Any = value
         return new_value
     
-    def filter_out_flow(self, value:Any, address:AddressInfo, ops:YamlDataOperations):
+    def filter_out_flow(self, value:Any, address:AddressInfo, ops:Any):
         """
         This is the 
         """
@@ -243,7 +252,7 @@ class NutFilterDefinitions():
        
         return new_value
     
-    def filter_in_flow(self,  value:Any, address:AddressInfo, ops:YamlDataOperations):
+    def filter_in_flow(self,  value:Any, address:AddressInfo, ops:Any):
         """
         This is the 
         """

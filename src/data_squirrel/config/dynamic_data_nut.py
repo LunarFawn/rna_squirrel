@@ -11,6 +11,7 @@ import pickle
 from data_squirrel.config.nut_yaml_objects import AtrClass, GenericAttribute, ValuePacket
 
 from data_squirrel.config.nut_filter_definitions import NutFilterDefinitions, ValueFlow
+from data_squirrel.config.backend_types import BackendType
 
 from data_squirrel.config.nut_data_manager import init_variable_folder
 
@@ -195,11 +196,12 @@ class Nut():
     db:Any = field()
     var_name:str = field()
     working_folder:Path = field()
+    backend_type:BackendType = field(default=BackendType.SQLITE)
     atr_class:AtrClass = AtrClass.NUT
     nut_filter:NutFilterDefinitions = field(init=False)#NutFilterDefinitions(working_dir=Path('/home/rnauser/repo/rna_squirrel/src/test/bin/data'))
     
     def __attrs_post_init__(self):
-        self.nut_filter = NutFilterDefinitions(working_dir=self.working_folder)
+        self.nut_filter = NutFilterDefinitions(working_dir=self.working_folder, backend_type=self.backend_type)
         init_variable_folder(working_folder=self.working_folder,
                                 nut_name=self.var_name)        
         for thing in self.enum_list:
